@@ -220,6 +220,7 @@ void do_bootm_linux (cmd_tbl_t * cmdtp, int flag, int argc, char *argv[],
 
 	/* we assume that the kernel is in place */
 	printf ("\nStarting kernel ...\n\n");
+	printf("checkpoint /lib_mips/mips_linux.c, do_bootm_linux(), line223\n\n");
 
 	theKernel (linux_argc, linux_argv, linux_env, 0);
 }
