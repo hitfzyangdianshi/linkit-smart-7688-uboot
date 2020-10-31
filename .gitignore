@@ -7,3 +7,5 @@
 /ecdsa/Release/*
 */Debug/*
 */Release/*
+/ecdsa/x64/Release
+/ecdsa/x64/Debug
