@@ -15,7 +15,7 @@ OBJS = $(SRCS:.c=.o)
 MAIN = ecdsa_test01
 
 all:	$(MAIN)
-	@echo  Simple compiler named mycc has been compiled
+	@echo  Simple compiler named $(MAIN) has been compiled
 
 $(MAIN): $(OBJS) 
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
