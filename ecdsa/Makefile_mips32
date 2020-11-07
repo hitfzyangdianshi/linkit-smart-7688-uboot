@@ -14,9 +14,11 @@ OBJS = $(SRCS:.c=.o)
 
 MAIN = ecdsa_test01_mips32
 
-all:	$(MAIN)
-	@echo  Simple compiler named $(MAIN) has been compiled
+all:	$(SRCS)
+	$(CC) $(SRCS) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) 
 
-$(MAIN):	$(OBJS) 
-	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) $(OBJS) 
+clean:
+	$(RM) *.o *~ 
+
+
 
