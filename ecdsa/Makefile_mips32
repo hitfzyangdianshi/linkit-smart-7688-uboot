@@ -1,0 +1,22 @@
+CC = /opt/buildroot-gcc342/bin/mipsel-linux-gcc
+
+CFLAGS = -g -Wall 
+
+INCLUDES = -I/home/qwertyu/openssl_crosscompile/include
+
+LFLAGS = -L/home/qwertyu/openssl_crosscompile/lib
+
+LIBS = -lcrypto -lssl
+
+SRCS = ecdsa_main.c ecdsa_f.c 
+
+OBJS = $(SRCS:.c=.o)
+
+MAIN = ecdsa_test01_mips32
+
+all:	$(MAIN)
+	@echo  Simple compiler named $(MAIN) has been compiled
+
+$(MAIN):	$(OBJS) 
+	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) $(OBJS) 
+
