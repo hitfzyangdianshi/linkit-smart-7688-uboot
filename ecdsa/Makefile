@@ -6,7 +6,7 @@ LIBS = -l crypto -l ssl
 
 CFLAGS = 
 
-INCLUDES = /home/qwertyu/openssl32/include/
+INCLUDES = -I /home/qwertyu/openssl32/include/
 
 SRCS = ecdsa_main.c ecdsa_f.c 
 
