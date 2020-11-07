@@ -222,6 +222,34 @@ void do_bootm_linux (cmd_tbl_t * cmdtp, int flag, int argc, char *argv[],
 	printf ("\nStarting kernel ...\n\n");
 	printf("checkpoint /lib_mips/mips_linux.c, do_bootm_linux(), line223\n\n");
 
+#ifdef TEST_DCDSA_01
+	char digest[] = "11111111111111111111111111111111";
+	char* privatekey = "\
+-----BEGIN EC PRIVATE KEY-----\n\
+MHcCAQEEIIKLAYVVQVLBq6ZXeJuzblt7a1caKaiibD3q8X3NNLH1oAoGCCqGSM49\n\
+AwEHoUQDQgAEk3tdHSfsp+js0THokxaDtSye9AXavB+0KVuXCuzRKqMgc7EfOkLn\n\
+m2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
+-----END EC PRIVATE KEY-----";
+	char* publickey = "-----BEGIN PUBLIC KEY-----\n\
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk3tdHSfsp+js0THokxaDtSye9AXa\n\
+vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
+-----END PUBLIC KEY-----";
+	char signature_test0[71] = {
+0x30 , 0x45 , 0x02 , 0x20 , 0x5B , 0xDA , 0x92 , 0x9D ,
+0xFA , 0x81 , 0x26 , 0xB2 , 0x49 , 0x24 , 0x96 , 0xB4 ,
+0x63 , 0x49 , 0xD1 , 0x6D , 0x09 , 0x61 , 0xBA , 0x50 ,
+0x84 , 0x8F , 0xED , 0x77 , 0x49 , 0xE6 , 0x8E , 0x6B ,
+0x82 , 0xE9 , 0x04 , 0x73 , 0x02 , 0x21 , 0x00 , 0xE7 ,
+0x7B , 0x68 , 0xCF , 0x24 , 0xBC , 0xD4 , 0xF0 , 0x1B ,
+0x85 , 0x13 , 0xD0 , 0xA1 , 0x64 , 0x34 , 0xB2 , 0x3B ,
+0x38 , 0x18 , 0x0A , 0x95 , 0x7F , 0xF7 , 0x31 , 0x73 ,
+0x82 , 0x15 , 0xE1 , 0x63 , 0x6A , 0xCB , 0x20 };
+
+	printf("\n\ntest ecdsa_verify_signature: \n");
+	ecdsa_verify_signature(publickey, signature_test0, sizeof(signature_test0), digest);
+#endif // TEST_DCDSA_01
+
+
 	theKernel (linux_argc, linux_argv, linux_env, 0);
 }
 
