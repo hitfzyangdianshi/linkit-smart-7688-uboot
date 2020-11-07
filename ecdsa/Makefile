@@ -1,12 +1,12 @@
 CC = gcc -m32
 
-LFLAGS = -L /home/qwertyu/openssl32/lib/
+CFLAGS  = -g -Wall
+
+INCLUDES = -I /home/qwertyu/openssl32/include
+
+LFLAGS = -L /home/qwertyu/openssl32/lib
 
 LIBS = -l crypto -l ssl
-
-CFLAGS = 
-
-INCLUDES = -I /home/qwertyu/openssl32/include/
 
 SRCS = ecdsa_main.c ecdsa_f.c 
 
