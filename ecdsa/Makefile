@@ -1,12 +1,12 @@
 CC = gcc -m32
 
-CFLAGS  = -g -Wall
+CFLAGS = -g -Wall 
 
-INCLUDES = -I /home/qwertyu/openssl32/include
+INCLUDES = -I/home/qwertyu/openssl32/include
 
-LFLAGS = -L /home/qwertyu/openssl32/lib
+LFLAGS = -L/home/qwertyu/openssl32/lib
 
-LIBS = -l crypto -l ssl
+LIBS = -lcrypto -lssl
 
 SRCS = ecdsa_main.c ecdsa_f.c 
 
@@ -17,6 +17,6 @@ MAIN = ecdsa_test01
 all:	$(MAIN)
 	@echo  Simple compiler named $(MAIN) has been compiled
 
-$(MAIN): $(OBJS) 
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+$(MAIN):	$(OBJS) 
+	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) $(OBJS) 
 
