@@ -22,6 +22,8 @@ openssl pkcs12 -export -inkey private-key.pem -in cert-with-private-key -out cer
 #include<stdio.h>
 #include<string.h>
 
+//#include "ecdsa_f.c"
+
 //#define TEST_INCORRECT_SIGNATURE
 #ifdef TEST_INCORRECT_SIGNATURE
 const char* publickeyfile = "publickeytest.pem";//publickeytest.pem , public-key.pem
@@ -33,9 +35,12 @@ const char* privatekeyfile = "private-key.pem";
 #define PRIVATE "static unsigned char privkey[%d]={"
 #define PUBLIC "static const unsigned char pubkey[%d]={"
 #define ENDKEY "\n};\n"
+#define SIGN "static unsigned char signature[%d]={"
 
 char digest[] = "11111111111111111111111111111111";
+#define TEST4
 
+#ifdef TEST0
 int test0() {
 
     int        ret;
@@ -87,6 +92,11 @@ int test0() {
 
     return 0;
 }
+#endif //TEST0
+
+#ifdef TEST1
+
+
 
 int test1() {
     ECDSA_SIG* sig;
@@ -122,6 +132,11 @@ int test1() {
 
     return 0;
 }
+#endif // TEST1
+
+#ifdef TEST2
+
+
 
 int test2() {
     ECDSA_SIG* sig;
@@ -157,11 +172,9 @@ int test2() {
 
     return 0;
 }
+#endif // TEST2
 
-
-#define SIGN "static unsigned char signature[%d]={"
-
-#ifdef TEST3
+#ifdef TEST3 
 static unsigned char privkey[121] = {
 0x30 , 0x77 , 0x02 , 0x01 , 0x01 , 0x04 , 0x20 , 0x82 ,
 0x8B , 0x01 , 0x85 , 0x55 , 0x41 , 0x52 , 0xC1 , 0xAB ,
@@ -243,7 +256,7 @@ int test3() {
 
 
 
-
+#ifdef TEST4
 int test4() {
     char* privatekey = "\
 -----BEGIN EC PRIVATE KEY-----\n\
@@ -280,14 +293,14 @@ m2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
     unsigned char* pp;
     pp = buf;
     int i, len;
-    len=i2d_ECDSA_SIG(sig,&pp);
+    len = i2d_ECDSA_SIG(sig, &pp);
     if (!len) {
         printf("error, i2d_ECDSA_SIG(sig,&pp); \n ");
         return -1;
     }
     for (i = 0; i < len; i++)
         printf("%c", buf[i]);
-    printf("\nsig length= %d\n",len);
+    printf("\nsig length= %d\n", len);
     printf(SIGN, len);
     for (i = 0; i < len; i++) {
         if (!(i % 8))
@@ -299,17 +312,17 @@ m2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
     }
     printf("};\n");
 
-    char* publickey="-----BEGIN PUBLIC KEY-----\n\
+    char* publickey = "-----BEGIN PUBLIC KEY-----\n\
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk3tdHSfsp+js0THokxaDtSye9AXa\n\
 vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 -----END PUBLIC KEY-----";
-    char * publickey_wrong_incorrect="-----BEGIN PUBLIC KEY-----\n\
+    char* publickey_wrong_incorrect = "-----BEGIN PUBLIC KEY-----\n\
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE5kf6AvYDktru4WWb8KK6qAyfQpi7\n\
 LhCpGwIx6nRDNtTy//A2fBjyvB5cKWkJtv68ZAyQ3WE9k5hTGdzuDBv/jg==\n\
 -----END PUBLIC KEY-----";
 
     BIO* biopub = BIO_new_mem_buf(publickey, strlen(publickey));
-    eckey = PEM_read_bio_EC_PUBKEY(biopub, & eckey, NULL, NULL);
+    eckey = PEM_read_bio_EC_PUBKEY(biopub, &eckey, NULL, NULL);
     if (eckey == NULL) {
         printf("error, eckey = PEM_read_bio_EC_PUBKEY(biopub, & eckey, NULL, NULL); \n");
         return -1;
@@ -378,9 +391,41 @@ LhCpGwIx6nRDNtTy//A2fBjyvB5cKWkJtv68ZAyQ3WE9k5hTGdzuDBv/jg==\n\
 
 }
 
+#endif // TEST4
+
+
+
+
 int main() {
 
     test4();
+    char* privatekey = "\
+-----BEGIN EC PRIVATE KEY-----\n\
+MHcCAQEEIIKLAYVVQVLBq6ZXeJuzblt7a1caKaiibD3q8X3NNLH1oAoGCCqGSM49\n\
+AwEHoUQDQgAEk3tdHSfsp+js0THokxaDtSye9AXavB+0KVuXCuzRKqMgc7EfOkLn\n\
+m2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
+-----END EC PRIVATE KEY-----";
+    char* publickey = "-----BEGIN PUBLIC KEY-----\n\
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk3tdHSfsp+js0THokxaDtSye9AXa\n\
+vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
+-----END PUBLIC KEY-----";
+    char signature_test0[71] = {
+0x30 , 0x45 , 0x02 , 0x20 , 0x5B , 0xDA , 0x92 , 0x9D ,
+0xFA , 0x81 , 0x26 , 0xB2 , 0x49 , 0x24 , 0x96 , 0xB4 ,
+0x63 , 0x49 , 0xD1 , 0x6D , 0x09 , 0x61 , 0xBA , 0x50 ,
+0x84 , 0x8F , 0xED , 0x77 , 0x49 , 0xE6 , 0x8E , 0x6B ,
+0x82 , 0xE9 , 0x04 , 0x73 , 0x02 , 0x21 , 0x00 , 0xE7 ,
+0x7B , 0x68 , 0xCF , 0x24 , 0xBC , 0xD4 , 0xF0 , 0x1B ,
+0x85 , 0x13 , 0xD0 , 0xA1 , 0x64 , 0x34 , 0xB2 , 0x3B ,
+0x38 , 0x18 , 0x0A , 0x95 , 0x7F , 0xF7 , 0x31 , 0x73 ,
+0x82 , 0x15 , 0xE1 , 0x63 , 0x6A , 0xCB , 0x20 };
+
+
+    printf("test ecdsa_sign_and_verify: \n");
+    ecdsa_sign_and_verify(privatekey, publickey, digest);
+
+    printf("\n\ntest ecdsa_verify_signature: \n");
+    ecdsa_verify_signature(publickey, signature_test0, sizeof(signature_test0), digest);
     return 0;
 }
 
