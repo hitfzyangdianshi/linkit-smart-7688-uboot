@@ -29,6 +29,6 @@ clean:
 	$(RM) *.o *~ 
 
 depend: $(SRCS)
-	makedepend $(INCLUDES) $^
+	makedepend $(INCLUDES) $(LFLAGS) $(LIBS) $^
 
 # DO NOT DELETE THIS LINE -- make depend needs it
