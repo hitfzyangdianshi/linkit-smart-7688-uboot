@@ -1,6 +1,6 @@
 CC = gcc -m32
 
-CFLAGS = -g -Wall 
+CFLAGS = -g 
 
 INCLUDES = -I/home/qwertyu/openssl32/include
 
@@ -17,7 +17,7 @@ MAIN = ecdsa_test01
 .PHONY: clean
 
 all:	$(SRCS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) $(SRCS)
+	$(CC) $(SRCS) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) 
 
 clean:
 	$(RM) *.o *~ 
