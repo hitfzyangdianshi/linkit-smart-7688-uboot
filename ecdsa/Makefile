@@ -23,12 +23,12 @@ $(MAIN):	$(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) $(OBJS) 
 
 .c.o:
-	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -c $<  -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
 	$(RM) *.o *~ 
 
 depend: $(SRCS)
-	makedepend $(INCLUDES) $(LFLAGS) $(LIBS) $^
+	makedepend $(INCLUDES) $^
 
 # DO NOT DELETE THIS LINE -- make depend needs it
