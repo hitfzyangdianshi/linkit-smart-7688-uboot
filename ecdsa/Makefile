@@ -23,10 +23,10 @@ $(MAIN):	$(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) $(OBJS) 
 
 .c.o:
-	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -c $<  -o $@
 
 clean:
-	$(RM) *.o *~ $(MAIN)
+	$(RM) *.o *~ 
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
