@@ -9,3 +9,7 @@
 */Release/*
 /ecdsa/x64/Release
 /ecdsa/x64/Debug
+uboot.bin
+u-boot
+u-boot.*
+System.map
