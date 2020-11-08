@@ -1,7 +1,7 @@
 
-#define COMPILE_WITH_UBOOT
+//#define COMPILE_WITH_UBOOT
 
-#ifndef COMPILE_WITH_UBOOT
+//#ifndef COMPILE_WITH_UBOOT
 
 #include<openssl/ecdsa.h>
 #include <openssl/obj_mac.h>
@@ -11,7 +11,7 @@
 #include<stdio.h>
 #include<string.h>
 
-#endif // COMPILE_WITH_UBOOT
+//#endif // COMPILE_WITH_UBOOT
 
 #define SIGN "static unsigned char signature[%d]={"
 
