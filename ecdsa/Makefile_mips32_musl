@@ -1,0 +1,24 @@
+CC = /home/qwertyu/Downloads/buildroot-2020.08.1/output_musl/host/bin/mipsel-linux-gcc
+
+CFLAGS = -g -Wall 
+
+INCLUDES = -I/home/qwertyu/openssl_crosscompile_musl/include
+
+LFLAGS = -L/home/qwertyu/openssl_crosscompile_musl/lib
+
+LIBS = -lcrypto -lssl
+
+SRCS = ecdsa_main.c ecdsa_f.c 
+
+OBJS = $(SRCS:.c=.o)
+
+MAIN = ecdsa_test01_mips32_musl_buildroot
+
+all:	$(SRCS)
+	$(CC) $(SRCS) $(CFLAGS) $(INCLUDES) $(LFLAGS) $(LIBS) -o $(MAIN) 
+
+clean:
+	$(RM) *.o *~ 
+
+
+
