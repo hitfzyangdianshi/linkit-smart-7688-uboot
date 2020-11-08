@@ -49,7 +49,7 @@ $(LIB):	.depend $(OBJS)
 #########################################################################
 
 .depend:	Makefile $(AOBJS:.o=.S) $(COBJS:.o=.c)
-		$(CC) $(ECDSA_INCLUDES) $(ECDSA_LFLAGS) $(ECDSA_LIBS) -M $(CFLAGS) $(AOBJS:.o=.S) $(COBJS:.o=.c) > $@     #
+		$(CC)  -M $(CFLAGS) $(AOBJS:.o=.S) $(COBJS:.o=.c) > $@     #$(ECDSA_INCLUDES) $(ECDSA_LFLAGS) $(ECDSA_LIBS)
 
 sinclude .depend
 
