@@ -23,9 +23,9 @@
 
 include $(TOPDIR)/config.mk
 
-LIB	= lib$(ARCH).a
+LIB	= lib$(ARCH).a /home/qwertyu/openssl_crosscompile_342/lib/libcrypto.a /home/qwertyu/openssl_crosscompile_342/lib/libssl.a  #ecdsa
 
-ECDSA_INCLUDES = -I/home/qwertyu/openssl_crosscompile_342/include #ecdsa
+#ECDSA_INCLUDES = -I/home/qwertyu/openssl_crosscompile_342/include #ecdsa
 
 ECDSA_LFLAGS = -L/home/qwertyu/openssl_crosscompile_342/lib #ecdsa
 
@@ -49,7 +49,7 @@ $(LIB):	.depend $(OBJS)
 #########################################################################
 
 .depend:	Makefile $(AOBJS:.o=.S) $(COBJS:.o=.c)
-		$(CC) $(ECDSA_INCLUDES)  -M $(CFLAGS) $(AOBJS:.o=.S) $(COBJS:.o=.c) > $@     # $(ECDSA_LFLAGS) $(ECDSA_LIBS)
+		$(CC) $(ECDSA_LFLAGS) $(ECDSA_LIBS)  -M $(CFLAGS) $(AOBJS:.o=.S) $(COBJS:.o=.c) > $@     # $(ECDSA_LFLAGS) $(ECDSA_LIBS)  $(ECDSA_INCLUDES)
 
 sinclude .depend
 
