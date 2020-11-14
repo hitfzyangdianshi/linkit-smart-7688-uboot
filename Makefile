@@ -207,6 +207,7 @@ endif
 
 #LIBS += post/libpost.a post/cpu/libcpu.a
 LIBS += common/libcommon.a
+LIBS += ecdsa/libecdsa_f.a
 .PHONY : $(LIBS)
 
 # Add GCC lib
@@ -388,6 +389,7 @@ tags:
 				lib_generic board/$(BOARDDIR) cpu/$(CPU) lib_$(ARCH) \
 				fs/cramfs fs/fat fs/fdos fs/jffs2 \
 				net disk rtc dtt drivers drivers/sk98lin common \
+				ecdsa \
 			\( -name CVS -prune \) -o \( -name '*.[ch]' -print \)`
 
 etags:
@@ -395,6 +397,7 @@ etags:
 				lib_generic board/$(BOARDDIR) cpu/$(CPU) lib_$(ARCH) \
 				fs/cramfs fs/fat fs/fdos fs/jffs2 \
 				net disk rtc dtt drivers drivers/sk98lin common \
+				ecdsa \
 			\( -name CVS -prune \) -o \( -name '*.[ch]' -print \)`
 
 System.map:	u-boot
