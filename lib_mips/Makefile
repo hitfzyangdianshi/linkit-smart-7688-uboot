@@ -27,7 +27,8 @@ include $(TOPDIR)/config.mk
 
 LIB	= lib$(ARCH).a /home/qwertyu/openssl_crosscompile_342/lib/libcrypto.a /home/qwertyu/openssl_crosscompile_342/lib/libssl.a	
 
-ECDSA_INCLUDES = -I/home/qwertyu/openssl_crosscompile_342/include -I/opt/buildroot-gcc342/include	
+ECDSA_INCLUDES = -I/home/qwertyu/openssl_crosscompile_342/include 
+#-I/opt/buildroot-gcc342/include	
 
 ECDSA_LFLAGS = -L/home/qwertyu/openssl_crosscompile_342/lib -L/opt/buildroot-gcc342/lib		
 
