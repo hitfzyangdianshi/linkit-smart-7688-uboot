@@ -725,6 +725,7 @@ static int raspi_read_scur(u8 *val)
 	return 0;
 }
 
+static  int raspi_write_enable(void);/////////////////////////////////////////////////////////////////////////////////////////
 static int raspi_4byte_mode(int enable)
 {
 	ssize_t retval;
