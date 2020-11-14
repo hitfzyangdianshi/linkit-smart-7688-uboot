@@ -2090,7 +2090,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		printf ("\b\b\b%2d ", timer1);
 	}
-	putc ('\n');
+	//putc ('\n');
+	printf("\n");
 
 	// Roger debug
 	if (0) {
