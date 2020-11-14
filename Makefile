@@ -386,18 +386,18 @@ depend dep:
 
 tags:
 		ctags -w `find $(SUBDIRS) include \
+				ecdsa\
 				lib_generic board/$(BOARDDIR) cpu/$(CPU) lib_$(ARCH) \
 				fs/cramfs fs/fat fs/fdos fs/jffs2 \
 				net disk rtc dtt drivers drivers/sk98lin common \
-				ecdsa \
 			\( -name CVS -prune \) -o \( -name '*.[ch]' -print \)`
 
 etags:
 		etags -a `find $(SUBDIRS) include \
+				ecdsa \
 				lib_generic board/$(BOARDDIR) cpu/$(CPU) lib_$(ARCH) \
 				fs/cramfs fs/fat fs/fdos fs/jffs2 \
 				net disk rtc dtt drivers drivers/sk98lin common \
-				ecdsa \
 			\( -name CVS -prune \) -o \( -name '*.[ch]' -print \)`
 
 System.map:	u-boot
