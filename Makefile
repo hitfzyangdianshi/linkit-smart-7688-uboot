@@ -207,7 +207,6 @@ endif
 
 #LIBS += post/libpost.a post/cpu/libcpu.a
 LIBS += common/libcommon.a
-LIBS += ecdsa/libecdsa_f.a
 .PHONY : $(LIBS)
 
 # Add GCC lib
@@ -386,7 +385,6 @@ depend dep:
 
 tags:
 		ctags -w `find $(SUBDIRS) include \
-				ecdsa\
 				lib_generic board/$(BOARDDIR) cpu/$(CPU) lib_$(ARCH) \
 				fs/cramfs fs/fat fs/fdos fs/jffs2 \
 				net disk rtc dtt drivers drivers/sk98lin common \
@@ -394,7 +392,6 @@ tags:
 
 etags:
 		etags -a `find $(SUBDIRS) include \
-				ecdsa \
 				lib_generic board/$(BOARDDIR) cpu/$(CPU) lib_$(ARCH) \
 				fs/cramfs fs/fat fs/fdos fs/jffs2 \
 				net disk rtc dtt drivers drivers/sk98lin common \
