@@ -222,7 +222,7 @@ void do_bootm_linux (cmd_tbl_t * cmdtp, int flag, int argc, char *argv[],
 	printf ("\nStarting kernel ...\n\n");
 	printf("checkpoint /lib_mips/mips_linux.c, do_bootm_linux(), line223\n\n");
 
-#define TEST_DCDSA_01
+//#define TEST_DCDSA_01
 #ifdef TEST_DCDSA_01
 #include "../ecdsa/ecdsa_f.c"
 	char digest[] = "11111111111111111111111111111111";
