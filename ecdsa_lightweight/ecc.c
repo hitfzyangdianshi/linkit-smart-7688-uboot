@@ -5,7 +5,7 @@
 #define NUM_ECC_DIGITS (ECC_BYTES/8)
 #define MAX_TRIES 16
 
-typedef unsigned int uint;
+//typedef unsigned int uint;
 
 #if defined(__SIZEOF_INT128__) || ((__clang_major__ * 100 + __clang_minor__) >= 302)
 #define SUPPORTS_INT128 1
