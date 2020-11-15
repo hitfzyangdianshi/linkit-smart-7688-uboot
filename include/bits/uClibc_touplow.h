@@ -15,16 +15,16 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
- /*  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!
-  *
-  *  Besides uClibc, I'm using this code in my libc for elks, which is
-  *  a 16-bit environment with a fairly limited compiler.  It would make
-  *  things much easier for me if this file isn't modified unnecessarily.
-  *  In particular, please put any new or replacement functions somewhere
-  *  else, and modify the makefile to use your version instead.
-  *  Thanks.  Manuel
-  *
-  *  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION! */
+/*  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!
+ *
+ *  Besides uClibc, I'm using this code in my libc for elks, which is
+ *  a 16-bit environment with a fairly limited compiler.  It would make
+ *  things much easier for me if this file isn't modified unnecessarily.
+ *  In particular, please put any new or replacement functions somewhere
+ *  else, and modify the makefile to use your version instead.
+ *  Thanks.  Manuel
+ *
+ *  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION! */
 
 #ifndef _UCLIBC_TOUPLOW_H
 #define _UCLIBC_TOUPLOW_H
@@ -32,7 +32,7 @@
 #include <features.h>
 #include <bits/types.h>
 
-  /* glibc uses the equivalent of - typedef __int32_t __ctype_touplow_t; */
+/* glibc uses the equivalent of - typedef __int32_t __ctype_touplow_t; */
 
 typedef __uint16_t __ctype_mask_t;
 
@@ -51,3 +51,4 @@ typedef unsigned char __ctype_touplow_t;
 #endif /* __UCLIBC_HAS_CTYPE_SIGNED__ */
 
 #endif /* _UCLIBC_TOUPLOW_H */
+

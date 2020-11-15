@@ -16,9 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-   /*
-	*	POSIX Standard: 2.6 Primitive System Data Types	<sys/types.h>
-	*/
+/*
+ *	POSIX Standard: 2.6 Primitive System Data Types	<sys/types.h>
+ */
 
 #ifndef	_SYS_TYPES_H
 #define	_SYS_TYPES_H	1
@@ -187,18 +187,18 @@ typedef int register_t;
 
 # ifndef __int8_t_defined
 #  define __int8_t_defined
-__intN_t(8, __QI__);
-__intN_t(16, __HI__);
-__intN_t(32, __SI__);
-__intN_t(64, __DI__);
+__intN_t (8, __QI__);
+__intN_t (16, __HI__);
+__intN_t (32, __SI__);
+__intN_t (64, __DI__);
 # endif
 
-__u_intN_t(8, __QI__);
-__u_intN_t(16, __HI__);
-__u_intN_t(32, __SI__);
-__u_intN_t(64, __DI__);
+__u_intN_t (8, __QI__);
+__u_intN_t (16, __HI__);
+__u_intN_t (32, __SI__);
+__u_intN_t (64, __DI__);
 
-typedef int register_t __attribute__((__mode__(__word__)));
+typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 
 /* Some code from BIND tests this macro to see if the types above are
@@ -208,7 +208,7 @@ typedef int register_t __attribute__((__mode__(__word__)));
 
 
 #ifdef	__USE_BSD
-   /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
+/* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 # include <endian.h>
 
 /* It also defines `fd_set' and the FD_* macros for `select'.  */

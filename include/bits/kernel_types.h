@@ -1,6 +1,6 @@
 /* Note that we use the exact same include guard #define names
- * as asm/posix_types.h.  This will avoid gratuitous conflicts
- * with the posix_types.h kernel header, and will ensure that
+ * as asm/posix_types.h.  This will avoid gratuitous conflicts 
+ * with the posix_types.h kernel header, and will ensure that 
  * our private content, and not the kernel header, will win.
  *  -Erik
  */
@@ -24,7 +24,7 @@ typedef long		__kernel_time_t;
 typedef long		__kernel_suseconds_t;
 typedef long		__kernel_clock_t;
 typedef long		__kernel_daddr_t;
-typedef char* __kernel_caddr_t;
+typedef char *		__kernel_caddr_t;
 typedef unsigned short	__kernel_uid16_t;
 typedef unsigned short	__kernel_gid16_t;
 typedef int		__kernel_uid32_t;
@@ -60,7 +60,7 @@ typedef long		__kernel_time_t;
 typedef long		__kernel_suseconds_t;
 typedef long		__kernel_clock_t;
 typedef long		__kernel_daddr_t;
-typedef char* __kernel_caddr_t;
+typedef char *		__kernel_caddr_t;
 typedef unsigned short	__kernel_uid16_t;
 typedef unsigned short	__kernel_gid16_t;
 typedef int		__kernel_uid32_t;

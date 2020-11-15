@@ -20,7 +20,7 @@
 #ifndef	_POSIX_OPT_H
 #define	_POSIX_OPT_H	1
 
-   /* Job control is supported.  */
+/* Job control is supported.  */
 #define	_POSIX_JOB_CONTROL	1
 
 /* Processes have a saved set-user-ID and a saved set-group-ID.  */
@@ -72,7 +72,7 @@
    using the value _POSIX_VDISABLE.  */
 #define	_POSIX_VDISABLE	'\0'
 
-   /* Filenames are not silently truncated.  */
+/* Filenames are not silently truncated.  */
 #define	_POSIX_NO_TRUNC	1
 
 /* X/Open realtime support is available.  */

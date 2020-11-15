@@ -24,8 +24,8 @@
 #include <sys/types.h>
 
 
-   /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
-      located on an ext2 file system */
+/* open/fcntl - O_SYNC is only implemented on blocks devices and on files
+   located on an ext2 file system */
 #define O_ACCMODE	0x0003
 #define O_RDONLY	0x0000
 #define O_WRONLY	0x0001
@@ -53,15 +53,15 @@
 
 #define O_NDELAY	O_NONBLOCK
 
-      /* For now Linux has no synchronisity options for data and read
-         operations.	We define the symbols here but let them do the same as
-         O_SYNC since this is a superset.  */
+/* For now Linux has no synchronisity options for data and read
+   operations.	We define the symbols here but let them do the same as
+   O_SYNC since this is a superset.  */
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
 # define O_DSYNC	O_SYNC	/* Synchronize data.  */
 # define O_RSYNC	O_SYNC	/* Synchronize read operations.	 */
 #endif
 
-         /* Values for the second argument to `fcntl'.  */
+/* Values for the second argument to `fcntl'.  */
 #define F_DUPFD		0	/* Duplicate file descriptor.  */
 #define F_GETFD		1	/* Get file descriptor flags.  */
 #define F_SETFD		2	/* Set file descriptor flags.  */
@@ -114,7 +114,7 @@
 # define LOCK_SH	1	/* shared lock */
 # define LOCK_EX	2	/* exclusive lock */
 # define LOCK_NB	4	/* or'd with one of the above to prevent
-                   blocking */
+				   blocking */
 # define LOCK_UN	8	/* remove lock */
 #endif
 
@@ -126,7 +126,7 @@
 #endif
 
 #ifdef __USE_GNU
-                   /* Types of directory notifications that may be requested with F_NOTIFY.  */
+/* Types of directory notifications that may be requested with F_NOTIFY.  */
 # define DN_ACCESS	0x00000001	/* File accessed.  */
 # define DN_MODIFY	0x00000002	/* File modified.  */
 # define DN_CREATE	0x00000004	/* File created.  */
@@ -137,7 +137,7 @@
 #endif
 
 typedef struct flock
-{
+  {
     short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.	*/
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
 #ifndef __USE_FILE_OFFSET64
@@ -156,13 +156,13 @@ typedef struct flock
 
 #ifdef __USE_LARGEFILE64
 struct flock64
-{
+  {
     short int l_type;	/* Type of lock: F_RDLCK, F_WRLCK, or F_UNLCK.	*/
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
     __off64_t l_start;	/* Offset where the lock begins.  */
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
     __pid_t l_pid;	/* Process holding the lock.  */
-};
+  };
 #endif
 
 
@@ -176,7 +176,7 @@ struct flock64
 # define FNDELAY	O_NDELAY
 #endif /* Use BSD.  */
 
-   /* Advise to `posix_fadvise'.  */
+/* Advise to `posix_fadvise'.  */
 #ifdef __USE_XOPEN2K
 # define POSIX_FADV_NORMAL	0 /* No further special treatment.  */
 # define POSIX_FADV_RANDOM	1 /* Expect random page references.  */

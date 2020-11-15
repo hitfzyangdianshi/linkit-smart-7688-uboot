@@ -15,16 +15,16 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
- /*  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!
-  *
-  *  Besides uClibc, I'm using this code in my libc for elks, which is
-  *  a 16-bit environment with a fairly limited compiler.  It would make
-  *  things much easier for me if this file isn't modified unnecessarily.
-  *  In particular, please put any new or replacement functions somewhere
-  *  else, and modify the makefile to use your version instead.
-  *  Thanks.  Manuel
-  *
-  *  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION! */
+/*  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!
+ *
+ *  Besides uClibc, I'm using this code in my libc for elks, which is
+ *  a 16-bit environment with a fairly limited compiler.  It would make
+ *  things much easier for me if this file isn't modified unnecessarily.
+ *  In particular, please put any new or replacement functions somewhere
+ *  else, and modify the makefile to use your version instead.
+ *  Thanks.  Manuel
+ *
+ *  ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION!   ATTENTION! */
 
 #if !defined(_CTYPE_H) && !defined(_WCTYPE_H)
 #error Always include <{w}ctype.h> rather than <bits/uClibc_ctype.h>
@@ -35,16 +35,16 @@
 
 #ifdef __UCLIBC_GEN_LOCALE
 
-  /* Taking advantage of the C99 mutual-exclusion guarantees for the various
-   * (w)ctype classes, including the descriptions of printing and control
-   * (w)chars, we can place each in one of the following mutually-exlusive
-   * subsets.  Since there are less than 16, we can store the data for
-   * each (w)chars in a nibble. In contrast, glibc uses an unsigned int
-   * per (w)char, with one bit flag for each is* type.  While this allows
-   * a simple '&' operation to determine the type vs. a range test and a
-   * little special handling for the "blank" and "xdigit" types in my
-   * approach, it also uses 8 times the space for the tables on the typical
-   * 32-bit archs we supported.*/
+/* Taking advantage of the C99 mutual-exclusion guarantees for the various
+ * (w)ctype classes, including the descriptions of printing and control
+ * (w)chars, we can place each in one of the following mutually-exlusive
+ * subsets.  Since there are less than 16, we can store the data for
+ * each (w)chars in a nibble. In contrast, glibc uses an unsigned int
+ * per (w)char, with one bit flag for each is* type.  While this allows
+ * a simple '&' operation to determine the type vs. a range test and a
+ * little special handling for the "blank" and "xdigit" types in my
+ * approach, it also uses 8 times the space for the tables on the typical
+ * 32-bit archs we supported.*/
 enum {
 	__CTYPE_unclassified = 0,
 	__CTYPE_alpha_nonupper_nonlower,
@@ -77,14 +77,14 @@ enum {
 #define __CTYPE_ispunct(D)		(D == __CTYPE_punct)
 #define __CTYPE_isspace(D)		(((unsigned int)(D - __CTYPE_print_space_nonblank)) <= 5)
 #define __CTYPE_isupper(D)		(((unsigned int)(D - __CTYPE_alpha_upper_lower)) <= 1)
- /*  #define __CTYPE_isxdigit(D) -- isxdigit is untestable this way.
-  *  But that's ok as isxdigit() (and isdigit() too) are locale-invariant. */
+/*  #define __CTYPE_isxdigit(D) -- isxdigit is untestable this way. 
+ *  But that's ok as isxdigit() (and isdigit() too) are locale-invariant. */
 
 #else  /* __UCLIBC_GEN_LOCALE *****************************************/
 
-  /* Define some ctype macros valid for the C/POSIX locale. */
+/* Define some ctype macros valid for the C/POSIX locale. */
 
-  /* ASCII ords of \t, \f, \n, \r, and \v are 9, 12, 10, 13, 11 respectively. */
+/* ASCII ords of \t, \f, \n, \r, and \v are 9, 12, 10, 13, 11 respectively. */
 #define __C_isspace(c) \
 	((sizeof(c) == sizeof(char)) \
 	 ? ((((c) == ' ') || (((unsigned char)((c) - 9)) <= (13 - 9)))) \
@@ -184,17 +184,17 @@ extern int isxupper(int c) __THROW;	/* uClibc-specific. */
 #define __isdigit_int(C)     (((unsigned int)((C) - '0')) <= 9)
 #endif
 
- /* Next, some ctype macros which are valid for all supported locales. */
- /* WARNING: isspace and isblank need to be reverified if more 8-bit codesets
-  * are added!!!  But isdigit and isxdigit are always valid. */
+/* Next, some ctype macros which are valid for all supported locales. */
+/* WARNING: isspace and isblank need to be reverified if more 8-bit codesets
+ * are added!!!  But isdigit and isxdigit are always valid. */
 
-  /* #define __isspace(c)	__C_isspace(c) */
-  /* #define __isblank(c)	__C_isblank(c) */
+/* #define __isspace(c)	__C_isspace(c) */
+/* #define __isblank(c)	__C_isblank(c) */
 
-  /* #define __isdigit(c)	__C_isdigit(c) */
-  /* #define __isxdigit(c)	__C_isxdigit(c) */
+/* #define __isdigit(c)	__C_isdigit(c) */
+/* #define __isxdigit(c)	__C_isxdigit(c) */
 
-  /* Now some non-ansi/iso c99 macros. */
+/* Now some non-ansi/iso c99 macros. */
 
 #define __isascii(c) (((c) & ~0x7f) == 0)
 #define __toascii(c) ((c) & 0x7f)

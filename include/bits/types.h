@@ -16,9 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-   /*
-    * Never include this file directly; use <sys/types.h> instead.
-    */
+/*
+ * Never include this file directly; use <sys/types.h> instead.
+ */
 
 #ifndef	_BITS_TYPES_H
 #define	_BITS_TYPES_H	1
@@ -29,7 +29,7 @@
 #include <stddef.h>
 #include <bits/kernel_types.h>
 
-    /* Convenience types.  */
+/* Convenience types.  */
 typedef unsigned char __u_char;
 typedef unsigned short __u_short;
 typedef unsigned int __u_int;
@@ -39,13 +39,13 @@ __extension__ typedef unsigned long long int __u_quad_t;
 __extension__ typedef long long int __quad_t;
 #else
 typedef struct
-{
+  {
     long int __val[2];
-} __quad_t;
+  } __quad_t;
 typedef struct
-{
+  {
     __u_long __val[2];
-} __u_quad_t;
+  } __u_quad_t;
 #endif
 typedef signed char __int8_t;
 typedef unsigned char __uint8_t;
@@ -57,7 +57,7 @@ typedef unsigned int __uint32_t;
 __extension__ typedef signed long long int __int64_t;
 __extension__ typedef unsigned long long int __uint64_t;
 #endif
-typedef __quad_t* __qaddr_t;
+typedef __quad_t *__qaddr_t;
 
 typedef __u_quad_t __dev_t;		/* Type of device numbers.  */
 typedef __u_int __uid_t;		/* Type of user identifications.  */
@@ -74,18 +74,18 @@ typedef __u_quad_t __rlim64_t;		/* Type of resource counts (LFS).  */
 typedef __u_int __id_t;			/* General type for ID.  */
 
 typedef struct
-{
+  {
     int __val[2];
-} __fsid_t;				/* Type of file system IDs.  */
+  } __fsid_t;				/* Type of file system IDs.  */
 
 /* Everythin' else.  */
 typedef int __daddr_t;			/* The type of a disk address.  */
-typedef char* __caddr_t;
+typedef char *__caddr_t;
 typedef long int __time_t;
 typedef unsigned int __useconds_t;
 typedef long int __suseconds_t;
 typedef long int __swblk_t;		/* Type of a swap block maybe?  */
-
+
 typedef long int __clock_t;
 
 /* Clock ID used in clock and timer functions.  */

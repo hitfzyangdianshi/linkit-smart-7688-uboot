@@ -16,9 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-   /*
-	*	POSIX Standard: 5.6 File Characteristics	<sys/stat.h>
-	*/
+/*
+ *	POSIX Standard: 5.6 File Characteristics	<sys/stat.h>
+ */
 
 #ifndef	_SYS_STAT_H
 #define	_SYS_STAT_H	1
@@ -31,8 +31,8 @@
 # define __need_time_t
 # include <time.h>		/* For time_t.  */
 
-	/* The Single Unix specification says that some more types are
-	   available here.  */
+/* The Single Unix specification says that some more types are
+   available here.  */
 # ifndef __dev_t_defined
 typedef __dev_t dev_t;
 #  define __dev_t_defined
@@ -150,7 +150,7 @@ __BEGIN_DECLS
 #endif
 
 
-   /* Protection bits.  */
+/* Protection bits.  */
 
 #define	S_ISUID __S_ISUID	/* Set user ID on execution.  */
 #define	S_ISGID	__S_ISGID	/* Set group ID on execution.  */
@@ -197,86 +197,86 @@ __BEGIN_DECLS
 
 #ifndef __USE_FILE_OFFSET64
 /* Get file attributes for FILE and put them in BUF.  */
-extern int stat(__const char* __restrict __file,
-	struct stat* __restrict __buf) __THROW;
+extern int stat (__const char *__restrict __file,
+		 struct stat *__restrict __buf) __THROW;
 
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
-extern int fstat(int __fd, struct stat* __buf) __THROW;
+extern int fstat (int __fd, struct stat *__buf) __THROW;
 #else
 # ifdef __REDIRECT
-extern int __REDIRECT(stat,
-	(__const char* __restrict __file,
-		struct stat* __restrict __buf) __THROW,
-	stat64);
-extern int __REDIRECT(fstat, (int __fd, struct stat* __buf) __THROW, fstat64);
+extern int __REDIRECT (stat,
+		       (__const char *__restrict __file,
+			struct stat *__restrict __buf) __THROW,
+		       stat64);
+extern int __REDIRECT (fstat, (int __fd, struct stat *__buf) __THROW, fstat64);
 # else
 #  define stat stat64
 #  define fstat fstat64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
-extern int stat64(__const char* __restrict __file,
-	struct stat64* __restrict __buf) __THROW;
-extern int fstat64(int __fd, struct stat64* __buf) __THROW;
+extern int stat64 (__const char *__restrict __file,
+		   struct stat64 *__restrict __buf) __THROW;
+extern int fstat64 (int __fd, struct stat64 *__buf) __THROW;
 #endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 # ifndef __USE_FILE_OFFSET64
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
-extern int lstat(__const char* __restrict __file,
-	struct stat* __restrict __buf) __THROW;
+extern int lstat (__const char *__restrict __file,
+		  struct stat *__restrict __buf) __THROW;
 # else
 #  ifdef __REDIRECT
-extern int __REDIRECT(lstat,
-	(__const char* __restrict __file,
-		struct stat* __restrict __buf) __THROW,
-	lstat64);
+extern int __REDIRECT (lstat,
+		       (__const char *__restrict __file,
+			struct stat *__restrict __buf) __THROW,
+		       lstat64);
 #  else
 #   define lstat lstat64
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
-extern int lstat64(__const char* __restrict __file,
-	struct stat64* __restrict __buf) __THROW;
+extern int lstat64 (__const char *__restrict __file,
+		    struct stat64 *__restrict __buf) __THROW;
 # endif
 #endif
 
 /* Set file access permissions for FILE to MODE.
    This takes an `int' MODE argument because that
    is what `mode_t's get widened to.  */
-extern int chmod(__const char* __file, __mode_t __mode) __THROW;
+extern int chmod (__const char *__file, __mode_t __mode) __THROW;
 
 /* Set file access permissions of the file FD is open on to MODE.  */
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern int fchmod(int __fd, __mode_t __mode) __THROW;
+extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #endif
 
 
 /* Set the file creation mask of the current process to MASK,
    and return the old creation mask.  */
-extern __mode_t umask(__mode_t __mask) __THROW;
+extern __mode_t umask (__mode_t __mask) __THROW;
 
 #ifdef	__USE_GNU
 /* Get the current `umask' value without changing it.
    This function is only available under the GNU Hurd.  */
-extern __mode_t getumask(void) __THROW;
+extern __mode_t getumask (void) __THROW;
 #endif
 
 /* Create a new directory named PATH, with permission bits MODE.  */
-extern int mkdir(__const char* __path, __mode_t __mode) __THROW;
+extern int mkdir (__const char *__path, __mode_t __mode) __THROW;
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
 #if defined __USE_MISC || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
-extern int mknod(__const char* __path, __mode_t __mode, __dev_t __dev)
-__THROW;
+extern int mknod (__const char *__path, __mode_t __mode, __dev_t __dev)
+     __THROW;
 #endif
 
 /* Create a new FIFO named PATH, with permission bits MODE.  */
-extern int mkfifo(__const char* __path, __mode_t __mode) __THROW;
+extern int mkfifo (__const char *__path, __mode_t __mode) __THROW;
 
 __END_DECLS
 

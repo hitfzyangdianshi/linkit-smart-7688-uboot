@@ -25,7 +25,7 @@
 #endif
 
 
-   /* Scheduling algorithms.  */
+/* Scheduling algorithms.  */
 #define SCHED_OTHER	0
 #define SCHED_FIFO	1
 #define SCHED_RR	2
@@ -40,21 +40,21 @@
 # define CLONE_PID     0x00001000 /* Set if pid shared.  */
 # define CLONE_PTRACE  0x00002000 /* Set if tracing continues on the child.  */
 # define CLONE_VFORK   0x00004000 /* Set if the parent wants the child to
-                     wake it up on mm_release.  */
+				     wake it up on mm_release.  */
 #endif
 
-                     /* The official definition.  */
+/* The official definition.  */
 struct sched_param
-{
+  {
     int __sched_priority;
-};
+  };
 
 __BEGIN_DECLS
 
 /* Clone current process.  */
 #ifdef __USE_MISC
-extern int clone(int (*__fn) (void* __arg), void* __child_stack,
-    int __flags, void* __arg) __THROW;
+extern int clone (int (*__fn) (void *__arg), void *__child_stack,
+		  int __flags, void *__arg) __THROW;
 #endif
 
 __END_DECLS
@@ -66,8 +66,8 @@ __END_DECLS
 # define __defined_schedparam	1
 /* Data structure to describe a process' schedulability.  */
 struct __sched_param
-{
+  {
     int __sched_priority;
-};
+  };
 # undef __need_schedparam
 #endif
