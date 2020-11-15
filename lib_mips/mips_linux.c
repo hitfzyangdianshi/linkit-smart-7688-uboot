@@ -251,6 +251,61 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 	ecdsa_verify_signature(publickey, signature_test0, sizeof(signature_test0), digest);
 #endif // TEST_DCDSA_01
 
+#define TEST_EASY_ECC
+#ifdef TEST_EASY_ECC
+#include "../ecdsa_lightweight/ecc.c"
+	unsigned char  digest[] = "11111111111111111111111111111111";
+	int re;
+	uint8_t p_publicKey[ECC_BYTES + 1], p_privateKey[ECC_BYTES];
+	re = ecc_make_key(p_publicKey, p_privateKey);
+	printf("ecc_make_key (1=success), %d\n", re);
+	if (re == 1) {
+		printf("p_publicKey:\n");
+		for (i = 0; i < ECC_BYTES + 1; i++) {
+			printf("%c", p_publicKey[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES + 1; i++) {
+			if (i == ECC_BYTES)printf("0x%02X ", p_publicKey[i]);
+			else printf("0x%02X , ", p_publicKey[i]);
+		}
+		printf("};\n");
+
+		printf("p_privateKey:\n");
+		for (i = 0; i < ECC_BYTES; i++) {
+			printf("%c", p_privateKey[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES; i++) {
+			if (i == ECC_BYTES - 1)printf("0x%02X ", p_privateKey[i]);
+			else printf("0x%02X , ", p_privateKey[i]);
+		}
+		printf("};\n");
+	}
+
+	uint8_t p_signature[ECC_BYTES * 2];
+	re = ecdsa_sign(p_privateKey, digest, p_signature);
+	printf("ecdsa_sign (1=success), %d\n", re);
+	if (re == 1) {
+		printf("p_signature:\n");
+		for (i = 0; i < ECC_BYTES * 2; i++) {
+			printf("%c", p_signature[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES * 2; i++) {
+			if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", p_signature[i]);
+			else printf("0x%02X , ", p_signature[i]);
+		}
+		printf("};\n");
+	}
+
+
+	re = ecdsa_verify(p_publicKey, digest, p_signature);
+	if (re == 1)printf("ecdsa_verify valid\n");
+	else printf("ecdsa_verify INvalid\n");
+
+#endif //TEST_EASY_ECC
+
 
 	theKernel (linux_argc, linux_argv, linux_env, 0);
 }
