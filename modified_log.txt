@@ -1,0 +1,7 @@
+copy include files from uboot source codes (https://gitlab.denx.de/u-boot/u-boot) to /include
+
+copy include/bits, include/sys, and ctype.h, endian.h, fcntl.h, features.h, stddef.h, unistd.h from buildroot_gcc342 include to /include
+
+easy-ecc: https://github.com/jestan/easy-ecc
+
+ecdsa with openssl is not used.
