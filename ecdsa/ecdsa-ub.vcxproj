@@ -22,6 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>ecdsa_with_openssl</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
