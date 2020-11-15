@@ -70,7 +70,7 @@ static uint64_t curve_n[NUM_ECC_DIGITS] = CONCAT(Curve_N_, ECC_CURVE);
 
 #if (defined(_WIN32) || defined(_WIN64))
 /* Windows */
-
+typedef unsigned int uint;
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <wincrypt.h>
