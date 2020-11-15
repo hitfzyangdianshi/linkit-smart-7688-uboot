@@ -92,7 +92,7 @@ static int getRandomNumber(uint64_t* p_vli)
 #else /* _WIN32 */
 
 /* Assume that we are using a POSIX-like system with /dev/urandom or /dev/random. */
-#include <sys/types.h>
+#include <linux/types.h>
 #include <fcntl.h>
 #include <unistd.h>
 
