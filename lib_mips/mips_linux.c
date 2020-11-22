@@ -284,7 +284,7 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 		0x33, 0x14, 0x7C, 0xD0, 0x35, 0x88, 0x6D, 0x31, 
 		0xA1, 0x7E, 0x03, 0x2B, 0xD4, 0x99, 0xA4, 0x7E };
 
-	printf("the example of digest is: %s\n", current_hash_test);
+	printf("\nthe example of digest is: %s\n", current_hash_test);
 	printf("the public key is: \n");
 	for (i = 0; i < ECC_BYTES + 1; i++) {
 		printf("%c", publickey_example1[i]);
