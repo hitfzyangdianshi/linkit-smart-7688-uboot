@@ -292,7 +292,7 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 	printf("\n");
 	printf("the signature is:\n");
 	for (i = 0; i < ECC_BYTES * 2; i++) {
-		printf("%c", p_signature[i]);
+		printf("%c", signature_example2[i]);
 	}
 	printf("\n");
 
