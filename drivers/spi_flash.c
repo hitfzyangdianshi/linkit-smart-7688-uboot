@@ -134,7 +134,7 @@ static int spic_busy_wait(void)
  * @n_buf: size of buffer, in bytes
  * @flag: tag as READ/WRITE
  *
- * @return: if write_onlu, -1 means write fail, or return writing counter.
+ * @return: if write_only, -1 means write fail, or return writing counter.
  * @return: if read, -1 means read fail, or return reading counter.
  */
 static int spic_transfer(const u8 *cmd, int n_cmd, u8 *buf, int n_buf, int flag)
