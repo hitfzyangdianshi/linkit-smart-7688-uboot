@@ -302,6 +302,25 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 
 #endif //TEST_EASY_ECC
 
+//#define TEST_READ
+#ifdef TEST_READ
+/*
+ * @cmd: command and address
+ * @n_cmd: size of command, in bytes
+ * @buf: buffer into which data will be read/written
+ * @n_buf: size of buffer, in bytes
+ * @flag: tag as READ/WRITE
+ *
+ * @return: if write_onlu, -1 means write fail, or return writing counter.
+ * @return: if read, -1 means read fail, or return reading counter.
+ */
+	spic_read(const u8 * cmd, size_t n_cmd, u8 * rxbuf, size_t n_rx);
+
+
+
+#endif // TEST_READ
+
+
 
 	theKernel (linux_argc, linux_argv, linux_env, 0);
 }
