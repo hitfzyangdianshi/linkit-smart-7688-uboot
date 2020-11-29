@@ -15,6 +15,8 @@ cat private-key.pem cert.pem > cert-with-private-key
 openssl pkcs12 -export -inkey private-key.pem -in cert-with-private-key -out cert.pfx*/
 
 #include<openssl/ecdsa.h>
+#include<openssl/evp.h>
+#include<openssl/crypto.h>
 #include <openssl/obj_mac.h>
 #include <openssl/bio.h>
 #include <openssl/pem.h>
@@ -22,7 +24,12 @@ openssl pkcs12 -export -inkey private-key.pem -in cert-with-private-key -out cer
 #include<stdio.h>
 #include<string.h>
 
-//#include "ecdsa_f.c"
+//#if (defined(_WIN32) || defined(_WIN64))/* Windows */
+//
+//#else/* Windows */
+#include "ecdsa_f.c"
+//#endif/* Windows */
+
 
 //#define TEST_INCORRECT_SIGNATURE
 #ifdef TEST_INCORRECT_SIGNATURE
@@ -34,8 +41,9 @@ const char* privatekeyfile = "private-key.pem";
 
 #define PRIVATE "static unsigned char privkey[%d]={"
 #define PUBLIC "static const unsigned char pubkey[%d]={"
-#define ENDKEY "\n};\n"
+#define ENDKEY " };\n"
 #define SIGN "static unsigned char signature[%d]={"
+#define PUBKEY PUBLIC
 
 char digest[] = "11111111111111111111111111111111";
 #define TEST4
@@ -394,10 +402,125 @@ LhCpGwIx6nRDNtTy//A2fBjyvB5cKWkJtv68ZAyQ3WE9k5hTGdzuDBv/jg==\n\
 #endif // TEST4
 
 
+int test5() {
+    EC_KEY* ec_key;
+    EC_GROUP* ec_group;
+    unsigned char buf[1024];
+    unsigned char* pp;
+    int i, len;
+    ec_key = EC_KEY_new();
+    if (ec_key == NULL) {
+        printf("error,  EC_KEY_new();\n");
+        return 0;
+    }
+    ec_group= EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
+    if (ec_group == NULL) {
+        printf("error, EC_KEY_new_by_curve_name(NID_);\n");
+        return -1;
+    }
+
+    int ret;
+    ret = EC_KEY_set_group(ec_key, ec_group);
+    if (ret != 1) {
+        printf("error, EC_KEY_set_group(ec_key, ec_group);\n");
+        return -2;
+    }
+
+    if (!EC_KEY_generate_key(ec_key)) {
+        printf("error, EC_KEY_generate_key(ec_key)\n");
+        EC_KEY_free(ec_key);
+        return -3;
+    }
+
+    pp = buf;
+    len = i2d_ECPrivateKey(ec_key, &pp);
+    if (!len) {
+        printf("error, i2d_ECPrivateKey(ec_key, &pp);\n");
+        EC_KEY_free(ec_key);
+        return -4;
+    }
+    printf(PRIVATE, len);
+    for (i = 0; i < len; i++) {
+        if (!(i % 8))  printf("\n");
+        if (i == len - 1)    printf("0x%02X ", buf[i]);
+        else
+            printf("0x%02X , ", buf[i]);
+    }
+    printf(ENDKEY);
+
+    pp = buf;
+    len = i2o_ECPublicKey(ec_key, &pp);
+    if (!len) {
+        printf("error, i2o_ECPublicKey(ec_key, &pp);\n");
+        EC_KEY_free(ec_key);
+        return -4;
+    }
+    printf(PUBKEY, len);
+    for (i = 0; i < len; i++) {
+        if (!(i % 8))  printf("\n");
+        if (i == len - 1)    printf("0x%02X ", buf[i]);
+        else
+            printf("0x%02X , ", buf[i]);
+    }
+    printf(ENDKEY);
+
+    
+    EC_KEY_free(ec_key);
+    static unsigned char privkey[121] = {
+0x30 , 0x77 , 0x02 , 0x01 , 0x01 , 0x04 , 0x20 , 0x03 ,
+0x85 , 0x7C , 0xD9 , 0x85 , 0x83 , 0x22 , 0xFF , 0x3F ,
+0x75 , 0x90 , 0x92 , 0x6B , 0xE7 , 0xE1 , 0x29 , 0x32 ,
+0x84 , 0x6A , 0xF9 , 0x50 , 0x97 , 0xBE , 0x40 , 0x81 ,
+0xB5 , 0x27 , 0x17 , 0xB8 , 0xFB , 0x38 , 0xCD , 0xA0 ,
+0x0A , 0x06 , 0x08 , 0x2A , 0x86 , 0x48 , 0xCE , 0x3D ,
+0x03 , 0x01 , 0x07 , 0xA1 , 0x44 , 0x03 , 0x42 , 0x00 ,
+0x04 , 0x17 , 0x22 , 0x07 , 0x5F , 0x4E , 0x57 , 0x83 ,
+0x34 , 0x24 , 0x8B , 0x98 , 0xCA , 0x0A , 0x37 , 0x34 ,
+0x0A , 0xC1 , 0xDB , 0xC3 , 0xDC , 0x29 , 0xCA , 0xA8 ,
+0x93 , 0xD3 , 0x5E , 0x52 , 0xD6 , 0x92 , 0x58 , 0x23 ,
+0xE9 , 0x03 , 0x9C , 0x60 , 0x24 , 0xE3 , 0x55 , 0xBC ,
+0xDE , 0xB3 , 0xBD , 0x79 , 0x43 , 0xE2 , 0x95 , 0x91 ,
+0x20 , 0x3A , 0xA2 , 0x54 , 0xF7 , 0xCD , 0x7E , 0x4C ,
+0x1A , 0xC2 , 0x6E , 0xA8 , 0xC5 , 0x77 , 0x12 , 0xBD ,
+0xC2 };
+
+   /* 24f749e0f9d4904e
+    1cd9a697cece8746
+    f0a3583caf39a873
+    02e2b4c4de883d65*/
+    static const unsigned char pubkey[65] = {
+    0x04 , 0x17 , 0x22 , 0x07 , 0x5F , 0x4E , 0x57 , 0x83 ,
+    0x34 , 0x24 , 0x8B , 0x98 , 0xCA , 0x0A , 0x37 , 0x34 ,
+    0x0A , 0xC1 , 0xDB , 0xC3 , 0xDC , 0x29 , 0xCA , 0xA8 ,
+    0x93 , 0xD3 , 0x5E , 0x52 , 0xD6 , 0x92 , 0x58 , 0x23 ,
+    0xE9 , 0x03 , 0x9C , 0x60 , 0x24 , 0xE3 , 0x55 , 0xBC ,
+    0xDE , 0xB3 , 0xBD , 0x79 , 0x43 , 0xE2 , 0x95 , 0x91 ,
+    0x20 , 0x3A , 0xA2 , 0x54 , 0xF7 , 0xCD , 0x7E , 0x4C ,
+    0x1A , 0xC2 , 0x6E , 0xA8 , 0xC5 , 0x77 , 0x12 , 0xBD ,
+    0xC2 };
+
+    /*03408703589c276c
+    cf006172d7407523
+    0fb24509766bc596
+    da3d1bb5bc4fa32ef*/
+
+   
+    return 0;
+}
+
 
 
 int main() {
 
+    test5();
+
+
+    return 0;
+}
+
+
+#ifdef TEST_BACKUP
+int test_backup(){
     test4();
     char* privatekey = "\
 -----BEGIN EC PRIVATE KEY-----\n\
@@ -428,11 +551,7 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
     ecdsa_verify_signature(publickey, signature_test0, sizeof(signature_test0), digest);
     return 0;
 }
-
-
-
-
-
+#endif // TEST_BACKUP
 
 
 #define BOOTLOADER_BIN_FILENAME "lks7688.ldr"
