@@ -1,3 +1,48 @@
+Nov 28, 2020
+
+change the form of known keys by https://gchq.github.io/CyberChef/#recipe=PEM_to_Hex()Parse_ASN.1_hex_string(0,33) ,
+	private key: from PEM to octet string in 32 bytes;
+	public key: generated from 32 bytes by provided easy_ecc function (in easy_ecc_main.c)
+	eg: 
+		PrivKey: "MHcCAQEEICfrz3CsrsscS9h04p4Tt7JYuUmMvb0a/bLAE99lj8y5oAoGCCqGSM49AwEHoUQDQgAEaMDIHXKFZyLgNzintGwRYoXBo6hQ7vyEpudHeB8iHQr9n1fffwkJP3nIBm5TD9XEUjk72rAZEbylkSJOekTW0A==",
+		PubKey:  "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEaMDIHXKFZyLgNzintGwRYoXBo6hQ7vyEpudHeB8iHQr9n1fffwkJP3nIBm5TD9XEUjk72rAZEbylkSJOekTW0A==",
+		-------------------------->>>>>>>>>>>>>>>>>>>>>>>>
+		SEQUENCE
+		  INTEGER 01..(total 1bytes)..01
+		  OCTETSTRING 27ebcf70acaecb1c4bd874e29e13b7b258b9498cbdbd1afdb2c013df658fccb9..(total 32bytes)..27ebcf70acaecb1c4bd874e29e13b7b258b9498cbdbd1afdb2c013df658fccb9
+		  [0]
+		    ObjectIdentifier secp256r1 (1 2 840 10045 3 1 7)
+		  [1]
+		    BITSTRING 000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0..(total 66bytes)..000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0
+		
+		SEQUENCE
+		  SEQUENCE
+		    ObjectIdentifier ecPublicKey (1 2 840 10045 2 1)
+		    ObjectIdentifier secp256r1 (1 2 840 10045 3 1 7)
+		  BITSTRING 
+		000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0..(total 66bytes)..000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0
+		-------------------------->>>>>>>>>>>>>>>>>>>>>>>>
+		uint8_t privatekey_example1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
+										0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
+										0x58,0xb9,0x49,0x8c,0xbd,0xbd,0x1a,0xfd,
+										0xb2,0xc0,0x13,0xdf,0x65,0x8f,0xcc,0xb9 };
+
+		uint8_t publickey_example1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
+										0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
+										0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
+										0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
+										0x0A };
+		                 (BITSTRING0004)   68 c0 c8 1d 72 85 67 
+										22 e0 37 38 a7 b4 6c 11 
+										62 85 c1 a3 a8 50 ee fc 
+										84 a6 e7 47 78 1f 22 1d
+										0a 
+
+issues:
+	most lightweight ecdsa I found do not support keys in PEM form, therefore form/type transformation (PEM to byte array) in advance is needed.
+	buildroot gcc342 does not support openssl_1.1.1, and there are lots of errors when compiling this uboot codes by the latest buildroot gcc. if buildroot gcc compiler supports openssl, openssl can be used directly.
+
+--------------------------------------------------------------------------------------------------------------
 copy include files from uboot source codes (https://gitlab.denx.de/u-boot/u-boot) to /include
 
 copy include/bits, include/sys, and ctype.h, endian.h, fcntl.h, features.h, stddef.h, unistd.h from buildroot_gcc342 include to /include
@@ -5,3 +50,5 @@ copy include/bits, include/sys, and ctype.h, endian.h, fcntl.h, features.h, stdd
 easy-ecc: https://github.com/jestan/easy-ecc
 
 ecdsa with openssl is not used.
+
+NOTE: stdio.h cannot be used while uboot compiling 
