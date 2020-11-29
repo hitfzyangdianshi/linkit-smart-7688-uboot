@@ -15,9 +15,9 @@
 //#endif/* Windows */
 
 #include "ecc.c" 
-#include<stdio.h>
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
+#include<stdio.h>
 unsigned char  digest[] = "11111111111111111111111111111111";
 unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 #endif/* Windows */
