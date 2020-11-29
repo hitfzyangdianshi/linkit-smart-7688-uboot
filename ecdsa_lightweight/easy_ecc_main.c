@@ -25,6 +25,7 @@ unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d
 //#define ECC_CURVE secp384r1 
 //default: secp256r1
 
+#if (defined(_WIN32) || defined(_WIN64))/* Windows */
 int test1() {
 	int i, re;
 	uint8_t p_publicKey[ECC_BYTES + 1], p_privateKey[ECC_BYTES]; //32
@@ -151,7 +152,7 @@ int test2() {
 
 	return 0;
 }
-
+#endif/* Windows */
 
 int printkeys(uint8_t p_publicKey[ECC_BYTES + 1], uint8_t p_privateKey[ECC_BYTES]) {
 	int i;
@@ -253,6 +254,8 @@ int signature_verify_by_pubkey_33(uint8_t p_publicKey[ECC_BYTES + 1], unsigned c
 	return 0;
 }
 
+
+#if (defined(_WIN32) || defined(_WIN64))/* Windows */
 int test3() { 
 
 
@@ -301,7 +304,7 @@ int test3() {
 
 	return 0;
 }
-
+#endif/* Windows */
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
 int main() {
