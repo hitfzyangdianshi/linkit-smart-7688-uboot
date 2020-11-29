@@ -23,7 +23,7 @@
     <ClCompile Include="ecc.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test_main.c">
+    <ClCompile Include="easy_ecc_main.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
