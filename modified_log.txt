@@ -37,6 +37,7 @@ change the form of known keys by https://gchq.github.io/CyberChef/#recipe=PEM_to
 										62 85 c1 a3 a8 50 ee fc 
 										84 a6 e7 47 78 1f 22 1d
 										0a 
+						p_publicKey[0] = 2 + (l_public1.y[0] & 0x01);
 
 issues:
 	most lightweight ecdsa I found do not support keys in PEM form, therefore form/type transformation (PEM to byte array) in advance is needed.
