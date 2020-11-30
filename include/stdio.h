@@ -1,59 +1,15 @@
 #ifndef __STDIO_H
 #define __STDIO_H
 
-#include <stdarg.h>
-#include <linux/compiler.h>
+/*This is an empty file for the usage of Linkit Smart 7688 U-Boot codes. 
+  The printf function has been defined in the file /common/console.c */ 
 
-/* stdin */
-int getchar(void);
-int tstc(void);
+#ifdef NEED_STDIO_H
+#include<stdio.h.u-boot>
+#endif /* NEED_STDIO_H */
 
-/* stdout */
-#if !defined(CONFIG_SPL_BUILD) || \
-	(defined(CONFIG_TPL_BUILD) && defined(CONFIG_TPL_SERIAL_SUPPORT)) || \
-	(defined(CONFIG_SPL_BUILD) && !defined(CONFIG_TPL_BUILD) && \
-		defined(CONFIG_SPL_SERIAL_SUPPORT))
-void putc(const char c);
-void puts(const char *s);
-int __printf(1, 2) printf(const char *fmt, ...);
-int vprintf(const char *fmt, va_list args);
-#else
-static inline void putc(const char c)
-{
-}
-
-static inline void puts(const char *s)
-{
-}
-
-static inline int __printf(1, 2) printf(const char *fmt, ...)
-{
-	return 0;
-}
-
-static inline int vprintf(const char *fmt, va_list args)
-{
-	return 0;
-}
-#endif
-
-/*
- * FILE based functions (can only be used AFTER relocation!)
- */
-#define stdin		0
-#define stdout		1
-#define stderr		2
-#define MAX_FILES	3
-
-/* stderr */
-#define eputc(c)		fputc(stderr, c)
-#define eputs(s)		fputs(stderr, s)
-#define eprintf(fmt, args...)	fprintf(stderr, fmt, ##args)
-
-int __printf(2, 3) fprintf(int file, const char *fmt, ...);
-void fputs(int file, const char *s);
-void fputc(int file, const char c);
-int ftstc(int file);
-int fgetc(int file);
+#if (defined(_WIN32) || defined(_WIN64))/* Windows */
+#include<stdio.h.u-boot>
+#endif/* Windows */
 
 #endif /* __STDIO_H */
