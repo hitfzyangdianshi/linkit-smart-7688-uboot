@@ -1315,6 +1315,7 @@ print_image_hdr (image_header_t *hdr)
 #endif
 
 	printf ("   Image Name:   %.*s\n", IH_NMLEN, hdr->ih_name);
+	printf("test1: \t %.*s\n", 32, hdr->test1);
 #if (CONFIG_COMMANDS & CFG_CMD_DATE) || defined(CONFIG_TIMESTAMP)
 	to_tm (timestamp, &tm);
 	printf ("   Created:      %4d-%02d-%02d  %2d:%02d:%02d UTC\n",

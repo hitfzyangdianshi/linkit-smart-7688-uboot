@@ -1,3 +1,53 @@
+Dec 5, 2020
+
+binwalk firmware from openwrt src:
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             uImage header, header size: 64 bytes, header CRC: 0xBF4ACC07, created: 2020-10-22 14:13:38, image size: 1961554 bytes, Data Address: 0x80000000, Entry Point: 0x80000000, data CRC: 0x8579A9CF, OS: Linux, CPU: MIPS, image type: OS Kernel Image, compression type: lzma, image name: "MIPS OpenWrt Linux-5.4.72"
+64            0x40            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 6178878 bytes
+1961618       0x1DEE92        Squashfs filesystem, little endian, version 4.0, compression:xz, size: 14051022 bytes, 1650 inodes, blocksize: 262144 bytes, created: 2020-10-22 14:13:38
+
+
+binwalk firmware from "dd if=/dev/mtd3 of=/tmp/current_fw.bin"
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             uImage header, header size: 64 bytes, header CRC: 0xBF4ACC07, created: 2020-10-22 14:13:38, image size: 1961554 bytes, Data Address: 0x80000000, Entry Point: 0x80000000, data CRC: 0x8579A9CF, OS: Linux, CPU: MIPS, image type: OS Kernel Image, compression type: lzma, image name: "MIPS OpenWrt Linux-5.4.72"
+64            0x40            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 6178878 bytes
+1961618       0x1DEE92        Squashfs filesystem, little endian, version 4.0, compression:xz, size: 14051022 bytes, 1650 inodes, blocksize: 262144 bytes, created: 2020-10-22 14:13:38
+16056320      0xF50000        JFFS2 filesystem, little endian
+
+----
+firmware:
+	header
+		for uboot (MediaTek,Qualcomm): 0x27051956
+	kernel
+	rootfs
+		squashfs
+			hsqs...
+	add-on (optional)
+---- refer to image.h: (used in cmd_bootm.c)
+#define IH_MAGIC	0x27051956	/* Image Magic Number		*/
+#define IH_NMLEN		32	/* Image Name Length		*/
+
+typedef struct image_header {
+	uint32_t	ih_magic;	/* Image Header Magic Number	*/
+	uint32_t	ih_hcrc;	/* Image Header CRC Checksum	*/
+	uint32_t	ih_time;	/* Image Creation Timestamp	*/
+	uint32_t	ih_size;	/* Image Data Size		*/
+	uint32_t	ih_load;	/* Data	 Load  Address		*/
+	uint32_t	ih_ep;		/* Entry Point Address		*/
+	uint32_t	ih_dcrc;	/* Image Data CRC Checksum	*/
+	uint8_t		ih_os;		/* Operating System		*/
+	uint8_t		ih_arch;	/* CPU architecture		*/
+	uint8_t		ih_type;	/* Image Type			*/
+	uint8_t		ih_comp;	/* Compression Type		*/
+	uint8_t		ih_name[IH_NMLEN];	/* Image Name		*/
+} image_header_t;
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
 Nov 28, 2020
 
 change the form of known keys by https://gchq.github.io/CyberChef/#recipe=PEM_to_Hex()Parse_ASN.1_hex_string(0,33) ,
