@@ -44,6 +44,8 @@ typedef struct image_header {
 	uint8_t		ih_name[IH_NMLEN];	/* Image Name		*/
 } image_header_t;
 
+modify cmd_bootm.c line 1318 and add something into the header for test: 
+		Verifying Checksum ... Bad Data CRC
 
 
 
