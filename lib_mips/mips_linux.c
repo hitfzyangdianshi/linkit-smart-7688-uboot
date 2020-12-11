@@ -372,23 +372,6 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 
 #endif //TEST_EASY_ECC_01
 
-//#define TEST_READ
-#ifdef TEST_READ
-/*
- * @cmd: command and address
- * @n_cmd: size of command, in bytes
- * @buf: buffer into which data will be read/written
- * @n_buf: size of buffer, in bytes
- * @flag: tag as READ/WRITE
- *
- * @return: if write_onlu, -1 means write fail, or return writing counter.
- * @return: if read, -1 means read fail, or return reading counter.
- */
-	spic_read(const u8 * cmd, size_t n_cmd, u8 * rxbuf, size_t n_rx);
-
-
-
-#endif // TEST_READ
 
 #define TEST_READ_USB_FILE
 #ifdef TEST_READ_USB_FILE
@@ -401,7 +384,7 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 
 	argc = 2;
 	argv[1] = "start";
-	do_usb(cmdtp, 0, argc, argv);
+	do_usb(cmdtp, flag, argc, argv);
 	if (usb_stor_curr_dev < 0) {
 		printf("No USB Storage found.Reading key/sig file failed.\n");
 	}
@@ -420,8 +403,9 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 		printf("Find publickey1.file\n");
 	}
 
-	do_reset(cmdtp, 0, argc, argv);
-
+	argc = 2;
+	argv[1] = "stop";
+	do_usb(cmdtp, flag, argc, argv);
 
 
 
