@@ -30,6 +30,7 @@
 #include <image.h>
 #include <malloc.h>
 #include <rt_mmap.h>
+#include <sha256.h>
 
 #include <environment.h>
 #include <asm/byteorder.h>
@@ -173,11 +174,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	ulong	data, len, checksum;
 	ulong  *len_ptr;
 	uint	unc_len = 0x800000;
-	int	i, verify;
+	int	i, j, verify;
 	char	*name, *s;
 	int	(*appl)(int, char *[]);
 	image_header_t *hdr = &header;
-
+	uint8_t sha256_sum[32];
 
 	//mips_cache_set(3);
 
@@ -189,8 +190,32 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	} else {
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
+/*
+	puts ("Loading Current Firmware ... ");
 
-	
+	int chunk = 4096;
+	int empty = 0;
+	ulong k;
+	for (i = 0, k = 0; empty == 0; i++, k += chunk) {
+		raspi_read(load_addr + k, (addr + k) - CFG_FLASH_BASE, chunk);
+
+		empty = 1;
+		for (j = 0; j < chunk; j++) {
+			if (*(uint8_t *)(load_addr + k + j) != 0xff) {
+				empty = 0;
+				break;
+			}
+		}
+	}
+	printf ("%d bytes \n", k - chunk); // size = k - chunk (excluding last chunk)
+
+	puts ("Current Firmware sha256 ... ");
+	sha256_csum_wd((char *)load_addr, k-chunk, sha256_sum, CHUNKSZ_SHA256);
+	for (i = 0; i < 32; i++) {
+		printf ("%02lx", sha256_sum[i]);
+	}
+	printf ("\n\n");
+*/
 	SHOW_BOOT_PROGRESS (1);
 	printf ("## Booting image at %08lx ...\n", addr);
 
@@ -220,7 +245,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
    else if(addr == 0x88001000)
 	   ((void(*) (void)) (0x88001000U))();	
    else if(addr == 0x8B800000)
-	   ((void(*) (void)) (0x8B800000U))();	
+	   ((void(*) (void)) (0x8B800000U))();
 
 	/* Copy header so we can blank CRC field for re-calculation */
 #ifdef CONFIG_HAS_DATAFLASH

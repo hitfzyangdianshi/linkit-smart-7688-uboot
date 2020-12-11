@@ -219,7 +219,7 @@ void do_bootm_linux (cmd_tbl_t * cmdtp, int flag, int argc, char *argv[],
 	linux_env = KSEG0ADDR(linux_env);
 
 	/* we assume that the kernel is in place */
-	printf ("\nStarting kernel ...\n\n");
+	printf ("\nStarting kernel from updated uboot ...\n\n");
 
 	theKernel (linux_argc, linux_argv, linux_env, 0);
 }

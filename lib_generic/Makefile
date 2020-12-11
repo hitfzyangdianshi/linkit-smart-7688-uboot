@@ -25,7 +25,7 @@ include $(TOPDIR)/config.mk
 
 LIB	= libgeneric.a
 
-OBJS	= crc32.o ctype.o display_options.o string.o vsprintf.o
+OBJS	= crc32.o ctype.o display_options.o string.o vsprintf.o sha256.o
 
 ifeq ($(CONFIG_GZIP),ON)
 OBJS   += zlib.o
