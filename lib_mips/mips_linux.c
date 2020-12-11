@@ -393,7 +393,10 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 #define TEST_READ_USB_FILE
 #ifdef TEST_READ_USB_FILE
 	//refer to board.c line2401
-	
+#if defined (RALINK_USB ) || defined (MTK_USB)
+	extern int usb_stor_curr_dev;
+#endif
+	char addr_str[11];
 
 	argc = 2;
 	argv[1] = "start";
