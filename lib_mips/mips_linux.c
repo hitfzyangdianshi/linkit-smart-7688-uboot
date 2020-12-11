@@ -390,6 +390,34 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 
 #endif // TEST_READ
 
+#define TEST_READ_USB_FILE
+#ifdef TEST_READ_USB_FILE
+	//refer to board.c line2401
+	
+
+	argc = 2;
+	argv[1] = "start";
+	do_usb(cmdtp, 0, argc, argv);
+	if (usb_stor_curr_dev < 0) {
+		printf("No USB Storage found.Reading key/sig file failed.\n");
+	}
+
+	argc = 5;
+	argv[1] = "usb";
+	argv[2] = "0";
+	sprintf(addr_str, "0x%X", CFG_LOAD_ADDR);
+	argv[3] = &addr_str[0];
+	argv[4] = "publickey1.file";
+	
+	if (do_fat_fsload(cmdtp, 0, argc, argv)) {
+		printf("Could not find publickey1.file\n");
+	}
+	else {
+		printf("Find publickey1.file\n");
+	}
+
+
+#endif // TEST_READ_USB_FILE
 
 
 	theKernel (linux_argc, linux_argv, linux_env, 0);
