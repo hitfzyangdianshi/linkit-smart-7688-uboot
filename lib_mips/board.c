@@ -2148,12 +2148,11 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		long size_file = file_fat_read("publickey1.file", buf, 0);
 		if (size_file > 0) {
 			printf("Loading publickey1.file from USB,\tSize: %d\n", size_file);		
+			for (i = 0; i < 3; i++) {
+				printf("%c,0x%02X\n", buf[i], buf[i]);
+			}
+			printf("\n");
 		}
-		for ( i = 0; i < 3; i++) {
-			printf("%c,0x%02X\n", buf[i], buf[i]);
-		}
-		printf("\n");
-
 		free(buf);
 
 		argc = 2;
