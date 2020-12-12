@@ -220,7 +220,6 @@ void do_bootm_linux (cmd_tbl_t * cmdtp, int flag, int argc, char *argv[],
 
 	/* we assume that the kernel is in place */
 	printf ("\nStarting kernel ...\n\n");
-	printf("checkpoint /lib_mips/mips_linux.c, do_bootm_linux(), line223\n\n");
 
 //#define TEST_DCDSA_OPENSSL_01
 #ifdef TEST_DCDSA_OPENSSL_01
@@ -251,7 +250,7 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 	ecdsa_verify_signature(publickey, signature_test0, sizeof(signature_test0), digest);
 #endif // TEST_DCDSA_OPENSSL_01
 
-#define TEST_EASY_ECC_01
+//#define TEST_EASY_ECC_01
 #ifdef TEST_EASY_ECC_01
 #include "../ecdsa_lightweight/easy_ecc_main.c"
 	//unsigned char  digest[] = "11111111111111111111111111111111";
@@ -372,44 +371,6 @@ vB+0KVuXCuzRKqMgc7EfOkLnm2CqbE4xKDAqlybrUDyYh4ocfbQEkt2r1A==\n\
 
 #endif //TEST_EASY_ECC_01
 
-
-#define TEST_READ_USB_FILE
-#ifdef TEST_READ_USB_FILE
-	//refer to board.c line2401
-
-#if defined (RALINK_USB ) || defined (MTK_USB)
-	extern int usb_stor_curr_dev;
-#endif
-	char addr_str[11];
-
-	argc = 2;
-	argv[1] = "start";
-	do_usb(cmdtp, flag, argc, argv);
-	if (usb_stor_curr_dev < 0) {
-		printf("No USB Storage found.Reading key/sig file failed.\n");
-	}
-
-	argc = 5;
-	argv[1] = "usb";
-	argv[2] = "0";
-	sprintf(addr_str, "0x%X", CFG_LOAD_ADDR);
-	argv[3] = &addr_str[0];
-	argv[4] = "publickey1.file";
-	
-	if (do_fat_fsload(cmdtp, 0, argc, argv)) {
-		printf("Could not find publickey1.file\n");
-	}
-	else {
-		printf("Find publickey1.file\n");
-	}
-
-	argc = 2;
-	argv[1] = "stop";
-	do_usb(cmdtp, flag, argc, argv);
-
-
-
-#endif // TEST_READ_USB_FILE
 
 
 	theKernel (linux_argc, linux_argv, linux_env, 0);

@@ -2113,8 +2113,45 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 
 
 	if(BootType == '3') {
-		char *argv[2];
-		sprintf(addr_str, "0x%X", CFG_KERN_ADDR);
+		//char *argv[2];
+		char* argv[5];//change 2 to 5
+
+#define TEST_READ_USB_FILE
+#ifdef TEST_READ_USB_FILE
+	//refer to board.c line2401
+
+#if defined (RALINK_USB ) || defined (MTK_USB)
+		extern int usb_stor_curr_dev;
+#endif
+		//char addr_str[11];
+		int argc = 2;
+		argv[1] = "start";
+		do_usb(cmdtp, flag, argc, argv);
+		if (usb_stor_curr_dev < 0) {
+			printf("No USB Storage found. Reading key/sig file failed.\n");
+		}
+		argc = 5;
+		argv[1] = "usb";
+		argv[2] = "0";
+		sprintf(addr_str, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
+		argv[3] = &addr_str[0];
+		argv[4] = "publickey1.file";
+
+		if (do_fat_fsload(cmdtp, 0, argc, argv)) {
+			printf("Could not find publickey1.file\n");
+		}
+		else {
+			printf("Find publickey1.file\n");
+		}
+
+		argc = 2;
+		argv[1] = "stop";
+		do_usb(cmdtp, flag, argc, argv);
+#endif // TEST_READ_USB_FILE
+
+
+
+		sprintf(addr_str, "0x%X", CFG_KERN_ADDR); //(CFG_FLASH_BASE + (CFG_BOOTLOADER_SIZE + CFG_CONFIG_SIZE + CFG_FACTORY_SIZE)), 0xBC000000+0x30000+0x10000+0x10000
 		argv[1] = &addr_str[0];
 		printf("   \n3: System Boot system code via Flash.\n");
 		do_bootm(cmdtp, 0, 2, argv);

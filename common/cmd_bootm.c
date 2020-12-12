@@ -178,7 +178,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	int	(*appl)(int, char *[]);
 	image_header_t *hdr = &header;
 
-
 	//mips_cache_set(3);
 
 	s = getenv ("verify");

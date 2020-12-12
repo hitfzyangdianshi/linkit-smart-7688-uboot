@@ -52,3 +52,381 @@ No initrd
 
 Starting kernel ...
 
+[    0.000000] Linux version 5.4.82 (qwer@qwer) (gcc version 8.4.0 (OpenWrt GCC 8.4.0 r14574-96023cd4ba)) #0 Thu Dec 10 19:33:51 2020
+[    0.000000] Board has DDR2
+[    0.000000] Analog PMU set to hw control
+[    0.000000] Digital PMU set to hw control
+[    0.000000] SoC Type: MediaTek MT7688 ver:1 eco:2
+[    0.000000] printk: bootconsole [early0] enabled
+[    0.000000] CPU0 revision is: 00019655 (MIPS 24KEc)
+[    0.000000] MIPS: machine is MediaTek LinkIt Smart 7688
+[    0.000000] Initrd not found or empty - disabling initrd
+[    0.000000] Primary instruction cache 64kB, VIPT, 4-way, linesize 32 bytes.
+[    0.000000] Primary data cache 32kB, 4-way, PIPT, no aliases, linesize 32 bytes
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] On node 0 totalpages: 32768
+[    0.000000]   Normal zone: 288 pages used for memmap
+[    0.000000]   Normal zone: 0 pages reserved
+[    0.000000]   Normal zone: 32768 pages, LIFO batch:7
+[    0.000000] pcpu-alloc: s0 r0 d32768 u32768 alloc=1*32768
+[    0.000000] pcpu-alloc: [0] 0 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 32480
+[    0.000000] Kernel command line: console=ttyS2,57600 rootfstype=squashfs,jffs2
+[    0.000000] Dentry cache hash table entries: 16384 (order: 4, 65536 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 8192 (order: 3, 32768 bytes, linear)
+[    0.000000] Writing ErrCtl register=0003014f
+[    0.000000] Readback ErrCtl register=0003014f
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Memory: 122428K/131072K available (4643K kernel code, 197K rwdata, 1036K rodata, 1220K init, 197K bss, 8644K reserved, 0K cma-reserved)
+[    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] NR_IRQS: 256
+[    0.000000] intc: using register map from devicetree
+[    0.000000] random: get_random_bytes called from start_kernel+0x32c/0x518 with crng_init=0
+[    0.000000] CPU Clock: 580MHz
+[    0.000000] timer_probe: no matching timers found
+[    0.000000] clocksource: MIPS: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6590553264 ns
+[    0.000009] sched_clock: 32 bits at 290MHz, resolution 3ns, wraps every 7405115902ns
+[    0.015376] Calibrating delay loop... 385.02 BogoMIPS (lpj=770048)
+[    0.059453] pid_max: default: 32768 minimum: 301
+[    0.068776] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.083109] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.104584] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.123785] futex hash table entries: 256 (order: -1, 3072 bytes, linear)
+[    0.137311] pinctrl core: initialized pinctrl subsystem
+[    0.148711] NET: Registered protocol family 16
+[    0.192143] workqueue: max_active 576 requested for napi_workq is out of range, clamping between 1 and 512
+[    0.214564] clocksource: Switched to clocksource MIPS
+[    0.225897] NET: Registered protocol family 2
+[    0.235373] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.251859] TCP established hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.266933] TCP bind hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.280855] TCP: Hash tables configured (established 1024 bind 1024)
+[    0.293556] UDP hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.306400] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.320465] NET: Registered protocol family 1
+[    0.329001] PCI: CLS 0 bytes, default 32
+[    0.341421] workingset: timestamp_bits=14 max_order=15 bucket_order=1
+[    0.362617] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.374024] jffs2: version 2.2 (NAND) (SUMMARY) (LZMA) (RTIME) (CMODE_PRIORITY) (c) 2001-2006 Red Hat, Inc.
+[    0.411907] mt7621_gpio 10000600.gpio: registering 32 gpios
+[    0.423146] mt7621_gpio 10000600.gpio: registering 32 gpios
+[    0.434399] mt7621_gpio 10000600.gpio: registering 32 gpios
+[    0.445642] Serial: 8250/16550 driver, 3 ports, IRQ sharing disabled
+[    0.459452] 10000c00.uartlite: ttyS0 at MMIO 0x10000c00 (irq = 28, base_baud = 2500000) is a 16550A
+[    0.477952] 10000d00.uart1: ttyS1 at MMIO 0x10000d00 (irq = 29, base_baud = 2500000) is a 16550A
+[    0.495958] 10000e00.uart2: ttyS2 at MMIO 0x10000e00 (irq = 30, base_baud = 2500000) is a 16550A
+[    0.513319] printk: console [ttyS2] enabled
+[    0.529729] printk: bootconsole [early0] disabled
+[    0.549710] spi-mt7621 10000b00.spi: sys_freq: 193333333
+[    0.568728] spi-nor spi0.0: mx25l25635e (32768 Kbytes)
+[    0.579029] 4 fixed-partitions partitions found on MTD device spi0.0
+[    0.591618] Creating 4 MTD partitions on "spi0.0":
+[    0.601118] 0x000000000000-0x000000030000 : "u-boot"
+[    0.612023] 0x000000030000-0x000000040000 : "u-boot-env"
+[    0.623604] 0x000000040000-0x000000050000 : "factory"
+[    0.634809] 0x000000050000-0x000002000000 : "firmware"
+[    0.649321] 2 uimage-fw partitions found on MTD device firmware
+[    0.661120] Creating 2 MTD partitions on "firmware":
+[    0.670970] 0x000000000000-0x0000001deecc : "kernel"
+[    0.681868] 0x0000001deecc-0x000001fb0000 : "rootfs"
+[    0.692703] mtd: device 5 (rootfs) set to be root filesystem
+[    0.705660] 1 squashfs-split partitions found on MTD device rootfs
+[    0.717990] 0x000000f70000-0x000001fb0000 : "rootfs_data"
+[    0.730906] libphy: Fixed MDIO Bus: probed
+[    0.750468] rt3050-esw 10110000.esw: link changed 0x00
+[    0.762740] mtk_soc_eth 10100000.ethernet eth0: mediatek frame engine at 0xb0100000, irq 5
+[    0.781058] NET: Registered protocol family 10
+[    0.794489] Segment Routing with IPv6
+[    0.801963] NET: Registered protocol family 17
+[    0.810841] 8021q: 802.1Q VLAN Support v1.8
+[    0.820383] mtk-linkit bootstrap: Version  : LINKITS7688
+[    0.830986] mtk-linkit bootstrap: Revision : REV3
+[    0.840305] mtk-linkit bootstrap: setting up bootstrap latch
+[    0.851523] mtk-linkit bootstrap: failed to setup bootstrap gpio
+[    0.863443] mtk-linkit: probe of bootstrap failed with error -1
+[    0.880977] VFS: Mounted root (squashfs filesystem) readonly on device 31:5.
+[    0.901966] Freeing unused kernel memory: 1220K
+[    0.910959] This architecture does not have kernel memory protection.
+[    0.923713] Run /sbin/init as init process
+[    1.522571] random: fast init done
+[    1.700569] init: Console is alive
+[    1.707727] init: - watchdog -
+[    3.226471] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[    3.446794] usbcore: registered new interface driver usbfs
+[    3.457795] usbcore: registered new interface driver hub
+[    3.468454] usbcore: registered new device driver usb
+[    3.523890] SCSI subsystem initialized
+[    3.578336] sdhci: Secure Digital Host Controller Interface driver
+[    3.590648] sdhci: Copyright(c) Pierre Ossman
+[    3.601661] sdhci-pltfm: SDHCI platform and OF driver helper
+[    3.617571] usbcore: registered new interface driver usb-storage
+[    3.634124] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[    3.659096] init: - preinit -
+[    4.102142] mmc0: new high speed SDXC card at address aaaa
+[    4.357838] mmcblk0: mmc0:aaaa SC128 119 GiB 
+[    4.367997] random: procd: uninitialized urandom read (4 bytes read)
+[    4.380980]  mmcblk0: p1
+[    5.142276] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.315557] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.393994] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.454712] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.514422] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.857100] rt3050-esw 10110000.esw: link changed 0x00
+[   10.370296] mount_root: loading kmods from internal overlay
+[   10.419458] kmodloader: loading kernel modules from //etc/modules-boot.d/*
+[   10.434755] kmodloader: done loading kernel modules from //etc/modules-boot.d/*
+[   10.710877] jffs2: notice: (464) jffs2_build_xattr_subsystem: complete building xattr subsystem, 17 of xdatum (7 unchecked, 5 orphan) and 19 of xref (5 dead, 0 orphan) found.
+[   10.742491] block: attempting to load /tmp/jffs_cfg/upper/etc/config/fstab
+[   10.761490] block: extroot: not configured
+[   10.825651] jffs2: notice: (462) jffs2_build_xattr_subsystem: complete building xattr subsystem, 17 of xdatum (7 unchecked, 5 orphan) and 19 of xref (5 dead, 0 orphan) found.
+[   11.000127] block: attempting to load /tmp/jffs_cfg/upper/etc/config/fstab
+[   11.018790] block: extroot: not configured
+[   11.028201] mount_root: switching to jffs2 overlay
+[   11.042990] overlayfs: upper fs does not support tmpfile.
+[   11.059308] urandom-seed: Seeding with /etc/urandom.seed
+[   11.197940] procd: - early -
+[   11.203860] procd: - watchdog -
+[   11.940209] procd: - watchdog -
+[   11.956227] procd: - ubus -
+[   12.082399] EXT4-fs (mmcblk0p1): mounted filesystem with ordered data mode. Opts: 
+[   12.098211] random: ubusd: uninitialized urandom read (4 bytes read)
+[   12.112345] random: ubusd: uninitialized urandom read (4 bytes read)
+[   12.125760] random: ubusd: uninitialized urandom read (4 bytes read)
+[   12.145837] procd: - init -
+[   13.634344] kmodloader: loading kernel modules from /etc/modules.d/*
+[   14.006197] urngd: v1.0.2 started.
+[   14.082707] fuse: init (API version 7.31)
+[   14.110581] Loading modules backported from Linux version v5.8-0-gbcf876870b95
+[   14.124923] Backport generated by backports.git v5.8-1-0-g79400d9e
+[   14.210275] xt_time: kernel timezone is -0000
+[   14.463084] mt76_wmac 10300000.wmac: ASIC revision: 76280001
+[   14.518277] random: crng init done
+[   14.525048] random: 1 urandom warning(s) missed due to ratelimiting
+[   15.516742] mt76_wmac 10300000.wmac: Firmware Version: 20151201
+[   15.528551] mt76_wmac 10300000.wmac: Build Time: 20151201183641
+[   15.586574] mt76_wmac 10300000.wmac: firmware init done
+[   15.776225] ieee80211 phy0: Selected rate control algorithm 'minstrel_ht'
+[   15.982644] kmodloader: done loading kernel modules from /etc/modules.d/*
+[   32.158949] br-lan: port 1(eth0) entered blocking state
+[   32.169373] br-lan: port 1(eth0) entered disabled state
+[   32.180150] device eth0 entered promiscuous mode
+[   32.274752] br-lan: port 1(eth0) entered blocking state
+[   32.285140] br-lan: port 1(eth0) entered forwarding state
+[   33.162692] IPv6: ADDRCONF(NETDEV_CHANGE): br-lan: link becomes ready
+[   38.592784] br-lan: port 2(wlan0-1) entered blocking state
+[   38.603754] br-lan: port 2(wlan0-1) entered disabled state
+[   38.615061] device wlan0-1 entered promiscuous mode
+[   46.999746] wlan0: authenticate with 52:e0:85:50:f9:fb
+[   47.019866] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[   47.033600] wlan0: authenticated
+[   47.042650] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[   47.120740] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=5)
+[   47.136356] wlan0: associated
+[   47.159641] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+[   47.192754] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0-1: link becomes ready
+[   47.206089] br-lan: port 2(wlan0-1) entered blocking state
+[   47.217017] br-lan: port 2(wlan0-1) entered forwarding state
+[   79.946664] br-lan: port 2(wlan0-1) entered disabled state
+[   80.155358] wlan0: authenticate with 52:e0:85:50:f9:fb
+[   80.175537] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[   80.198220] wlan0: authenticated
+[   80.210693] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[   80.235903] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=6)
+[   80.251549] wlan0: associated
+[   80.736566] br-lan: port 2(wlan0-1) entered blocking state
+[   80.747504] br-lan: port 2(wlan0-1) entered forwarding state
+[  112.714648] br-lan: port 2(wlan0-1) entered disabled state
+[  112.930875] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  112.951259] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  112.968561] wlan0: authenticated
+[  112.982692] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  113.006697] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=10)
+[  113.022462] wlan0: associated
+[  113.509488] br-lan: port 2(wlan0-1) entered blocking state
+[  113.520443] br-lan: port 2(wlan0-1) entered forwarding state
+[  145.482651] br-lan: port 2(wlan0-1) entered disabled state
+[  145.698286] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  145.718420] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  145.735146] wlan0: authenticated
+[  145.750679] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  145.774680] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=7)
+[  145.790272] wlan0: associated
+[  145.851489] br-lan: port 2(wlan0-1) entered blocking state
+[  145.862443] br-lan: port 2(wlan0-1) entered forwarding state
+[  178.250658] br-lan: port 2(wlan0-1) entered disabled state
+[  178.466785] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  178.486969] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  178.500777] wlan0: authenticated
+[  178.530678] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  178.601944] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=8)
+[  178.617574] wlan0: associated
+[  178.646039] br-lan: port 2(wlan0-1) entered blocking state
+[  178.656993] br-lan: port 2(wlan0-1) entered forwarding state
+[  211.018670] br-lan: port 2(wlan0-1) entered disabled state
+[  211.179458] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  211.201336] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  211.275519] wlan0: authenticated
+[  211.293723] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  211.318247] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=9)
+[  211.333873] wlan0: associated
+[  211.391795] br-lan: port 2(wlan0-1) entered blocking state
+[  211.402748] br-lan: port 2(wlan0-1) entered forwarding state
+[  243.786648] br-lan: port 2(wlan0-1) entered disabled state
+[  243.963660] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  243.983783] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  244.046322] wlan0: authenticated
+[  244.058665] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  244.082738] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=11)
+[  244.098534] wlan0: associated
+[  244.582130] br-lan: port 2(wlan0-1) entered blocking state
+[  244.593070] br-lan: port 2(wlan0-1) entered forwarding state
+[  276.554669] br-lan: port 2(wlan0-1) entered disabled state
+[  276.721698] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  276.743002] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  276.816813] wlan0: authenticated
+[  276.832260] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  276.856639] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=2)
+[  276.872270] wlan0: associated
+[  277.360681] br-lan: port 2(wlan0-1) entered blocking state
+[  277.371635] br-lan: port 2(wlan0-1) entered forwarding state
+[  309.322702] br-lan: port 2(wlan0-1) entered disabled state
+[  309.483470] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  309.504755] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  309.573796] wlan0: authenticated
+[  309.587498] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  309.614668] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=3)
+[  309.630255] wlan0: associated
+[  310.123651] br-lan: port 2(wlan0-1) entered blocking state
+[  310.134610] br-lan: port 2(wlan0-1) entered forwarding state
+[  342.090646] br-lan: port 2(wlan0-1) entered disabled state
+[  342.247472] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  342.271134] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  342.359941] wlan0: authenticated
+[  342.372915] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  342.550680] wlan0: associate with 52:e0:85:50:f9:fb (try 2/3)
+[  342.578613] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=4)
+[  342.594216] wlan0: associated
+[  343.074804] br-lan: port 2(wlan0-1) entered blocking state
+[  343.085724] br-lan: port 2(wlan0-1) entered forwarding state
+[  374.858667] br-lan: port 2(wlan0-1) entered disabled state
+[  375.026131] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  375.046300] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  375.111839] wlan0: authenticated
+[  375.127435] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  375.154721] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=5)
+[  375.170308] wlan0: associated
+[  375.223815] br-lan: port 2(wlan0-1) entered blocking state
+[  375.234768] br-lan: port 2(wlan0-1) entered forwarding state
+[  407.626668] br-lan: port 2(wlan0-1) entered disabled state
+[  407.794802] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  407.814971] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  407.889130] wlan0: authenticated
+[  407.901893] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  407.926689] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=6)
+[  407.942262] wlan0: associated
+[  408.000731] br-lan: port 2(wlan0-1) entered blocking state
+[  408.011669] br-lan: port 2(wlan0-1) entered forwarding state
+[  440.394646] br-lan: port 2(wlan0-1) entered disabled state
+[  440.557314] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  440.577442] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  440.649831] wlan0: authenticated
+[  440.662753] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  440.688196] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=10)
+[  440.704024] wlan0: associated
+[  440.763830] br-lan: port 2(wlan0-1) entered blocking state
+[  440.774790] br-lan: port 2(wlan0-1) entered forwarding state
+[  473.162665] br-lan: port 2(wlan0-1) entered disabled state
+[  473.326820] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  473.346964] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  473.419065] wlan0: authenticated
+[  473.432809] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  473.458214] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=7)
+[  473.473871] wlan0: associated
+[  473.524508] br-lan: port 2(wlan0-1) entered blocking state
+[  473.535462] br-lan: port 2(wlan0-1) entered forwarding state
+[  505.930694] br-lan: port 2(wlan0-1) entered disabled state
+[  506.091596] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  506.112771] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  506.210129] wlan0: authenticated
+[  506.225372] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  506.283839] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=8)
+[  506.299462] wlan0: associated
+[  506.327631] br-lan: port 2(wlan0-1) entered blocking state
+[  506.338591] br-lan: port 2(wlan0-1) entered forwarding state
+[  538.698663] br-lan: port 2(wlan0-1) entered disabled state
+[  538.859475] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  538.880559] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  538.951361] wlan0: authenticated
+[  538.962792] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  538.989071] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=9)
+[  539.004736] wlan0: associated
+[  539.065533] br-lan: port 2(wlan0-1) entered blocking state
+[  539.076475] br-lan: port 2(wlan0-1) entered forwarding state
+[  571.466670] br-lan: port 2(wlan0-1) entered disabled state
+[  571.627517] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  571.648010] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  571.731752] wlan0: authenticated
+[  571.742723] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  571.770680] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=11)
+[  571.786457] wlan0: associated
+[  571.827356] br-lan: port 2(wlan0-1) entered blocking state
+[  571.838292] br-lan: port 2(wlan0-1) entered forwarding state
+[  604.234644] br-lan: port 2(wlan0-1) entered disabled state
+[  604.391728] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  604.415220] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  604.502830] wlan0: authenticated
+[  604.516021] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  604.597387] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=2)
+[  604.613012] wlan0: associated
+[  604.692621] br-lan: port 2(wlan0-1) entered blocking state
+[  604.703589] br-lan: port 2(wlan0-1) entered forwarding state
+[  637.002663] br-lan: port 2(wlan0-1) entered disabled state
+[  637.163895] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  637.184884] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  637.266253] wlan0: authenticated
+[  637.277224] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  637.301785] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=3)
+[  637.317417] wlan0: associated
+[  637.372351] br-lan: port 2(wlan0-1) entered blocking state
+[  637.383305] br-lan: port 2(wlan0-1) entered forwarding state
+[  669.770660] br-lan: port 2(wlan0-1) entered disabled state
+[  669.931182] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  669.955172] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  670.036349] wlan0: authenticated
+[  670.048608] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  670.120327] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=4)
+[  670.135968] wlan0: associated
+[  670.163633] br-lan: port 2(wlan0-1) entered blocking state
+[  670.174579] br-lan: port 2(wlan0-1) entered forwarding state
+[  702.538663] br-lan: port 2(wlan0-1) entered disabled state
+[  702.699703] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  702.722917] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  702.801569] wlan0: authenticated
+[  702.815968] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  702.840501] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=5)
+[  702.856131] wlan0: associated
+[  702.913136] br-lan: port 2(wlan0-1) entered blocking state
+[  702.924090] br-lan: port 2(wlan0-1) entered forwarding state
+[  735.306663] br-lan: port 2(wlan0-1) entered disabled state
+[  735.463934] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  735.488725] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  735.572666] wlan0: authenticated
+[  735.582818] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  735.614665] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=6)
+[  735.630253] wlan0: associated
+[  735.674346] br-lan: port 2(wlan0-1) entered blocking state
+[  735.685288] br-lan: port 2(wlan0-1) entered forwarding state
+[  768.074658] br-lan: port 2(wlan0-1) entered disabled state
+[  768.235121] wlan0: authenticate with 52:e0:85:50:f9:fb
+[  768.256794] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[  768.344810] wlan0: authenticated
+[  768.356928] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[  768.431997] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=10)
+[  768.447788] wlan0: associated
+[  768.478061] br-lan: port 2(wlan0-1) entered blocking state
+[  768.489015] br-lan: port 2(wlan0-1) entered forwarding state
