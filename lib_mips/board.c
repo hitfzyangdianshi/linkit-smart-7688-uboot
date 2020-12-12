@@ -2154,6 +2154,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		printf("\n");
 
+		free(buf);
+
 		argc = 2;
 		argv[1] = "stop";
 		do_usb(cmdtp, 0, argc, argv);
