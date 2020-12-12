@@ -2126,7 +2126,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		//char addr_str[11];
 		int argc = 2;
 		argv[1] = "start";
-		do_usb(cmdtp, flag, argc, argv);
+		do_usb(cmdtp, 0, argc, argv);
 		if (usb_stor_curr_dev < 0) {
 			printf("No USB Storage found. Reading key/sig file failed.\n");
 		}
@@ -2146,7 +2146,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 
 		argc = 2;
 		argv[1] = "stop";
-		do_usb(cmdtp, flag, argc, argv);
+		do_usb(cmdtp, 0, argc, argv);
 #endif // TEST_READ_USB_FILE
 
 
