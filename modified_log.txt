@@ -1,6 +1,171 @@
 
 
 
+U-Boot 1.1.3 (Dec 12 2020 - 20:54:25)
+
+Board: Ralink APSoC DRAM:  128 MB
+relocate_code Pointer at: 87f68000
+******************************
+Software System Reset Occurred
+******************************
+flash manufacture id: c2, device id 20 19
+find flash: MX25L25635E
+*** Warning - bad CRC, using default environment
+
+============================================ 
+Ralink UBoot Version: 4.3.0.0
+-------------------------------------------- 
+ASIC 7628_MP (Port5<->None)
+DRAM component: 1024 Mbits DDR, width 16
+DRAM bus: 16 bit
+Total memory: 128 MBytes
+Flash component: SPI Flash
+Date:Dec 12 2020  Time:20:54:25
+============================================ 
+icache: sets:512, ways:4, linesz:32 ,total:65536
+dcache: sets:256, ways:4, linesz:32 ,total:32768 
+
+ ##### The CPU freq = 580 MHZ #### 
+ estimate memory size =128 Mbytes
+RESET MT7628 PHY!!!!!!
+GPIOMODE --> 50054404
+
+GPIOMODE2 --> 5540551
+
+Please choose the operation: 
+   1: Load system code to SDRAM via TFTP. 
+   2: Load system code then write to Flash via TFTP. 
+   3: Boot system code via Flash (default).
+   4: Entr boot command line interface.
+   7: Load Boot Loader code then write to Flash via Serial. 
+   9: Load Boot Loader code then write to Flash via TFTP.                                                    0 
+(Re)start USB...
+USB0:   *********ehci_hcd_init**********
+Mediatek/Ralink USB EHCI host init hccr b01c0000 and hcor b01c0010 hc_length 16
+ 6. u2phydcr0(0xb0120860)=0x00aaaa02
+ FM_OUT value: u4FmOut = 126(0x0000007E)
+ FM detection done! loop = 0
+ SR calibration value u1SrCalVal = 7
+
+
+Register 1111 NbrPorts 1
+USB EHCI 1.00
+scanning bus 0 for devices... 4 USB Device(s) found
+       scanning bus for storage devices... Device NOT ready
+   Request Sense returned 00 3A 00
+2 Storage Device(s) found
+reading publickey1.file
+
+
+
+.
+
+
+
+.
+
+
+.
+
+
+3 bytes read
+Find publickey1.file
+stopping USB..
+   
+3: System Boot system code via Flash.
+## Booting image at bc050000 ...
+   Image Name:   MIPS OpenWrt Linux-5.4.82
+   Image Type:   MIPS Linux Kernel Image (lzma compressed)
+   Data Size:    1961612 Bytes =  1.9 MB
+   Load Address: 80000000
+   Entry Point:  80000000
+   Verifying Checksum ... OK
+   Uncompressing Kernel Image ... OK
+No initrd
+## Transferring control to Linux (at address 80000000) ...
+## Giving linux memsize in MB, 0
+
+Starting kernel ...
+
+[04020C0D][04020D07]
+DDR Calibration DQS reg = 00008887
+
+
+U-Boot 1.1.3 (Dec 12 2020 - 20:54:25)
+
+Board: Ralink APSoC DRAM:  128 MB
+relocate_code Pointer at: 87f68000
+flash manufacture id: c2, device id 20 19
+find flash: MX25L25635E
+*** Warning - bad CRC, using default environment
+
+============================================ 
+Ralink UBoot Version: 4.3.0.0
+-------------------------------------------- 
+ASIC 7628_MP (Port5<->None)
+DRAM component: 1024 Mbits DDR, width 16
+DRAM bus: 16 bit
+Total memory: 128 MBytes
+Flash component: SPI Flash
+Date:Dec 12 2020  Time:20:54:25
+============================================ 
+icache: sets:512, ways:4, linesz:32 ,total:65536
+dcache: sets:256, ways:4, linesz:32 ,total:32768 
+
+ ##### The CPU freq = 580 MHZ #### 
+ estimate memory size =128 Mbytes
+RESET MT7628 PHY!!!!!!
+GPIOMODE --> 50054404
+
+GPIOMODE2 --> 5540551
+
+Please choose the operation: 
+   1: Load system code to SDRAM via TFTP. 
+   2: Load system code then write to Flash via TFTP. 
+   3: Boot system code via Flash (default).
+   4: Entr boot command line interface.
+   7: Load Boot Loader code then write to Flash via Serial. 
+   9: Load Boot Loader code then write to Flash via TFTP.                                                    0 
+(Re)start USB...
+USB0:   *********ehci_hcd_init**********
+Mediatek/Ralink USB EHCI host init hccr b01c0000 and hcor b01c0010 hc_length 16
+ 6. u2phydcr0(0xb0120860)=0x00aaaa02
+ FM_OUT value: u4FmOut = 0(0x00000000)
+ FM_OUT value: u4FmOut = 128(0x00000080)
+ FM detection done! loop = 1
+ SR calibration value u1SrCalVal = 6
+
+
+Register 1111 NbrPorts 1
+USB EHCI 1.00
+scanning bus 0 for devices... 3 USB Device(s) found
+       scanning bus for storage devices... Device NOT ready
+   Request Sense returned 00 3A 00
+1 Storage Device(s) found
+Device NOT ready
+   Request Sense returned 00 3A 00
+
+** Unable to use usb 0:1 for fatload **
+Could not find publickey1.file
+stopping USB..
+   
+3: System Boot system code via Flash.
+## Booting image at bc050000 ...
+   Image Name:   MIPS OpenWrt Linux-5.4.82
+   Image Type:   MIPS Linux Kernel Image (lzma compressed)
+   Data Size:    1961612 Bytes =  1.9 MB
+   Load Address: 80000000
+   Entry Point:  80000000
+   Verifying Checksum ... OK
+   Uncompressing Kernel Image ... OK
+No initrd
+## Transferring control to Linux (at address 80000000) ...
+## Giving linux memsize in MB, 128
+
+Starting kernel ...
+
+[    0.000000] Linux version 5.4.82 (qwer@qwer) (gcc version 8.4.0 (OpenWrt GCC 8.4.0 r14574-96023cd4ba)) #0 Thu Dec 10 19:33:51 2020
+
 
 
 

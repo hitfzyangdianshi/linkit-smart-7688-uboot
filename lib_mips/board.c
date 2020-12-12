@@ -2113,8 +2113,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 
 
 	if(BootType == '3') {
-		//char *argv[2];
-		char* argv[5];//change 2 to 5
+		char *argv[2];
+		//char* argv[5];//change 2 to 5
 
 #define TEST_READ_USB_FILE
 #ifdef TEST_READ_USB_FILE
@@ -2124,13 +2124,14 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		extern int usb_stor_curr_dev;
 #endif
 		//char addr_str[11];
+		char* argv1[5];
 		int argc = 2;
 		argv[1] = "start";
 		do_usb(cmdtp, 0, argc, argv);
 		if (usb_stor_curr_dev < 0) {
-			printf("No USB Storage found. Reading key/sig file failed.\n");
+			printf("No USB Storage found. Reading key/sig file from USB failed.\n");
 		}
-		argc = 5;
+		/*argc = 5;
 		argv[1] = "usb";
 		argv[2] = "0";
 		sprintf(addr_str, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
@@ -2142,7 +2143,16 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		else {
 			printf("Find publickey1.file\n");
+		}   */
+		char *buf = (uchar*)CFG_LOAD_ADDR;
+		long size_file = file_fat_read("publickey1.file", buf, 0);
+		if (size_file > 0) {
+			printf("Loading publickey1.file from USB,\tSize: %d\n", size_file);		
 		}
+		for ( i = 0; i < 3; i++) {
+			printf("%c,0x%02X\n", buf[i], buf[i]);
+		}
+		printf("\n");
 
 		argc = 2;
 		argv[1] = "stop";
