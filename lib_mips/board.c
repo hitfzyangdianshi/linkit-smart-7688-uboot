@@ -2218,6 +2218,29 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
 
 
+		printf("p_publicKey:\n");
+		for (i = 0; i < ECC_BYTES + 1; i++) {
+			printf("%c", publickey_eg1[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES + 1; i++) {
+			if (i == ECC_BYTES)printf("0x%02X ", publickey_eg1[i]);
+			else printf("0x%02X , ", publickey_eg1[i]);
+		}
+		printf("};\n");
+		printf("p_signature:\n");
+		for (i = 0; i < ECC_BYTES * 2; i++) {
+			printf("%c", signature_eg1[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES * 2; i++) {
+			if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", signature_eg1[i]);
+			else printf("0x%02X , ", signature_eg1[i]);
+		}
+		printf("};\n");
+
+
+
 		///*uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
 		//	0xec,0xd5,0xef,0x8d,0xe7,0x37,0xf4,0x87,
 		//	0xe4,0xf4,0x2b,0x42,0x30,0x14,0xa1,0x39,
