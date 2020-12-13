@@ -2189,15 +2189,49 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		argv_1[2] = "0";
 		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
 		argv_1[3] = &addr_str_1[0];
-		argv_1[4] = "pub2.file";
+		argv_1[4] = "pub1.file";
 		uint8_t publickey_eg1[33];
 		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
-			printf("Could not find pub2.file\n");
+			printf("Could not find pub1.file\n");
 		}
 		else {
-			printf("Find pub2.file\n");
+			printf("Find pub1.file\n");
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;		
 			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf[ii];
+		}
+#ifdef READ_SIG_FILES_64BYTES
+		argc = 5;
+		argv_1[1] = "usb";
+		argv_1[2] = "0";
+		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
+		argv_1[3] = &addr_str_1[0];
+		argv_1[4] = "s1.file";			
+		uint8_t signature_eg1[64];
+		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
+			printf("Could not find s1.file\n");
+		}
+		else {
+			printf("Find s1.file\n");
+			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
+			for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf[ii];
+		}
+
+#else //// READ_SIG_FILES_64BYTES
+		argc = 5;
+		argv_1[1] = "usb";
+		argv_1[2] = "0";
+		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
+		argv_1[3] = &addr_str_1[0];
+		argv_1[4] = "s1.file1";
+		uint8_t signature_eg1[64];
+		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
+			printf("Could not find s1.file1\n");
+			goto STOP_USB_FROM_READING_SIGFILES;
+		}
+		else {
+			printf("Find s1.file1\n");
+			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
+			for (ii = 0; ii < 32; ii++)signature_eg1[ii] = buf[ii];
 		}
 
 		argc = 5;
@@ -2205,16 +2239,19 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		argv_1[2] = "0";
 		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
 		argv_1[3] = &addr_str_1[0];
-		argv_1[4] = "s2.file";			
-		uint8_t signature_eg1[64];
+		argv_1[4] = "s1.file2";
 		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
-			printf("Could not find s2.file\n");
+			printf("Could not find s1.file2\n");
 		}
 		else {
-			printf("Find s2.file\n");
+			printf("Find s1.file2\n");
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
-			for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf[ii];
+			for (ii = 32; ii < 64; ii++)signature_eg1[ii] = buf[ii - 32];
 		}
+
+
+#endif // READ_SIG_FILES_64BYTES
+
 		signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
 
 
@@ -2238,6 +2275,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			else printf("0x%02X , ", signature_eg1[i]);
 		}
 		printf("};\n");
+
 
 
 
@@ -2280,7 +2318,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		////sign_and_print(privatekey_eg4, current_hash_test);
 		//uint8_t signature_eg4[] = { 0x20, 0xAE, 0x6F, 0x84, 0xDD, 0x85, 0xFF, 0x0A, 0x21, 0x1C, 0x25, 0x18, 0x71, 0x03, 0xF2, 0x97, 0xEE, 0x6B, 0xD1, 0x89, 0x0B, 0xB1, 0x71, 0x76, 0x1A, 0xBB, 0x43, 0x20, 0x96, 0x3B, 0xBE, 0x1A, 0xED, 0x6F, 0xEF, 0xF0, 0x60, 0x05, 0x67, 0xFF, 0xC0, 0xBD, 0xF6, 0x50, 0xDC, 0x1B, 0xFC, 0x22, 0xAD, 0x40, 0x95, 0xB8, 0x4B, 0x18, 0x9F, 0x34, 0xE8, 0xB7, 0x40, 0x86, 0x34, 0xCF, 0xC5, 0x34 };
 		//signature_verify_by_pubkey_33(publickey_eg4, current_hash_test, signature_eg4);
-		
+STOP_USB_FROM_READING_SIGFILES:
 		printf("\n");
 #endif //EASY_ECC_TEST02
 
