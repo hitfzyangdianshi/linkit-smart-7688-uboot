@@ -2197,6 +2197,10 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		else {
 			printf("Find pub1.file\n");
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;		
+			for (ii = 0; ii < 33; ii++) {
+				printf("0x%02X,\t", buf[ii]);
+			}
+			printf("\n");
 			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf[ii];
 		}
 #define READ_SIG_FILES_64BYTES
@@ -2214,6 +2218,10 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		else {
 			printf("Find s1.file\n");
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
+			for (ii = 0; ii < 64; ii++) {
+				printf("0x%02X,\t", buf[ii]);
+			}
+			printf("\n");
 			for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf[ii];
 		}
 
