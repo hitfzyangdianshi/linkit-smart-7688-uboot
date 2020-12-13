@@ -27,6 +27,7 @@
 #include <common.h>
 #include <watchdog.h>
 #include <command.h>
+#include <devices.h>
 #include <image.h>
 #include <malloc.h>
 #include <rt_mmap.h>
@@ -53,6 +54,10 @@
 
  /*cmd_boot.c*/
  extern int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
+
+#if defined (RALINK_USB ) || defined (MTK_USB)
+extern int usb_stor_curr_dev;
+#endif
 
 #if (CONFIG_COMMANDS & CFG_CMD_DATE) || defined(CONFIG_TIMESTAMP)
 #include <rtc.h>
@@ -190,6 +195,30 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	} else {
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
+
+	char *tmp_argv[4];
+	char *addr_str[11];
+	int tmp_argc = 2;
+	tmp_argv[1] = "start";
+	do_usb(cmdtp, 0, tmp_argc, tmp_argv);
+	printf("do_usb called\n");
+
+	if(usb_stor_curr_dev < 0){
+		printf("No USB Storage found.\n");
+	}
+
+	tmp_argc = 5;
+	tmp_argv[1] = "usb";
+	tmp_argv[2] = "0";
+	sprintf(addr_str, "0x%X", CFG_LOAD_ADDR);
+	tmp_argv[3] = &addr_str[0];
+	tmp_argv[4] = "signatures.img";
+	setenv("autostart", "no");
+	if (do_fat_fsload(cmdtp, 0, tmp_argc, tmp_argv)) {
+		printf("Count not find signatures.img\n");
+	} else {
+		printf("Loaded file at: 0x%X\n", CFG_LOAD_ADDR);
+	}	
 /*
 	puts ("Loading Current Firmware ... ");
 
