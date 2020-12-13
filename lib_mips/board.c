@@ -2144,7 +2144,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		else {
 			printf("Find publickey1.file\n");
 		}   */
-		char *buf = (uchar*)CFG_LOAD_ADDR;
+		char* buf;//= (uchar*)CFG_LOAD_ADDR;
 		long size_file = file_fat_read("publickey1.file", buf, 0);
 		if (size_file > 0) {
 			printf("Loading publickey1.file from USB,\tSize: %d\n", size_file);		
