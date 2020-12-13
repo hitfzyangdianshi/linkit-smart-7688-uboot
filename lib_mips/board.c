@@ -2199,6 +2199,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;		
 			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf[ii];
 		}
+#define READ_SIG_FILES_64BYTES
 #ifdef READ_SIG_FILES_64BYTES
 		argc = 5;
 		argv_1[1] = "usb";
@@ -2216,7 +2217,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf[ii];
 		}
 
-#else //// READ_SIG_FILES_64BYTES
+#else // READ_SIG_FILES_64BYTES
 		argc = 5;
 		argv_1[1] = "usb";
 		argv_1[2] = "0";
