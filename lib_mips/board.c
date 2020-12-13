@@ -2323,9 +2323,9 @@ STOP_USB_FROM_READING_SIGFILES:
 		printf("\n");
 #endif //EASY_ECC_TEST02
 
-		argc = 2;
+		/*argc = 2;
 		argv_1[1] = "stop";
-		do_usb(cmdtp, 0, 2, argv_1);
+		do_usb(cmdtp, 0, 2, argv_1);*/
 
 #endif // TEST_READ_USB_FILE
 
