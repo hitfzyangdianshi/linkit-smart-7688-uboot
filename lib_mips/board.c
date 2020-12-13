@@ -2216,7 +2216,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			uint8_t signature_eg1[64];
 			for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf[ii];
 		}
-		signature_verify_by_pubkey_33(publickey_example1, current_hash_test, signature_eg1);
+		signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
 
 
 		///*uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
