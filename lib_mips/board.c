@@ -2153,6 +2153,9 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			}
 			printf("\n");
 		}
+		else {
+			printf("file_fat_read() failed....\n")
+		}
 		free(buf);
 
 		argc = 2;
