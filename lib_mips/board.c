@@ -2134,7 +2134,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		argc = 5;
 		argv_1[1] = "usb";
 		argv_1[2] = "0";
-		char buf[10];
+		//char buf[10];
 		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
 		//sprintf(addr_str_1, "0x%X", &buf[0]);
 		printf("addr_str_1:    %s\n", addr_str_1);
@@ -2146,7 +2146,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		else {
 			printf("Find test1.file\n");
-			//char *buf= (uchar*)CFG_LOAD_ADDR;
+			char *buf= (uchar*)CFG_LOAD_ADDR;
 			//char buf_temp[20];
 			//buf_temp[0] = buf[0]; buf_temp[1] = buf[1]; buf_temp[2] = buf[2];
 			int ii;
