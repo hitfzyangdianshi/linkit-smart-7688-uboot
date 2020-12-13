@@ -2149,7 +2149,6 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 				printf("%c,0x%02X\n", buf[ii], buf[ii]);
 			}
 			printf("\n");
-			free(buf);
 		}   
 		/*char* buf;//= (uchar*)CFG_LOAD_ADDR;
 		long size_file = file_fat_read("publickey1.file", buf, 0);
