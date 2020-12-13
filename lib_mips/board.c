@@ -2189,13 +2189,13 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		argv_1[2] = "0";
 		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
 		argv_1[3] = &addr_str_1[0];
-		argv_1[4] = "pub1.file";
+		argv_1[4] = "pub2.file";
 		uint8_t publickey_eg1[33];
 		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
-			printf("Could not find pub1.file\n");
+			printf("Could not find pub2.file\n");
 		}
 		else {
-			printf("Find pub1.file\n");
+			printf("Find pub2.file\n");
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;		
 			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf[ii];
 		}
@@ -2205,13 +2205,13 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		argv_1[2] = "0";
 		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
 		argv_1[3] = &addr_str_1[0];
-		argv_1[4] = "s1.file";			
+		argv_1[4] = "s2.file";			
 		uint8_t signature_eg1[64];
 		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
-			printf("Could not find s1.file\n");
+			printf("Could not find s2.file\n");
 		}
 		else {
-			printf("Find s1.file\n");
+			printf("Find s2.file\n");
 			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
 			for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf[ii];
 		}
