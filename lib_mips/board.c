@@ -2176,29 +2176,9 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	
 		#include "../ecdsa_lightweight/easy_ecc_main.c"
 		unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
-
 		int re;
 
-		argc = 5;
-		argv_1[1] = "usb";
-		argv_1[2] = "0";
-		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
-		argv_1[3] = &addr_str_1[0];
-		argv_1[4] = "pub1.file";
-		uint8_t publickey_eg1[33];
-		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
-			printf("Could not find pub1.file\n");
-		}
-		else {
-			printf("Find pub1.file\n");
-			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;		
-			for (ii = 0; ii < 33; ii++) {
-				printf("0x%02X,\t", buf[ii]);
-			}
-			printf("\n");
-			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf[ii];
-		}
-#define READ_SIG_FILES_64BYTES
+//#define READ_SIG_FILES_64BYTES
 #ifdef READ_SIG_FILES_64BYTES
 		argc = 5;
 		argv_1[1] = "usb";
@@ -2234,12 +2214,12 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		else {
 			printf("Find s1.file1\n");
-			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
+			uint8_t* buf1 = (uchar*)CFG_LOAD_ADDR;
 			for (ii = 0; ii < 32; ii++) {
-				printf("0x%02X,\t", buf[ii]);
+				printf("0x%02X,\t", buf1[ii]);
 			}
 			printf("\n");
-			for (ii = 0; ii < 32; ii++)signature_eg1[ii] = buf[ii];
+			for (ii = 0; ii < 32; ii++)signature_eg1[ii] = buf1[ii];
 		}
 
 		argc = 5;
@@ -2253,16 +2233,36 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		else {
 			printf("Find s1.file2\n");
-			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
+			uint8_t* buf2 = (uchar*)CFG_LOAD_ADDR;
 			for (ii = 0; ii < 32; ii++) {
-				printf("0x%02X,\t", buf[ii]);
+				printf("0x%02X,\t", buf2[ii]);
 			}
 			printf("\n");
-			for (ii = 32; ii < 64; ii++)signature_eg1[ii] = buf[ii - 32];
+			for (ii = 32; ii < 64; ii++)signature_eg1[ii] = buf2[ii - 32];
 		}
 
 
 #endif // READ_SIG_FILES_64BYTES
+
+		argc = 5;
+		argv_1[1] = "usb";
+		argv_1[2] = "0";
+		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
+		argv_1[3] = &addr_str_1[0];
+		argv_1[4] = "pub1.file";
+		uint8_t publickey_eg1[33];
+		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
+			printf("Could not find pub1.file\n");
+		}
+		else {
+			printf("Find pub1.file\n");
+			uint8_t* buf3 = (uchar*)CFG_LOAD_ADDR;
+			for (ii = 0; ii < 33; ii++) {
+				printf("0x%02X,\t", buf3[ii]);
+			}
+			printf("\n");
+			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf3[ii];
+		}
 
 		signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
 
