@@ -2247,7 +2247,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		argc = 5;
 		argv_1[1] = "usb";
 		argv_1[2] = "0";
-		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
+		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR+64); //CFG_LOAD_ADDR		0x80100000
 		argv_1[3] = &addr_str_1[0];
 		argv_1[4] = "pub1.file";
 		uint8_t publickey_eg1[33];
@@ -2256,7 +2256,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		else {
 			printf("Find pub1.file\n");
-			uint8_t* buf3 = (uchar*)CFG_LOAD_ADDR;
+			uint8_t* buf3 = (uchar*)(CFG_LOAD_ADDR+64);
 			for (ii = 0; ii < 33; ii++) {
 				printf("0x%02X,\t", buf3[ii]);
 			}
