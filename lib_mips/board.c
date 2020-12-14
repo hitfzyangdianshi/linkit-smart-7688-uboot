@@ -2116,12 +2116,13 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		char *argv[2];
 		//char* argv[5];//change 2 to 5
 
-#define TEST_READ_USB_FILE
+//#define TEST_READ_USB_FILE
 #ifdef TEST_READ_USB_FILE
 	//refer to board.c line2401
+
 #if defined (RALINK_USB ) || defined (MTK_USB)
 		extern int usb_stor_curr_dev;
-#endif
+#endif//(RALINK_USB ) || defined (MTK_USB)
 		int ii;
 		char addr_str_1[11];
 		char* argv_1[5];
@@ -2327,6 +2328,46 @@ STOP_USB_FROM_READING_SIGFILES:
 		do_usb(cmdtp, 0, 2, argv_1);*/
 
 #endif // TEST_READ_USB_FILE
+
+#define TEST_READ_PUBKEYSIG_FROM_MTD8
+#ifdef TEST_READ_PUBKEYSIG_FROM_MTD8
+		#define MTD8_ADDR 0x000001ff0000
+		#include "../ecdsa_lightweight/easy_ecc_main.c"
+		unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
+		int re,ii;
+		uint8_t signature_eg1[64], publickey_eg1[33];
+		uint8_t* buf_p = (uchar*)(MTD8_ADDR + 0x10);
+		uint8_t* buf_s = (uchar*)(MTD8_ADDR + 0x40);
+		for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf_p[ii];
+		for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf_s[ii];
+
+
+		signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
+		printf("p_publicKey:\n");
+		for (i = 0; i < ECC_BYTES + 1; i++) {
+			printf("%c", publickey_eg1[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES + 1; i++) {
+			if (i == ECC_BYTES)printf("0x%02X ", publickey_eg1[i]);
+			else printf("0x%02X , ", publickey_eg1[i]);
+		}
+		printf("};\n");
+		printf("p_signature:\n");
+		for (i = 0; i < ECC_BYTES * 2; i++) {
+			printf("%c", signature_eg1[i]);
+		}
+		printf("\n{");
+		for (i = 0; i < ECC_BYTES * 2; i++) {
+			if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", signature_eg1[i]);
+			else printf("0x%02X , ", signature_eg1[i]);
+		}
+		printf("};\n");
+
+
+
+
+#endif // TEST_READ_PUBKEYSIG_FROM_MTD8
 
 
 

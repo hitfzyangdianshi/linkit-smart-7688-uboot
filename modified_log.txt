@@ -1,7 +1,44 @@
+
+14 Dec 2020:
+solve the USB reading issue:
+	sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR+64)
+		(read sig file(64bytes) first, and address CFG_LOAD_ADDR plus 64 bytes, then read pubkey file(33bytes).....)
+
+new firmware with partition patch:
+
+[    0.591259] Creating 6 MTD partitions on "spi0.0":
+[    0.600759] 0x000000000000-0x000000030000 : "u-boot"
+[    0.611670] 0x000000030000-0x000000040000 : "u-boot-env"
+[    0.623304] 0x000000040000-0x000000050000 : "factory"
+[    0.634424] 0x000000050000-0x000001600000 : "firmware"
+[    0.649015] 2 uimage-fw partitions found on MTD device firmware
+[    0.660815] Creating 2 MTD partitions on "firmware":
+[    0.670666] 0x000000000000-0x0000001deeed : "kernel"
+[    0.681543] 0x0000001deeed-0x0000015b0000 : "rootfs"
+[    0.692395] mtd: device 5 (rootfs) set to be root filesystem
+[    0.705354] 1 squashfs-split partitions found on MTD device rootfs
+[    0.717685] 0x000000f70000-0x0000015b0000 : "rootfs_data"
+[    0.729460] 0x000001600000-0x000001ff0000 : "fw-new"
+[    0.740383] 0x000001ff0000-0x000002000000 : "fw-info"
+
+dev:    size   erasesize  name
+mtd0: 00030000 00010000 "u-boot"
+mtd1: 00010000 00010000 "u-boot-env"
+mtd2: 00010000 00010000 "factory"
+mtd3: 015b0000 00010000 "firmware"
+mtd4: 001deeed 00010000 "kernel"
+mtd5: 013d1113 00010000 "rootfs"
+mtd6: 00640000 00010000 "rootfs_data"
+mtd7: 009f0000 00010000 "fw-new"
+mtd8: 00010000 00010000 "fw-info"
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 12 Dec 2020:
 issue: 
 	freeze at "Starting kernel" after reading files from USB;
-	can only read first 32 bytes of the sig file (64bytes).
+	can only read first 32 bytes of the sig file (64bytes). 
 	totally wrong read if cut sig into 2 files... 
 
 uint8_t signature_eg1[] = { 0x04, 0xD9, 0x04, 0x6B, 0xC1, 0x9D, 0xAF, 0xA2, 
