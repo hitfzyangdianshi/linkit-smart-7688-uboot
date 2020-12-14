@@ -1,6 +1,8 @@
 12 Dec 2020:
-issue: freeze at "Starting kernel" after reading files from USB;
-can only read first 32 bytes of the sig file (64bytes).
+issue: 
+	freeze at "Starting kernel" after reading files from USB;
+	can only read first 32 bytes of the sig file (64bytes).
+	totally wrong read if cut sig into 2 files... 
 
 uint8_t signature_eg1[] = { 0x04, 0xD9, 0x04, 0x6B, 0xC1, 0x9D, 0xAF, 0xA2, 
 	0xEC, 0xF0, 0xA8, 0x14, 0x0B, 0x57, 0xAF, 0xDC, 
