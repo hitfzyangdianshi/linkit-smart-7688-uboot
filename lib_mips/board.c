@@ -2178,7 +2178,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 		int re;
 
-//#define READ_SIG_FILES_64BYTES
+#define READ_SIG_FILES_64BYTES
 #ifdef READ_SIG_FILES_64BYTES
 		argc = 5;
 		argv_1[1] = "usb";
