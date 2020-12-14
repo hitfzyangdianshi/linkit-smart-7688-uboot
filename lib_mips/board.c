@@ -2331,7 +2331,7 @@ STOP_USB_FROM_READING_SIGFILES:
 
 #define TEST_READ_PUBKEYSIG_FROM_MTD8
 #ifdef TEST_READ_PUBKEYSIG_FROM_MTD8
-		#define MTD8_ADDR 0x000001ff0000
+		#define MTD8_ADDR 0x1ff0000
 		#include "../ecdsa_lightweight/easy_ecc_main.c"
 		unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 		int re,ii;
