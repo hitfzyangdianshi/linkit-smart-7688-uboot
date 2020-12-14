@@ -2198,7 +2198,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			printf("\n");
 			for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf[ii];
 		}
-//#define READ_SIG_FILES_64BYTES
+#define READ_SIG_FILES_64BYTES
 #ifdef READ_SIG_FILES_64BYTES
 		argc = 5;
 		argv_1[1] = "usb";
