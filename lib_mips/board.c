@@ -2247,20 +2247,23 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			for (ii = 0; ii < 32; ii++)signature_eg1[ii] = buf[ii];
 		}
 
-		//argc = 5;
-		//argv_1[1] = "usb";
-		//argv_1[2] = "0";
-		//sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
-		//argv_1[3] = &addr_str_1[0];
-		//argv_1[4] = "s1.file2";
-		//if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
-		//	printf("Could not find s1.file2\n");
-		//}
-		//else {
-		//	printf("Find s1.file2\n");
-		//	uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
-		//	for (ii = 32; ii < 64; ii++)signature_eg1[ii] = buf[ii - 32];
-		//}
+		argc = 5;
+		argv_1[1] = "usb";
+		argv_1[2] = "0";
+		sprintf(addr_str_1, "0x%X", CFG_LOAD_ADDR); //CFG_LOAD_ADDR		0x80100000
+		argv_1[3] = &addr_str_1[0];
+		argv_1[4] = "s1.file2";
+		if (do_fat_fsload(cmdtp, 0, argc, argv_1)) {
+			printf("Could not find s1.file2\n");
+		}
+		else {
+			printf("Find s1.file2\n");
+			uint8_t* buf = (uchar*)CFG_LOAD_ADDR;
+			for (ii = 0; ii < 32; ii++) {
+				printf("0x%02X,\t", buf[ii]);
+			}
+			for (ii = 32; ii < 64; ii++)signature_eg1[ii] = buf[ii - 32];
+		}
 
 
 #endif // READ_SIG_FILES_64BYTES
