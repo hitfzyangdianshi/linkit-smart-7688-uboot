@@ -2134,7 +2134,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		else {
 			printf("USB Storage found. Reading key/sig file from USB ....... .....\n");
 		}
-		argc = 5;
+		/*argc = 5;
 		argv_1[1] = "usb";
 		argv_1[2] = "0";
 		//char buf[10];
@@ -2150,16 +2150,11 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		else {
 			printf("Find test1.file\n");
 			char *buf= (uchar*)CFG_LOAD_ADDR;
-			//char buf_temp[20];
-			//buf_temp[0] = buf[0]; buf_temp[1] = buf[1]; buf_temp[2] = buf[2];
 			for (ii = 0; ii < 3; ii++) {
 				printf("%c,0x%02X\n", buf[ii], buf[ii]);
 			}
 			printf("\n");
-			/*for (ii = 0; ii < 3; ii++) {
-				buf[i] = buf_temp[i];
-			}*/
-		}  
+		}  */
 
 		/*char* buf;//= (uchar*)CFG_LOAD_ADDR;
 		long size_file = file_fat_read("publickey1.file", buf, 0);
@@ -2262,6 +2257,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			for (ii = 0; ii < 32; ii++) {
 				printf("0x%02X,\t", buf[ii]);
 			}
+			printf("\n");
 			for (ii = 32; ii < 64; ii++)signature_eg1[ii] = buf[ii - 32];
 		}
 
