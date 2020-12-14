@@ -196,6 +196,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
 
+/*
 	char *tmp_argv[4];
 	char *addr_str[11];
 	int tmp_argc = 2;
@@ -219,7 +220,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	} else {
 		printf("Loaded file at: 0x%X\n", CFG_LOAD_ADDR);
 	}	
-/*
+
 	puts ("Loading Current Firmware ... ");
 
 	int chunk = 4096;
