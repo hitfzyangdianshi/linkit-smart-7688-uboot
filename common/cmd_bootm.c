@@ -195,14 +195,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	} else {
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
-
 /*
-	char *tmp_argv[4];
-	char *addr_str[11];
+	char *tmp_argv[5];
+	char addr_str[11];
+	uint8_t *sig = malloc(128); // allocate more than 64 bytes
+
 	int tmp_argc = 2;
 	tmp_argv[1] = "start";
 	do_usb(cmdtp, 0, tmp_argc, tmp_argv);
-	printf("do_usb called\n");
 
 	if(usb_stor_curr_dev < 0){
 		printf("No USB Storage found.\n");
@@ -211,15 +211,22 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	tmp_argc = 5;
 	tmp_argv[1] = "usb";
 	tmp_argv[2] = "0";
-	sprintf(addr_str, "0x%X", CFG_LOAD_ADDR);
+	sprintf(addr_str, "0x%08X", sig);
+	printf("Load Addr: %s\n", addr_str);
 	tmp_argv[3] = &addr_str[0];
-	tmp_argv[4] = "signatures.img";
-	setenv("autostart", "no");
+	tmp_argv[4] = "s1.file";
 	if (do_fat_fsload(cmdtp, 0, tmp_argc, tmp_argv)) {
-		printf("Count not find signatures.img\n");
+		printf("Count not find s1.file\n");
 	} else {
-		printf("Loaded file at: 0x%X\n", CFG_LOAD_ADDR);
+		for (i = 0; i < 64; i++) {
+			printf("%02X ", sig[i]);
+			if ((i+1) % 16 == 0) {
+				printf("\n");
+			}
+		}
+		printf("\n\n");
 	}	
+
 
 	puts ("Loading Current Firmware ... ");
 
