@@ -148,5 +148,12 @@ typedef struct image_header {
 	uint8_t		ih_name[IH_NMLEN];	/* Image Name		*/
 } image_header_t;
 
+typedef struct fw_info {
+	uint32_t	size_old;
+	uint32_t	size_new;
+	uint8_t		update;
+	uint8_t		hash_old[32];
+	uint8_t		hash_new[32];
+} fw_info_t;
 
 #endif	/* __IMAGE_H__ */
