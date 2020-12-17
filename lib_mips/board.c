@@ -2366,18 +2366,18 @@ STOP_USB_FROM_READING_SIGFILES:
 		
 #define READ_ALL_ADDRESS_TEST
 #ifdef READ_ALL_ADDRESS_TEST
-#define mtd0addr 0x00030000 // "u-boot"
-#define		mtd1addr  0x00010000 // "u-boot-env"
-#define			mtd2addr  0x00010000 // "factory"
-#define			mtd3addr  0x015b0000 // "firmware"
-#define		mtd4addr  0x001deeed // "kernel"
-#define			mtd5addr  0x013d1113 // "rootfs"
-#define			mtd6addr  0x00640000 // "rootfs_data"
-#define			mtd7addr  0x009f0000 // "fw-new"
-#define			mtd8addr 0x00010000 // "fw-info"
+#define mtd0addr 0x30000 // "u-boot"
+#define		mtd1addr  0x10000 // "u-boot-env"
+#define			mtd2addr  0x10000 // "factory"
+#define			mtd3addr  0x15b0000 // "firmware"
+#define		mtd4addr  0x1deeed // "kernel"
+#define			mtd5addr  0x13d1113 // "rootfs"
+#define			mtd6addr  0x640000 // "rootfs_data"
+#define			mtd7addr  0x9f0000 // "fw-new"
+#define			mtd8addr 0x10000 // "fw-info"
 		int tag_readaddr = 0;
 		long i3; int i4;
-		for ( i3 = 0; i3 < mtd0addr+ mtd1addr+ mtd2addr+ mtd3addr+ mtd4addr+ mtd5addr+ mtd6addr+ mtd7addr+ mtd8addr -8; i3++) {
+		for (i3 = 0; i3 < 62849536; i3++) {//for ( i3 = 0; i3 < mtd0addr+ mtd1addr+ mtd2addr+ mtd3addr+ mtd4addr+ mtd5addr+ mtd6addr+ mtd7addr+ mtd8addr ; i3++) {
 			if (i3 % 100000 == 0)printf(".");
 			uint8_t* buf_test = (uchar*)(i3 );
 			uint8_t* chararrary_test[8];
