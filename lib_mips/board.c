@@ -2366,7 +2366,7 @@ STOP_USB_FROM_READING_SIGFILES:
 		
 #define READ_ALL_ADDRESS_TEST
 #ifdef READ_ALL_ADDRESS_TEST
-		bool tag_readaddr = false;
+		int tag_readaddr = 0;
 		long i3; int i4;
 		for ( i3 = 0; i3 < 0x000001ff0000; i3++) {
 			if (i3 % 10000 == 0)printf(".");
@@ -2380,7 +2380,7 @@ STOP_USB_FROM_READING_SIGFILES:
 				chararrary_test[4] == 0x0C && chararrary_test[5] == 0x00 && chararrary_test[6] == 0x00 && chararrary_test[7] == 0x00)
 			{
 				printf("%X\n", i3);
-				tag_readaddr = true;
+				tag_readaddr = 1;
 				buf_p = (uchar*)(i3 + 0x10);
 				buf_s = (uchar*)(i3 + 0x40);
 				for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf_p[ii];
@@ -2412,7 +2412,7 @@ STOP_USB_FROM_READING_SIGFILES:
 				break;
 			}
 		}
-		printf("%B\n", tag_readaddr);
+		printf("tag_readaddr: %d\n", tag_readaddr);
 
 #endif //READ_ALL_ADDRESS
 
