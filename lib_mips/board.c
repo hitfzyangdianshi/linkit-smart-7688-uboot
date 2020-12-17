@@ -2363,9 +2363,57 @@ STOP_USB_FROM_READING_SIGFILES:
 			else printf("0x%02X , ", signature_eg1[i]);
 		}
 		printf("};\n");
+		
+#define READ_ALL_ADDRESS_TEST
+#ifdef READ_ALL_ADDRESS_TEST
+		bool tag_readaddr = false;
+		for (long i3 = 0; i3 < 0x000001ff0000; i3++) {
+			if (i3 % 10000 == 0)printf(".");
+			uint8_t* buf_test = (uchar*)(i3 );
+			uint8_t* chararrary_test[8];
+			for (i = 0; i < 8; i++)chararrary_test[i] = buf_test[i];
+			/*unsigned AnsiChar data[8] = {
+			0x85, 0x19, 0x03, 0x20, 0x0C, 0x00, 0x00, 0x00
+			};*/
+			if (chararrary_test[0] == 0x85 && chararrary_test[1] == 0x19 && chararrary_test[2] == 0x03 && chararrary_test[3] == 0x20 &&
+				chararrary_test[4] == 0x0C && chararrary_test[5] == 0x00 && chararrary_test[6] == 0x00 && chararrary_test[7] == 0x00)
+			{
+				printf("%X\n", i3);
+				tag_readaddr = true;
+				buf_p = (uchar*)(i3 + 0x10);
+				buf_s = (uchar*)(i3 + 0x40);
+				for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf_p[ii];
+				for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf_s[ii];
+				signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
+				printf("p_publicKey:\n");
+				for (int i4 = 0; i < ECC_BYTES + 1; i4++) {
+					printf("%c", publickey_eg1[i4]);
+				}
+				printf("\n{");
+				for (int i4 = 0; i4 < ECC_BYTES + 1; i4++) {
+					if (i4 == ECC_BYTES)printf("0x%02X ", publickey_eg1[i4]);
+					else printf("0x%02X , ", publickey_eg1[i4]);
+				}
+				printf("};\n");
+				printf("p_signature:\n");
+				for (int i4 = 0; i4 < ECC_BYTES * 2; i4++) {
+					printf("%c", signature_eg1[i4]);
+				}
+				printf("\n{");
+				for (int i4 = 0; i4 < ECC_BYTES * 2; i4++) {
+					if (i4 == ECC_BYTES * 2 - 1)printf("0x%02X ", signature_eg1[i4]);
+					else printf("0x%02X , ", signature_eg1[i4]);
+				}
+				printf("};\n");
 
 
 
+				break;
+			}
+		}
+		printf("%B\n", tag_readaddr);
+
+#endif //READ_ALL_ADDRESS
 
 #endif // TEST_READ_PUBKEYSIG_FROM_MTD8
 
