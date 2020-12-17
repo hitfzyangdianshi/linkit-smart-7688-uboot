@@ -2368,8 +2368,8 @@ STOP_USB_FROM_READING_SIGFILES:
 #ifdef READ_ALL_ADDRESS_TEST
 		int tag_readaddr = 0;
 		long i3; int i4;
-		for ( i3 = 0; i3 < 0x000001ff0000; i3++) {
-			if (i3 % 10000 == 0)printf(".");
+		for ( i3 = 0; i3 < 0x000001ff0000+ 0x000001600000; i3++) {
+			if (i3 % 100000 == 0)printf(".");
 			uint8_t* buf_test = (uchar*)(i3 );
 			uint8_t* chararrary_test[8];
 			for (i = 0; i < 8; i++)chararrary_test[i] = buf_test[i];
