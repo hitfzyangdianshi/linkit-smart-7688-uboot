@@ -2384,14 +2384,15 @@ STOP_USB_FROM_READING_SIGFILES:
 			for (i = 0; i < 8; i++)chararrary_test[i] = buf_test[i];
 			/*unsigned AnsiChar data[8] = {
 			0x85, 0x19, 0x03, 0x20, 0x0C, 0x00, 0x00, 0x00
+			};*/				/*unsigned AnsiChar data[8] = {
+	0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67
 			};*/
-			if (chararrary_test[0] == 0x85 && chararrary_test[1] == 0x19 && chararrary_test[2] == 0x03 && chararrary_test[3] == 0x20 &&
-				chararrary_test[4] == 0x0C && chararrary_test[5] == 0x00 && chararrary_test[6] == 0x00 && chararrary_test[7] == 0x00)
+			if (chararrary_test[0] == 0x02 && chararrary_test[1] == 0x68 && chararrary_test[2] == 0xC0 && chararrary_test[3] == 0xC8 && chararrary_test[4] == 0x1D && chararrary_test[5] == 0x72 && chararrary_test[6] == 0x85 && chararrary_test[7] == 0x67)//if (chararrary_test[0] == 0x85 && chararrary_test[1] == 0x19 && chararrary_test[2] == 0x03 && chararrary_test[3] == 0x20 &&chararrary_test[4] == 0x0C && chararrary_test[5] == 0x00 && chararrary_test[6] == 0x00 && chararrary_test[7] == 0x00)
 			{
 				printf("%X\n", i3);
 				tag_readaddr = 1;
-				buf_p = (uchar*)(i3 + 0x10);
-				buf_s = (uchar*)(i3 + 0x40);
+				buf_p = (uchar*)(i3 );
+				buf_s = (uchar*)(i3 + 0x30);
 				for (ii = 0; ii < 33; ii++)publickey_eg1[ii] = buf_p[ii];
 				for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf_s[ii];
 				signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
