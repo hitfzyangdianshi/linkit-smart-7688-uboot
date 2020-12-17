@@ -2377,7 +2377,7 @@ STOP_USB_FROM_READING_SIGFILES:
 #define			mtd8addr 0x10000 // "fw-info"
 		int tag_readaddr = 0;
 		long i3; int i4;
-		for (i3 = CFG_FLASH_BASE; i3 < CFG_FLASH_BASE+ 128*1024*1024; i3++) {//for (i3 = 0; i3 < 62849536; i3++) {//for ( i3 = 0; i3 < mtd0addr+ mtd1addr+ mtd2addr+ mtd3addr+ mtd4addr+ mtd5addr+ mtd6addr+ mtd7addr+ mtd8addr ; i3++) {
+		for (i3 = 0; i3 < CFG_FLASH_BASE+ 128*1024*1024; i3++) {//for (i3 = 0; i3 < 62849536; i3++) {//for ( i3 = 0; i3 < mtd0addr+ mtd1addr+ mtd2addr+ mtd3addr+ mtd4addr+ mtd5addr+ mtd6addr+ mtd7addr+ mtd8addr ; i3++) {
 			if (i3 % 100000 == 0)printf(".");
 			uint8_t* buf_test = (uchar*)(i3 );
 			uint8_t* chararrary_test[8];
