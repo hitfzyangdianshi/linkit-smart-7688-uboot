@@ -2367,7 +2367,8 @@ STOP_USB_FROM_READING_SIGFILES:
 #define READ_ALL_ADDRESS_TEST
 #ifdef READ_ALL_ADDRESS_TEST
 		bool tag_readaddr = false;
-		for (long i3 = 0; i3 < 0x000001ff0000; i3++) {
+		long i3; int i4;
+		for ( i3 = 0; i3 < 0x000001ff0000; i3++) {
 			if (i3 % 10000 == 0)printf(".");
 			uint8_t* buf_test = (uchar*)(i3 );
 			uint8_t* chararrary_test[8];
@@ -2386,21 +2387,21 @@ STOP_USB_FROM_READING_SIGFILES:
 				for (ii = 0; ii < 64; ii++)signature_eg1[ii] = buf_s[ii];
 				signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
 				printf("p_publicKey:\n");
-				for (int i4 = 0; i < ECC_BYTES + 1; i4++) {
+				for ( i4 = 0; i < ECC_BYTES + 1; i4++) {
 					printf("%c", publickey_eg1[i4]);
 				}
 				printf("\n{");
-				for (int i4 = 0; i4 < ECC_BYTES + 1; i4++) {
+				for ( i4 = 0; i4 < ECC_BYTES + 1; i4++) {
 					if (i4 == ECC_BYTES)printf("0x%02X ", publickey_eg1[i4]);
 					else printf("0x%02X , ", publickey_eg1[i4]);
 				}
 				printf("};\n");
 				printf("p_signature:\n");
-				for (int i4 = 0; i4 < ECC_BYTES * 2; i4++) {
+				for ( i4 = 0; i4 < ECC_BYTES * 2; i4++) {
 					printf("%c", signature_eg1[i4]);
 				}
 				printf("\n{");
-				for (int i4 = 0; i4 < ECC_BYTES * 2; i4++) {
+				for ( i4 = 0; i4 < ECC_BYTES * 2; i4++) {
 					if (i4 == ECC_BYTES * 2 - 1)printf("0x%02X ", signature_eg1[i4]);
 					else printf("0x%02X , ", signature_eg1[i4]);
 				}
