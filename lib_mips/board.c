@@ -2364,7 +2364,7 @@ STOP_USB_FROM_READING_SIGFILES:
 		}
 		printf("};\n");
 		
-#define READ_ALL_ADDRESS_TEST
+//#define READ_ALL_ADDRESS_TEST
 #ifdef READ_ALL_ADDRESS_TEST
 #define mtd0addr 0x30000 // "u-boot"
 #define		mtd1addr  0x10000 // "u-boot-env"
