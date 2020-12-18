@@ -1,2 +1,4 @@
 mtd8_pubsig.bin
 *.bin
+Release
+Release/*

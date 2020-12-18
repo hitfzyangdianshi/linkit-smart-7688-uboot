@@ -45,7 +45,7 @@ int copy_char_to_unsigned_char(char s[], uint8_t ch[]) {
 int main(){
 	string hash_test = "e7eb4cd2a61df11fa56bdcb2e8744f66";//32
 	char hash_test_ch[]= "e7eb4cd2a61df11fa56bdcb2e8744f66";//32
-	fw_info_t fw_info_test = { 0,0,0x00 };
+	fw_info_t fw_info_test = { 12345,54321,0x00 };
 	/*copy_string_to_unsigned_char(hash_test, fw_info_test.hash_old);
 	copy_string_to_unsigned_char(hash_test, fw_info_test.hash_new);*/
 	copy_char_to_unsigned_char(hash_test_ch, fw_info_test.hash_old);
@@ -70,6 +70,26 @@ int main(){
 	for(i=0;i<64;i++) fputc(signature_eg1[i], mtd8_pubsig);
 
 	fclose(mtd8_pubsig);
+
+
+	fw_info_t* fwi =(fw_info_t*) malloc(sizeof(fw_info_t));
+	printf("fw-info size: %d\n", sizeof(fw_info_t));
+	FILE* mtd8 = fopen("mtd8_pubsig.bin", "rb");
+	printf("fw-info raw: \n");
+	for (i = 0; i < (sizeof(fw_info_t)); i++) {
+		*(p+i)=fgetc(mtd8);
+	}
+	for (i = 0; i < (sizeof(fw_info_t)); i++) {
+		printf("%02X ", p[i]);
+		if ((i + 1) % 16 == 0) {
+			printf("\n");
+		}
+	}
+	printf("\n\n");
+	fwi = (fw_info_t*)p;
+	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+
+	fclose(mtd8);
 
 	return 0;
 }

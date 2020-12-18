@@ -10,6 +10,19 @@
 	remove all dubug and ecdsa/read/search codes in /lib_mips/board.c (TEST_READ_USB_FILE, TEST_READ_PUBKEYSIG_FROM_MTD8, etc...) and in /lib_mips/mips_linux.c (TEST_EASY_ECC_01, etc... )
 	add READ_BYTES_FROM_mtd8_DURING_BOOT in /common/cmd_bootm.c (line193)
 
+	3: System Boot system code via Flash.
+fw-info size: 76
+fw-info raw: 
+00 00 00 00 00 00 00 00 00 65 37 65 62 34 63 64 
+32 61 36 31 64 66 31 31 66 61 35 36 62 64 63 62 
+32 65 38 37 34 34 66 36 36 65 37 65 62 34 63 64 
+32 61 36 31 64 66 31 31 66 61 35 36 62 64 63 62 
+32 65 38 37 34 34 66 36 36 00 00 00 
+
+fw-info data: 0 0 0
+
+
+
 
 14 Dec 2020:
 solve the USB reading issue:
