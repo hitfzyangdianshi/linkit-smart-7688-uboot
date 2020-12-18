@@ -212,8 +212,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 	uint8_t publickey_eg1[ECC_BYTES + 1];//33
 	uint8_t signature_eg1[ECC_BYTES * 2];//64
-	raspi_read(pubkey, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1);
-	raspi_read(sig, mtd8_ADDR + sizeof(fw_info_t)+ ECC_BYTES + 1, ECC_BYTES * 2);
+	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1);
+	raspi_read(signature_eg1, mtd8_ADDR + sizeof(fw_info_t)+ ECC_BYTES + 1, ECC_BYTES * 2);
 	signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
 	printf("p_publicKey:\n");
 	for (i = 0; i < ECC_BYTES + 1; i++) {
