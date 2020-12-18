@@ -209,6 +209,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define TEST_ECDSA_mtd8
 #ifdef TEST_ECDSA_mtd8
 #include "../ecdsa_lightweight/easy_ecc_main.c"
+	unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 	uint8_t publickey_eg1[ECC_BYTES + 1];//33
 	uint8_t signature_eg1[ECC_BYTES * 2];//64
 	raspi_read(pubkey, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1);
