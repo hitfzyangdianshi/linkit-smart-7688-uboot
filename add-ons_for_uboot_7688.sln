@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ecdsa_lightweight", "ecdsa_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ecdsa_with_openssl", "ecdsa_openssl\ecdsa-ub.vcxproj", "{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "write_mtd", "write_mtd\write_mtd.vcxproj", "{BC975E73-349B-45B6-B2B3-642C68540884}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}.Release|x64.Build.0 = Release|x64
 		{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}.Release|x86.ActiveCfg = Release|Win32
 		{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}.Release|x86.Build.0 = Release|Win32
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Debug|x64.ActiveCfg = Debug|x64
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Debug|x64.Build.0 = Debug|x64
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Debug|x86.ActiveCfg = Debug|Win32
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Debug|x86.Build.0 = Debug|Win32
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Release|x64.ActiveCfg = Release|x64
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Release|x64.Build.0 = Release|x64
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Release|x86.ActiveCfg = Release|Win32
+		{BC975E73-349B-45B6-B2B3-642C68540884}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

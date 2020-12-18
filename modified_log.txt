@@ -1,32 +1,14 @@
-
-root@OpenWrt:/tmp# dd if=/dev/mtd0 of=/tmp/mtd0
-384+0 records in
-384+0 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd1 of=/tmp/mtd1
-128+0 records in
-128+0 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd2 of=/tmp/mtd2
-128+0 records in
-128+0 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd3 of=/tmp/mtd3
-44416+0 records in
-44416+0 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd4 of=/tmp/mtd4
-3831+1 records in
-3831+1 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd5 of=/tmp/mtd5
-40584+1 records in
-40584+1 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd6 of=/tmp/mtd6
-12800+0 records in
-12800+0 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd7 of=/tmp/mtd7
-20352+0 records in
-20352+0 records out
-root@OpenWrt:/tmp# dd if=/dev/mtd8 of=/tmp/mtd8
-128+0 records in
-128+0 records out
-
+18 Dec 2020:
+	make mtd8 image according to modified include/image.h 
+					typedef struct fw_info {
+						uint32_t	size_old;
+						uint32_t	size_new;
+						uint8_t		update;
+						uint8_t		hash_old[32];
+						uint8_t		hash_new[32];
+					} fw_info_t;
+	remove all dubug and ecdsa/read/search codes in /lib_mips/board.c (TEST_READ_USB_FILE, TEST_READ_PUBKEYSIG_FROM_MTD8, etc...) and in /lib_mips/mips_linux.c (TEST_EASY_ECC_01, etc... )
+	add READ_BYTES_FROM_mtd8_DURING_BOOT in /common/cmd_bootm.c (line193)
 
 
 14 Dec 2020:

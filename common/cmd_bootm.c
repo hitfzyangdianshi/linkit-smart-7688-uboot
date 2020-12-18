@@ -189,6 +189,23 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
 
+#define READ_BYTES_FROM_mtd8_DURING_BOOT
+#ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
+	fw_info_t* fwi = malloc(sizeof(fw_info_t));
+	printf("fw-info size: %d\n", sizeof(fw_info_t));
+	raspi_read(fwi, 0x1ff0000, sizeof(fw_info_t));
+	printf("fw-info raw: \n");
+	uint8_t* p = (uint8_t*)fwi;
+	for (i = 0; i < (sizeof(fw_info_t)); i++) {
+		printf("%02X ", p[i]);
+		if ((i + 1) % 16 == 0) {
+			printf("\n");
+		}
+	}
+	printf("\n\n");
+	printf("fw-info data: %d %ld %ld\n", fwi->update, fwi->size_old, fwi->size_new);
+#endif // READ_BYTES_FROM_mtd8_DURING_BOOT
+
 	
 	SHOW_BOOT_PROGRESS (1);
 	printf ("## Booting image at %08lx ...\n", addr);
