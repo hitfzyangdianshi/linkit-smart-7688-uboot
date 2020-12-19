@@ -259,12 +259,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #endif // TEST_ECDSA_mtd8
 
 	if (fwi->update != 0) {
-		uint8_t update_update[1] = { 0x19 };
+		uint8_t update_update[1] = { 0x19 },existupdatevalue[1];
 		int raspiwriteresult;
-		printf("%02x#", *(p + sizeof(uint32_t)) );
-		raspiwriteresult=raspi_write(update_update, p + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
+		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
+		printf("%02x#", existupdatevalue[0]);
+		raspiwriteresult=raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
 		//printf("test: update fwi->update value to 0x19\n");
-		printf("%02x#%d\n", *(p + sizeof(uint32_t)),raspiwriteresult);
+		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
+		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);
 	}
 
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
