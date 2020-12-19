@@ -209,7 +209,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
 	//printf("hash_old:%s\n", fwi->hash_old);
 	printf("hash_old: "); 
-	for (i = 0; i < ECC_BYTES; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
+	for (i = 0; i < 32; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
 	printf("hash_new: %s\n", fwi->hash_new);
 
 	/*printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");*/

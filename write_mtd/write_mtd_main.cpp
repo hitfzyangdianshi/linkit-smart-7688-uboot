@@ -143,7 +143,7 @@ int main(){
 
 	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
 	printf("hash_old: ");
-	for (i = 0; i < ECC_BYTES; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
+	for (i = 0; i < 32; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
 	printf("hash_new: %s\n", fwi->hash_new);
 
 	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", pubkey_get1[i]);
