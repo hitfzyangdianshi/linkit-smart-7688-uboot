@@ -15,6 +15,7 @@
 //#endif/* Windows */
 
 #include "ecc.c" 
+//#define TEST_AND_RUN_IN_THIS_FILE
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
 #include<stdio.h>
@@ -29,7 +30,7 @@ unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
 #ifdef TEST_AND_RUN_IN_THIS_FILE
-int test1() {
+static int test1() {
 	int i, re;
 	uint8_t p_publicKey[ECC_BYTES + 1], p_privateKey[ECC_BYTES]; //32
 
@@ -89,7 +90,7 @@ int test1() {
 	return 0;
 }
 
-int test2() {
+static int test2() {
 	int i, re;
 	//uint8_t p_publicKey[ECC_BYTES + 1], p_privateKey[ECC_BYTES]; //32
 
@@ -261,7 +262,7 @@ int signature_verify_by_pubkey_33(uint8_t p_publicKey[ECC_BYTES + 1], uint8_t di
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
 #ifdef TEST_AND_RUN_IN_THIS_FILE
-int test3() { 
+static int test3() {
 
 
 	uint8_t privatekey_example1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
