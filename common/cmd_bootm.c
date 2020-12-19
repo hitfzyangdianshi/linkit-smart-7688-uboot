@@ -261,10 +261,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	if (fwi->update != 0) {
 		uint8_t update_update[1] = { 0x19 };
 		int raspiwriteresult;
-		//raspi_write_enable();  : common/libcommon.a(cmd_bootm.o): In function `do_bootm':cmd_bootm.c:(.text+0x3c9c): undefined reference to `raspi_write_enable'
+		printf("%02x#", *(mtd8_ADDR + sizeof(uint32_t) * 2));
 		raspiwriteresult=raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
 		//printf("test: update fwi->update value to 0x19\n");
-		printf("%d\n",raspiwriteresult);
+		printf("%02x#%d\n", *(mtd8_ADDR + sizeof(uint32_t) * 2),raspiwriteresult);
 	}
 
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
