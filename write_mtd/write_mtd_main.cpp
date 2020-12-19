@@ -84,7 +84,7 @@ int main(){
 	copy_char_to_unsigned_char(hash_old, fw_info_test.hash_old);
 	copy_char_to_unsigned_char(hash_new, fw_info_test.hash_new);
 
-#define GET_NEW_SIGNATURE
+//#define GET_NEW_SIGNATURE
 #ifdef GET_NEW_SIGNATURE
 	sign_and_print(privatekey_eg1, fw_info_test.hash_new);
 #endif // GET_NEW_SIGNATURE
@@ -94,7 +94,7 @@ int main(){
 	uint8_t* p = (uint8_t*)(&fw_info_test);
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		putc(p[i], mtd8_pubsig);
-		printf("%02X ", p[i]);
+		printf("%02x ", p[i]);
 		if ((i + 1) % 16 == 0) {
 			printf("\n");
 		}
@@ -119,7 +119,7 @@ int main(){
 		*(p+i)=fgetc(mtd8);
 	}
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
-		printf("%02X ", p[i]);
+		printf("%02x ", p[i]);
 		if ((i + 1) % 16 == 0) {
 			printf("\n");
 		}
@@ -142,7 +142,15 @@ int main(){
 	}
 
 	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
-	printf("sig_old:"); signature_verify_by_pubkey_33(pubkey_get1, fwi->hash_old, sig_old_get1);
+	printf("hash_old: ");
+	for (i = 0; i < ECC_BYTES; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
+	printf("hash_new: %s\n", fwi->hash_new);
+
+	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", pubkey_get1[i]);
+	printf("\nsig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", sig_old_get1[i]);
+	printf("\nsig_new: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", sig_new_get1[i]);
+
+	printf("\nsig_old:"); signature_verify_by_pubkey_33(pubkey_get1, fwi->hash_old, sig_old_get1);
 	printf("sig_new:"); signature_verify_by_pubkey_33(pubkey_get1, fwi->hash_new, sig_new_get1);
 	fclose(mtd8);
 
