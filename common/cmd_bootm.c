@@ -258,7 +258,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 	if (fwi->update != 0) {
 		uint8_t update_update[1] = { 99 };
-#include "../drivers/spi_flash.c"
 		raspi_write_enable();
 		raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
 		printf("test: update fwi->update value to 99\n");
