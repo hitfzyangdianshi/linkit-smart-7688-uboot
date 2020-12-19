@@ -223,7 +223,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1+ ECC_BYTES * 2, ECC_BYTES * 2);
 
 	printf("sig_old:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
-	printf("sig_new:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_old_eg1);
+	printf("sig_new:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
 
 	/*printf("publicKey:\n");
 	for (i = 0; i < ECC_BYTES + 1; i++) {
@@ -250,8 +250,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #endif // TEST_ECDSA_mtd8
 
-	uint8_t update_update[1] = {99};
 	if (fwi->update != 0) {
+		uint8_t update_update[1] = { 99 };
 		raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
 		printf("test: update fwi->update value to 99");
 	}
