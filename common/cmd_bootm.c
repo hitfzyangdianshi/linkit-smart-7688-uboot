@@ -207,8 +207,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	printf("\n\n");
 	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+	printf("hash_old:%s\n", fwi->hash_old);
+	printf("hash_new:%s\n", fwi->hash_new);
 
-	printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");
+	/*printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");*/
 
 #define TEST_ECDSA_mtd8
 #ifdef TEST_ECDSA_mtd8
@@ -222,7 +224,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t)+ ECC_BYTES + 1, ECC_BYTES * 2);
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1+ ECC_BYTES * 2, ECC_BYTES * 2);
 
-	printf("sig_old:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
+	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", publickey_eg1[i]);
+	printf("\nsig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
+	printf("\nsig_new: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_new_eg1[i]);
+
+	printf("\nsig_old:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
 	printf("sig_new:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
 
 	/*printf("publicKey:\n");
@@ -252,8 +258,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 	if (fwi->update != 0) {
 		uint8_t update_update[1] = { 99 };
+		raspi_write_enable();
 		raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
-		printf("test: update fwi->update value to 99");
+		printf("test: update fwi->update value to 99\n");
 	}
 
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT

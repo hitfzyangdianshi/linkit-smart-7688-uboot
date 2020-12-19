@@ -10,18 +10,19 @@ sig_old		64	(ECC_BYTES*2)
 sig_new		64	(ECC_BYTES*2)
 
 if(not update): 
-		check hash_new:
+		check hash_new with mtd3 firmware:
 			hash==?
 			sig?
 
 if(update): 
-		check hash_new:
+		check hash_new with mtd7 fw-new:
 			hash==?
 			sig?
-		check hash_old:
+		check hash_old with mtd3 firmware??????:
 			hash==?
 			sig?
-		update->0
+		move mtd7 to mtd3;
+		update<-0
 
 
 18 Dec 2020:
