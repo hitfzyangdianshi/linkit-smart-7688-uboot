@@ -259,7 +259,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	if (fwi->update != 0) {
 		uint8_t update_update[1] = { 99 };
 		//raspi_write_enable();
-		u8 code = OPCODE_WREN;
+		u8 code = 6;//OPCODE_WREN;
 #ifdef COMMAND_MODE
 		raspi_cmd(code, 0, 0, 0, 0, 0, 0);
 #else
