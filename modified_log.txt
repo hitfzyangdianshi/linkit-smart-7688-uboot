@@ -1,3 +1,29 @@
+19 Dec 2020:
+uint32_t	size_old;
+uint32_t	size_new;
+uint8_t		update;
+uint8_t		hash_old[32];
+uint8_t		hash_new[32];
+000
+publickey	33	(ECC_BYTES+1)
+sig_old		64	(ECC_BYTES*2)
+sig_new		64	(ECC_BYTES*2)
+
+if(not update): 
+		check hash_new:
+			hash==?
+			sig?
+
+if(update): 
+		check hash_new:
+			hash==?
+			sig?
+		check hash_old:
+			hash==?
+			sig?
+		update->0
+
+
 18 Dec 2020:
 	make mtd8 image according to modified include/image.h 
 					typedef struct fw_info {

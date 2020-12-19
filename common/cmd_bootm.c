@@ -191,7 +191,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #define READ_BYTES_FROM_mtd8_DURING_BOOT
 #ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
-#define mtd8_ADDR 0x1ff0000
+#define mtd8_ADDR 0x1ff0000 //"fw-info"
+#define mtd7_ADDR 0x1600000 //"fw-new"
+#define mtd3_ADDR   0x50000 //"firmware"
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	printf("fw-info size: %d\n", sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
@@ -206,16 +208,24 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("\n\n");
 	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
 
+	printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");
+
 #define TEST_ECDSA_mtd8
 #ifdef TEST_ECDSA_mtd8
 #include "../ecdsa_lightweight/easy_ecc_main.c"
-	unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
+	//unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 	uint8_t publickey_eg1[ECC_BYTES + 1];//33
-	uint8_t signature_eg1[ECC_BYTES * 2];//64
-	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1);
-	raspi_read(signature_eg1, mtd8_ADDR + sizeof(fw_info_t)+ ECC_BYTES + 1, ECC_BYTES * 2);
-	signature_verify_by_pubkey_33(publickey_eg1, current_hash_test, signature_eg1);
-	printf("p_publicKey:\n");
+	uint8_t signature_old_eg1[ECC_BYTES * 2];//64
+	uint8_t signature_new_eg1[ECC_BYTES * 2];//64
+	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
+	//if(fwi->update)	
+		raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t)+ ECC_BYTES + 1, ECC_BYTES * 2);
+	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1+ ECC_BYTES * 2, ECC_BYTES * 2);
+
+	printf("sig_old:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
+	printf("sig_new:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_old_eg1);
+
+	/*printf("publicKey:\n");
 	for (i = 0; i < ECC_BYTES + 1; i++) {
 		printf("%c", publickey_eg1[i]);
 	}
@@ -225,7 +235,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		else printf("0x%02X , ", publickey_eg1[i]);
 	}
 	printf("};\n");
-	printf("p_signature:\n");
+	printf("signature:\n");
 	for (i = 0; i < ECC_BYTES * 2; i++) {
 		printf("%c", signature_eg1[i]);
 	}
@@ -234,12 +244,18 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", signature_eg1[i]);
 		else printf("0x%02X , ", signature_eg1[i]);
 	}
-	printf("};\n");
-
+	printf("};\n");*/
 
 
 
 #endif // TEST_ECDSA_mtd8
+
+	uint8_t update_update[1] = {99};
+	if (fwi->update != 0) {
+		raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
+		printf("test: update fwi->update value to 99");
+	}
+
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
 
 	

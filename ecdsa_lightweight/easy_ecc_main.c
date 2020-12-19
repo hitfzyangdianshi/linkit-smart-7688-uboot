@@ -18,14 +18,17 @@
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
 #include<stdio.h>
+#ifdef TEST_AND_RUN_IN_THIS_FILE
 unsigned char  digest[] = "11111111111111111111111111111111";
 unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
+#endif // TEST_AND_RUN_IN_THIS_FILE
 #endif/* Windows */
 
 //#define ECC_CURVE secp384r1 
 //default: secp256r1
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
+#ifdef TEST_AND_RUN_IN_THIS_FILE
 int test1() {
 	int i, re;
 	uint8_t p_publicKey[ECC_BYTES + 1], p_privateKey[ECC_BYTES]; //32
@@ -152,6 +155,7 @@ int test2() {
 
 	return 0;
 }
+#endif // TEST_AND_RUN_IN_THIS_FILE
 #endif/* Windows */
 
 int printkeys(uint8_t p_publicKey[ECC_BYTES + 1], uint8_t p_privateKey[ECC_BYTES]) {
@@ -212,7 +216,7 @@ int getpublickey(uint8_t p_publicKey[ECC_BYTES + 1], uint8_t p_privateKey[ECC_BY
 }
 
 
-int sign_and_print(uint8_t p_privateKey[ECC_BYTES], unsigned char *digest) {
+int sign_and_print(uint8_t p_privateKey[ECC_BYTES], uint8_t digest[ECC_BYTES]) {
 	//*******************ecdsa_sign*************
 	int re, i;
 	uint8_t p_signature1[ECC_BYTES * 2];
@@ -236,7 +240,7 @@ int sign_and_print(uint8_t p_privateKey[ECC_BYTES], unsigned char *digest) {
 	return 0;
 }
 
-int signature_verify_by_pubkey_33(uint8_t p_publicKey[ECC_BYTES + 1], unsigned char* digest, uint8_t p_signature1[ECC_BYTES * 2]) {
+int signature_verify_by_pubkey_33(uint8_t p_publicKey[ECC_BYTES + 1], uint8_t digest[ECC_BYTES], uint8_t p_signature1[ECC_BYTES * 2]) {
 
 	//*******************ecdsa_verify*************
 
@@ -256,6 +260,7 @@ int signature_verify_by_pubkey_33(uint8_t p_publicKey[ECC_BYTES + 1], unsigned c
 
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
+#ifdef TEST_AND_RUN_IN_THIS_FILE
 int test3() { 
 
 
@@ -304,9 +309,11 @@ int test3() {
 
 	return 0;
 }
+#endif // TEST_AND_RUN_IN_THIS_FILE
 #endif/* Windows */
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
+#ifdef TEST_AND_RUN_IN_THIS_FILE
 int main() {
 	
 	uint8_t privatekey_example1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
@@ -374,6 +381,7 @@ int main() {
 	
 	return 0;
 }
+#endif // TEST_AND_RUN_IN_THIS_FILE
 #endif/* Windows */
 
 
