@@ -200,7 +200,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("fw-info raw: \n");
 	uint8_t* p = (uint8_t*)fwi;
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
-		printf("%02X ", p[i]);
+		printf("%02x ", p[i]);
 		if ((i + 1) % 16 == 0) {
 			printf("\n");
 		}
@@ -261,11 +261,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	if (fwi->update != 0) {
 		uint8_t update_update[1] = { 0x19 };
 		int raspiwriteresult;
-		p = mtd8_ADDR + sizeof(uint32_t) * 2;
-		printf("%02x#", *p);
-		raspiwriteresult=raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
+		printf("%02x#", *(p + sizeof(uint32_t));
+		raspiwriteresult=raspi_write(update_update, p + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
 		//printf("test: update fwi->update value to 0x19\n");
-		printf("%02x#%d\n", *p,raspiwriteresult);
+		printf("%02x#%d\n", *(p + sizeof(uint32_t)),raspiwriteresult);
 	}
 
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
