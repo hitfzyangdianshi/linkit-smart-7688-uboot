@@ -158,7 +158,7 @@ extern void lynxkdi_boot( image_header_t * );
 #endif
 
 image_header_t header;
-ulong load_addr =  CFG_LOAD_ADDR;		/* Default Load Address */
+ulong load_addr =  CFG_LOAD_ADDR;		/* Default Load Address */  //0x80100000
 
 static inline void mips_cache_set(u32 v)
 {
@@ -190,6 +190,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 
 #define READ_BYTES_FROM_mtd8_DURING_BOOT
+#define TEST_HASH_SHA256_
 #ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
 #define mtd7_ADDR 0x1600000 //"fw-new"
@@ -213,6 +214,34 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("hash_new: %s\n", fwi->hash_new);
 
 	/*printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");*/
+
+#ifdef TEST_HASH_SHA256_
+#include<u-boot/sha256.h>
+	printf("testing sha256... ...n");
+	uint8_t sha256_sum[32];
+	int chunk = 4096;
+	int empty = 0,j;
+	ulong k;
+	for (i = 0, k = 0; empty == 0; i++, k += chunk) {
+		raspi_read(load_addr+k, (addr + k) - CFG_FLASH_BASE, chunk);
+		empty = 1;
+		for (j = 0; j < chunk; j++) {
+			if (*(uint8_t*)(load_addr + k + j) != 0xff) {
+				empty = 0;
+				break;
+			}
+		}
+	}
+	printf("%d bytes \n", k - chunk); // size = k - chunk (excluding last chunk)
+	printf("Current Firmware sha256 ... ");
+	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);
+	for (i = 0; i < 32; i++) {
+		printf("%02lx", sha256_sum[i]);
+	}
+	printf("\n\n");
+
+
+#endif // TEST_HASH_SHA256_
 
 #define TEST_ECDSA_mtd8
 #ifdef TEST_ECDSA_mtd8
@@ -254,9 +283,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	printf("};\n");*/
 
-
-
 #endif // TEST_ECDSA_mtd8
+
+#define TEST_raspi_write_UPDATE_VALUE
+#ifdef TEST_raspi_write_UPDATE_VALUE
 
 	if (fwi->update != 0) {
 		uint8_t update_update =  0x19 ,existupdatevalue[1];
@@ -268,7 +298,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
 		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);
 	}
-
+#endif // TEST_raspi_write_UPDATE_VALUE
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
 
 	

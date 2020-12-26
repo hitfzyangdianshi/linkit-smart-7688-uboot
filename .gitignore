@@ -11,7 +11,9 @@
 /ecdsa/x64/Debug
 uboot.bin
 u-boot
-u-boot.*
+!/include/u-boot
+u-boot.map
+u-boot.srec
 System.map
 CyberChef_v9.21.0.zip
 Release
