@@ -215,13 +215,22 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 	/*printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");*/
 
-#ifdef TEST_HASH_SHA256_
+#ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
-	printf("testing sha256... ...n");
+	printf("testing sha256... ...\n");
 	uint8_t sha256_sum[32];
 	int chunk = 4096;
 	int empty = 0,j;
 	ulong k;
+
+	uint8_t test_sha256_string[] = { '1','2','3' };
+	sha256_csum_wd(test_sha256_string, 3, sha256_sum, chunk);
+	printf("testing sha256... ...  123:   ");
+	for (i = 0; i < 32; i++) {
+		printf("%02lx", sha256_sum[i]);
+	}
+	printf("..\n");
+
 	for (i = 0, k = 0; empty == 0; i++, k += chunk) {
 		raspi_read(load_addr+k, (addr + k) - CFG_FLASH_BASE, chunk);
 		empty = 1;
