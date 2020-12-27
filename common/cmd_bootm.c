@@ -195,8 +195,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
 #define mtd7_ADDR 0x1600000 //"fw-new"
 #define mtd3_ADDR   0x50000 //"firmware"
-#define mtd5_ADDR  0x1deeed //"rootfs"
-#define mtd6_ADDR  0xf70000 //"rootfs_data"
+#define mtd5_ADDR  0x1df91c //"rootfs"
+#define mtd6_ADDR  0xf20000 //"rootfs_data"
 
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	printf("fw-info size: %d\n", sizeof(fw_info_t));
@@ -222,15 +222,23 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #include<u-boot/sha256.h>
 	printf("testing sha256... ...\n");
 	uint8_t sha256_sum[32];
-	int chunk = 4096;
+	int chunk = 64;
 	int empty = 0,j;
 	ulong k,i1;
-	for ( k = 0;k< mtd6_ADDR - mtd5_ADDR;  k += chunk) {
+	/*for ( k = 0; (empty==0) && (k<mtd6_ADDR - mtd5_ADDR)  ;  k += chunk) {
+		empty = 1;
 		raspi_read(load_addr+k, mtd5_ADDR+k, chunk);							//int raspi_read(char *buf, unsigned int from, int len)
-		
-	}raspi_read(load_addr + k, mtd5_ADDR + k, chunk);
-	printf("%ld bytes \n", k ); // size = k - chunk (excluding last chunk) 
-	sha256_csum_wd((char*)load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
+		for (j = 0; j < chunk; j++) {
+			if (*(uint8_t*)(load_addr + k + j) != 0xff)
+				empty = 0;
+			break;
+		}	
+	}//raspi_read(load_addr + k, mtd5_ADDR + k, chunk);
+	printf("%ld bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
+	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/
+
+
+	sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	printf("Current Firmware /rom (/dev/root, mtd5-mtd6) sha256 ... ");
 	//sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {

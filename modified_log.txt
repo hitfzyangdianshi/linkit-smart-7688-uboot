@@ -1,4 +1,30 @@
 hash mtd5 - mtd6 (rootfs - rootfs_data, 0x0000001deeed --- (0x000000f70000 -1)  )
+root@OpenWrt:/# cat /proc/mtd
+dev:    size   erasesize  name
+mtd0: 00030000 00010000 "u-boot"
+mtd1: 00010000 00010000 "u-boot-env"
+mtd2: 00010000 00010000 "factory"
+mtd3: 015b0000 00010000 "firmware"
+mtd4: 001df91c 00010000 "kernel"
+mtd5: 013d06e4 00010000 "rootfs"
+mtd6: 00690000 00010000 "rootfs_data"
+mtd7: 009f0000 00010000 "fw-new"
+mtd8: 00010000 00010000 "fw-info"
+
+[    0.602068] 0x000000000000-0x000000030000 : "u-boot"
+[    0.612984] 0x000000030000-0x000000040000 : "u-boot-env"
+[    0.624570] 0x000000040000-0x000000050000 : "factory"
+[    0.635777] 0x000000050000-0x000001600000 : "firmware"
+[    0.650373] 2 uimage-fw partitions found on MTD device firmware
+[    0.662174] Creating 2 MTD partitions on "firmware":
+[    0.672026] 0x000000000000-0x0000001df91c : "kernel"
+[    0.682910] 0x0000001df91c-0x0000015b0000 : "rootfs"
+[    0.693766] mtd: device 5 (rootfs) set to be root filesystem
+[    0.706753] 1 squashfs-split partitions found on MTD device rootfs
+[    0.719089] 0x000000f20000-0x0000015b0000 : "rootfs_data"
+[    0.730862] 0x000001600000-0x000001ff0000 : "fw-new"
+[    0.741788] 0x000001ff0000-0x000002000000 : "fw-info"
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 19 Dec 2020:
 uint32_t	size_old;
