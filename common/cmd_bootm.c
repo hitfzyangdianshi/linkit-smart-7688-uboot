@@ -295,7 +295,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define TEST_raspi_write_UPDATE_VALUE
 #ifdef TEST_raspi_write_UPDATE_VALUE
 
-	if (fwi->update != 0) {
+	if (fwi->update != 1) {
 		uint8_t *update_update =  0x01 ,existupdatevalue[1];
 		int raspiwriteresult=-10;
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
