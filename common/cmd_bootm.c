@@ -195,6 +195,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
 #define mtd7_ADDR 0x1600000 //"fw-new"
 #define mtd3_ADDR   0x50000 //"firmware"
+#define mtd5_ADDR  0x1deeed //"rootfs"
+#define mtd6_ADDR  0xf70000 //"rootfs_data"
+
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	printf("fw-info size: %d\n", sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
@@ -222,16 +225,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	int chunk = 4096;
 	int empty = 0,j;
 	ulong k;
-
-	uint8_t test_sha256_string[] = { '1','2','3' };
-	sha256_csum_wd(test_sha256_string, 3, sha256_sum, chunk);
-	printf("testing sha256... ...  123:   ");
-	for (i = 0; i < 32; i++) {
-		printf("%02lx", sha256_sum[i]);
-	}
-	printf("..\n");
-
-	for (i = 0, k = 0; empty == 0; i++, k += chunk) {
+	/*for (i = 0, k = 0; empty == 0; i++, k += chunk) {
 		raspi_read(load_addr+k, (addr + k) - CFG_FLASH_BASE, chunk);
 		empty = 1;
 		for (j = 0; j < chunk; j++) {
@@ -241,13 +235,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			}
 		}
 	}
-	printf("%d bytes \n", k - chunk); // size = k - chunk (excluding last chunk)
-	printf("Current Firmware sha256 ... ");
-	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);
+	printf("%d bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
+	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/ 
+	printf("Current Firmware /rom (/dev/root, mtd5-mtd6) sha256 ... ");
+	sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", sha256_sum[i]);
 	}
-	printf("\n\n");
+	printf("\n");
 
 
 #endif // TEST_HASH_SHA256_
@@ -260,7 +255,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t signature_old_eg1[ECC_BYTES * 2];//64
 	uint8_t signature_new_eg1[ECC_BYTES * 2];//64
 	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
-	//if(fwi->update)	
+	//if(fwi->update==0x09)	
 		raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t)+ ECC_BYTES + 1, ECC_BYTES * 2);
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1+ ECC_BYTES * 2, ECC_BYTES * 2);
 
@@ -298,11 +293,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #ifdef TEST_raspi_write_UPDATE_VALUE
 
 	if (fwi->update != 0) {
-		uint8_t update_update =  0x19 ,existupdatevalue[1];
-		int raspiwriteresult;
+		uint8_t update_update =  0x01 ,existupdatevalue[1];
+		int raspiwriteresult=-10;
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
 		printf("%02x#", existupdatevalue[0]);
-		raspiwriteresult=raspi_write(&update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
+		if (existupdatevalue[0] == 0x09){
+			raspiwriteresult = raspi_write(&update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
+			printf("@");
+		}
 		//printf("test: update fwi->update value to 0x19\n");
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
 		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);

@@ -3,6 +3,9 @@
 #include<string>
 #include "../ecdsa_lightweight/easy_ecc_main.c"
 #include "../include/image.h"
+#define USE_HOSTCC
+#include "../include/u-boot/sha256.h"
+#include "../lib_generic/sha256.c"
 using namespace std;
 /*typedef struct fw_info {
 	uint32_t	size_old;
@@ -35,7 +38,7 @@ root@OpenWrt:/tmp# sha256sum /dev/mtd3
 root@OpenWrt:/tmp# md5sum /dev/mtd3
 2909bd2c7cde11e45c6bdaa6e5ceece1  /dev/mtd3				*/
 
-
+typedef		unsigned long		ulong;
 
 uint8_t privatekey_eg1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
 								  0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
@@ -78,7 +81,7 @@ int main(){
 	//string hash_test = "8cf65650b4dd0dc0ed0cff4ef06e8bc2";//32
 	char hash_old[]= "8cf65650b4dd0dc0ed0cff4ef06e8bc2";//32
 	char hash_new[]= "2909bd2c7cde11e45c6bdaa6e5ceece1";
-	fw_info_t fw_info_test = { 12345,54321,0x03 };
+	fw_info_t fw_info_test = { 12345,54321,0x09 };
 	/*copy_string_to_unsigned_char(hash_test, fw_info_test.hash_old);
 	copy_string_to_unsigned_char(hash_test, fw_info_test.hash_new);*/	/*uint8_t signature_eg1[] = { 0x04, 0xD9, 0x04, 0x6B, 0xC1, 0x9D, 0xAF, 0xA2, 0xEC, 0xF0, 0xA8, 0x14, 0x0B, 0x57, 0xAF, 0xDC, 0x90, 0xA5, 0x0B, 0xBB, 0x3B, 0x77, 0xC1, 0xDC, 0xC6, 0x44, 0xB2, 0x47, 0xAC, 0x93, 0xCE, 0xB6, 0x75, 0x34, 0x37, 0x0E, 0x27, 0x8A, 0xA0, 0xC0, 0x45, 0xE9, 0xEE, 0xB0, 0xED, 0xD7, 0x3C, 0x64, 0x5B, 0xEF, 0x57, 0x18, 0x95, 0x77, 0x2B, 0x55, 0x58, 0x71, 0x5E, 0xF9, 0x10, 0xBE, 0x5F, 0x3D };*/
 	copy_char_to_unsigned_char(hash_old, fw_info_test.hash_old);
@@ -152,8 +155,25 @@ int main(){
 
 	printf("\nsig_old:"); signature_verify_by_pubkey_33(pubkey_get1, fwi->hash_old, sig_old_get1);
 	printf("sig_new:"); signature_verify_by_pubkey_33(pubkey_get1, fwi->hash_new, sig_new_get1);
+	printf("\n");
 	fclose(mtd8);
 
+
+	/*int chunk = 4096;
+	int empty = 0, j;
+	ulong k;
+	uint8_t sha256_sum[32];
+	uint8_t test_sha256_string[] = { '1','2','3' };
+	sha256_csum_wd(test_sha256_string, 3, sha256_sum, chunk);
+	printf("testing sha256... ...  123:   \n");
+	for (i = 0; i < 32; i++) {
+		printf("%02lx", sha256_sum[i]);
+	}
+	printf("\n");
+	for (i = 0; i < 32; i++) {
+		printf("%c", sha256_sum[i]);
+	}
+	printf("\n");*/
 	return 0;
 }
 //mtd write mtd8_pubsig.bin fw-info

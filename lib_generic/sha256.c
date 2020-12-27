@@ -11,8 +11,14 @@
 #else
 #include <string.h>
 #endif /* USE_HOSTCC */
+
+#if (defined(_WIN32) || defined(_WIN64)) //Windows
+#include "../include/watchdog.h"
+#include "../include/u-boot/sha256.h"
+#else //Windows
 #include <watchdog.h>
 #include <u-boot/sha256.h>
+#endif //Windows
 
 const uint8_t sha256_der_prefix[SHA256_DER_LEN] = {
 	0x30, 0x31, 0x30, 0x0d, 0x06, 0x09, 0x60, 0x86,
