@@ -224,21 +224,15 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t sha256_sum[32];
 	int chunk = 4096;
 	int empty = 0,j;
-	ulong k;
-	/*for (i = 0, k = 0; empty == 0; i++, k += chunk) {
-		raspi_read(load_addr+k, (addr + k) - CFG_FLASH_BASE, chunk);
-		empty = 1;
-		for (j = 0; j < chunk; j++) {
-			if (*(uint8_t*)(load_addr + k + j) != 0xff) {
-				empty = 0;
-				break;
-			}
-		}
+	ulong k,i1;
+	for (i1 = 0, k = 0; i1< mtd6_ADDR - mtd5_ADDR; i1+= chunk, k += chunk) {
+		raspi_read(load_addr+k, mtd5_ADDR+k, chunk);							//int raspi_read(char *buf, unsigned int from, int len)
+		
 	}
-	printf("%d bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
-	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/ 
+	printf("%ld bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
+	sha256_csum_wd((char*)load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	printf("Current Firmware /rom (/dev/root, mtd5-mtd6) sha256 ... ");
-	sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
+	//sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", sha256_sum[i]);
 	}
