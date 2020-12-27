@@ -216,7 +216,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	for (i = 0; i < 32; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
 	printf("hash_new: %s\n", fwi->hash_new);
 
-	/*printf("[test info]: get hash value from firmware mtd3 and mtd7, and compare.... this may be done in future.......\n");*/
 
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
@@ -236,11 +235,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}//raspi_read(load_addr + k, mtd5_ADDR + k, chunk);
 	printf("%ld bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
 	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/
-	
-	for(k=0;k< mtd6_ADDR - mtd5_ADDR;k++)
-		raspi_read(load_addr + k, mtd5_ADDR + k, 1);
+	unsigned char* p_load_addr;
+	p_load_addr = load_addr;
+	raspi_read(p_load_addr, mtd5_ADDR , mtd6_ADDR - mtd5_ADDR);
 
-	sha256_csum_wd((char*)load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
+	sha256_csum_wd(p_load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	printf("Current Firmware /rom (/dev/root, mtd5-mtd6) sha256 ... ");
 	//sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {
