@@ -225,11 +225,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	int chunk = 4096;
 	int empty = 0,j;
 	ulong k,i1;
-	for (i1 = 0, k = 0; i1< mtd6_ADDR - mtd5_ADDR; i1+= chunk, k += chunk) {
+	for ( k = 0;k< mtd6_ADDR - mtd5_ADDR;  k += chunk) {
 		raspi_read(load_addr+k, mtd5_ADDR+k, chunk);							//int raspi_read(char *buf, unsigned int from, int len)
 		
-	}
-	printf("%ld bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
+	}raspi_read(load_addr + k, mtd5_ADDR + k, chunk);
+	printf("%ld bytes \n", k ); // size = k - chunk (excluding last chunk) 
 	sha256_csum_wd((char*)load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	printf("Current Firmware /rom (/dev/root, mtd5-mtd6) sha256 ... ");
 	//sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
@@ -287,12 +287,12 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #ifdef TEST_raspi_write_UPDATE_VALUE
 
 	if (fwi->update != 0) {
-		uint8_t update_update =  0x01 ,existupdatevalue[1];
+		uint8_t *update_update =  0x01 ,existupdatevalue[1];
 		int raspiwriteresult=-10;
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
 		printf("%02x#", existupdatevalue[0]);
-		if (existupdatevalue[0] == 0x09){
-			raspiwriteresult = raspi_write(&update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
+		if (existupdatevalue[0] != 0x01){
+			raspiwriteresult = raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
 			printf("@");
 		}
 		//printf("test: update fwi->update value to 0x19\n");

@@ -203,5 +203,3 @@ int main(){
 	return 0;
 }
 //mtd write mtd8_pubsig.bin fw-info
-
-// 579faaa7adcecd39a66b7781951ff8111fb6a8aec1e0fdb7415128a7b75c2e99
