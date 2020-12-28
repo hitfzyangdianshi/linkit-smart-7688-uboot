@@ -251,7 +251,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		if (k % 8 == 0)printf("  ");
 		if (k % 32 == 0)printf("\n");
 	}
-
+	printf("\n");
 
 #endif // TEST_HASH_SHA256_
 
