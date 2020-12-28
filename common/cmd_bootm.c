@@ -246,10 +246,12 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("%02lx", sha256_sum[i]);
 	}
 	printf("\n"); 
-	for (k = 0; k < mtd6_ADDR - mtd5_ADDR; k++) {
-		printf("%02lx ", *(p_load_addr+k));
-		if (k % 8 == 0)printf("  ");
-		if (k % 32 == 0)printf("\n");
+	for (k = 0; k < mtd6_ADDR - mtd5_ADDR; k=k+0x10000) {
+		for (i = 0; i < 32; i++) {
+			if (i % 8 == 0 && i != 0)printf("  ");
+			printf("%02lx ", *(p_load_addr + k+i));
+		}
+		printf("\n");
 	}
 	printf("\n");
 
