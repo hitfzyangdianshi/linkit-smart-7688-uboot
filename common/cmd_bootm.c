@@ -209,21 +209,24 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("\n");
 		}
 	}
-	printf("\n\n");
+	printf("\n");
 	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+	uint32_t fwi_size_old = fwi->size_old;
+	uint32_t fwi_size_new = fwi->size_new;
 	//printf("hash_old:%s\n", fwi->hash_old);
 	printf("hash_old: "); 
-	for (i = 0; i < 32; i++)printf("%c", *(fwi->hash_old + i)); printf("\n");
-	printf("hash_new: %s\n", fwi->hash_new);
-
+	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_old + i)); 
+	printf("\nhash_new: ");
+	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new + i));
+	printf("\n");
 
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
 	printf("testing sha256... ...\n");
 	uint8_t sha256_sum[32];
-	int chunk = 64;
+	/*int chunk = 64;
 	int empty = 0,j;
-	ulong k,i1;
+	ulong k,i1;*/
 	/*for ( k = 0; (empty==0) && (k<mtd6_ADDR - mtd5_ADDR)  ;  k += chunk) {
 		empty = 1;
 		raspi_read(load_addr+k, mtd5_ADDR+k, chunk);							//int raspi_read(char *buf, unsigned int from, int len)
@@ -235,24 +238,23 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}//raspi_read(load_addr + k, mtd5_ADDR + k, chunk);
 	printf("%ld bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
 	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/
-	unsigned char* p_load_addr;
-	p_load_addr = load_addr;
-	raspi_read(p_load_addr, mtd5_ADDR , mtd6_ADDR - mtd5_ADDR);
-
-	sha256_csum_wd(p_load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
+	/*unsigned char* p_load_addr;
+	p_load_addr = load_addr;*/
+	raspi_read(load_addr, mtd3_ADDR, fwi_size_old);
+	//sha256_csum_wd(p_load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	printf("Current Firmware /rom (/dev/root, mtd5-mtd6) sha256 ... ");
-	//sha256_csum_wd((char*)mtd5_ADDR, mtd6_ADDR- mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
+	sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", sha256_sum[i]);
 	}
-	printf("\n"); 
+	/*printf("\n"); 
 	for (k = 0; k < mtd6_ADDR - mtd5_ADDR; k=k+0x10000) {
 		for (i = 0; i < 32; i++) {
 			if (i % 8 == 0 && i != 0)printf("  ");
 			printf("%02lx ", *(p_load_addr + k+i));
 		}
 		printf("\n");
-	}
+	}*/
 	printf("\n");
 
 #endif // TEST_HASH_SHA256_
@@ -299,7 +301,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #endif // TEST_ECDSA_mtd8
 
-#define TEST_raspi_write_UPDATE_VALUE
+//#define TEST_raspi_write_UPDATE_VALUE
 #ifdef TEST_raspi_write_UPDATE_VALUE
 
 	if (fwi->update != 1) {
