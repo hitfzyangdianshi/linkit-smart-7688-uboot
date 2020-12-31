@@ -220,10 +220,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new + i));
 	printf("\n");
 
+	uint8_t sha256_sum[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
 	printf("testing sha256... ...\n");
-	uint8_t sha256_sum[32];
 	/*int chunk = 64;
 	int empty = 0,j;
 	ulong k,i1;*/
@@ -277,6 +277,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 	printf("\nsig_old:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
 	printf("sig_new:"); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
+	printf("sig_firmware"); signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
 
 	/*printf("publicKey:\n");
 	for (i = 0; i < ECC_BYTES + 1; i++) {
@@ -301,10 +302,17 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #endif // TEST_ECDSA_mtd8
 
-//#define TEST_raspi_write_UPDATE_VALUE
+#define TEST_raspi_write_UPDATE_VALUE
 #ifdef TEST_raspi_write_UPDATE_VALUE
+	if (fwi->update != 0) {
+		printf("change fwi->update to 0 .... ....\n");
+		fwi->update = 0;
+		raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));//int raspi_erase_write(char *buf, unsigned int offs, int count)
 
-	if (fwi->update != 1) {
+
+	
+	}
+	/*if (fwi->update != 1) {
 		uint8_t *update_update =  0x01 ,existupdatevalue[1];
 		int raspiwriteresult=-10;
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
@@ -316,7 +324,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		//printf("test: update fwi->update value to 0x19\n");
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
 		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);
-	}
+	}*/
 #endif // TEST_raspi_write_UPDATE_VALUE
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
 

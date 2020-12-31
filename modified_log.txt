@@ -1,4 +1,15 @@
-hash mtd5 - mtd6 (rootfs - rootfs_data, 0x0000001deeed --- (0x000000f70000 -1)  )
+30 Dec 2020
+hash all the firmware (from addr_mtd3_0x50000)
+init boot: init hash:		26f1473d6edd3f91b071128777dd0408403a3ed0c20ef058a7132ef7f26020ad
+second boot/third boot:		63dfbfeb1673f20da71b43fd5f048d22052de9b4a0a6855020f195ac5cb023fa
+add a text file and reboot:	63dfbfeb1673f20da71b43fd5f048d22052de9b4a0a6855020f195ac5cb023fa
+fill all the memory:		86d4fbf7d4f0246f379e94735a2118c5bb82e002e95858ba829eaad36820e2a4
+then firstboot and reboot:	86d4fbf7d4f0246f379e94735a2118c5bb82e002e95858ba829eaad36820e2a4
+then add a 2.7MB file:		b8b274f35bf638742630871e19ea35304e5806926aa258e0d4d619852dc3b092
+
+
+----------------------------------------------------------------------------------------------------
+try: hash mtd5 - mtd6 (rootfs - rootfs_data, 0x0000001deeed --- (0x000000f70000 -1)  )
 root@OpenWrt:/# cat /proc/mtd
 dev:    size   erasesize  name
 mtd0: 00030000 00010000 "u-boot"

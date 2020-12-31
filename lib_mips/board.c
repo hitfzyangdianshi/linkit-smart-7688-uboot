@@ -2114,7 +2114,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 
 	if(BootType == '3') {
 		char *argv[2];
-		//char* argv[5];//change 2 to 5
+/*		//char* argv[5];//change 2 to 5
 
 //#define TEST_READ_USB_FILE
 #ifdef TEST_READ_USB_FILE
@@ -2172,7 +2172,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 		//free(buf);*/
 
-#define EASY_ECC_TEST02
+/*#define EASY_ECC_TEST02
 #ifdef EASY_ECC_TEST02
 	
 		#include "../ecdsa_lightweight/easy_ecc_main.c"
@@ -2319,7 +2319,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		////sign_and_print(privatekey_eg4, current_hash_test);
 		//uint8_t signature_eg4[] = { 0x20, 0xAE, 0x6F, 0x84, 0xDD, 0x85, 0xFF, 0x0A, 0x21, 0x1C, 0x25, 0x18, 0x71, 0x03, 0xF2, 0x97, 0xEE, 0x6B, 0xD1, 0x89, 0x0B, 0xB1, 0x71, 0x76, 0x1A, 0xBB, 0x43, 0x20, 0x96, 0x3B, 0xBE, 0x1A, 0xED, 0x6F, 0xEF, 0xF0, 0x60, 0x05, 0x67, 0xFF, 0xC0, 0xBD, 0xF6, 0x50, 0xDC, 0x1B, 0xFC, 0x22, 0xAD, 0x40, 0x95, 0xB8, 0x4B, 0x18, 0x9F, 0x34, 0xE8, 0xB7, 0x40, 0x86, 0x34, 0xCF, 0xC5, 0x34 };
 		//signature_verify_by_pubkey_33(publickey_eg4, current_hash_test, signature_eg4);*/
-STOP_USB_FROM_READING_SIGFILES:
+/*STOP_USB_FROM_READING_SIGFILES:
 		printf("\n");
 #endif //EASY_ECC_TEST02
 
@@ -2327,7 +2327,7 @@ STOP_USB_FROM_READING_SIGFILES:
 		argv_1[1] = "stop";
 		do_usb(cmdtp, 0, 2, argv_1);*/
 
-#endif // TEST_READ_USB_FILE
+/*#endif // TEST_READ_USB_FILE
 
 //#define TEST_READ_PUBKEYSIG_FROM_MTD8
 #ifdef TEST_READ_PUBKEYSIG_FROM_MTD8
@@ -2387,7 +2387,7 @@ STOP_USB_FROM_READING_SIGFILES:
 			};*/				/*unsigned AnsiChar data[8] = {
 	0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67
 			};*/
-			if (chararrary_test[0] == 0x02 && chararrary_test[1] == 0x68 && chararrary_test[2] == 0xC0 && chararrary_test[3] == 0xC8 && chararrary_test[4] == 0x1D && chararrary_test[5] == 0x72 && chararrary_test[6] == 0x85 && chararrary_test[7] == 0x67)//if (chararrary_test[0] == 0x85 && chararrary_test[1] == 0x19 && chararrary_test[2] == 0x03 && chararrary_test[3] == 0x20 &&chararrary_test[4] == 0x0C && chararrary_test[5] == 0x00 && chararrary_test[6] == 0x00 && chararrary_test[7] == 0x00)
+/*			if (chararrary_test[0] == 0x02 && chararrary_test[1] == 0x68 && chararrary_test[2] == 0xC0 && chararrary_test[3] == 0xC8 && chararrary_test[4] == 0x1D && chararrary_test[5] == 0x72 && chararrary_test[6] == 0x85 && chararrary_test[7] == 0x67)//if (chararrary_test[0] == 0x85 && chararrary_test[1] == 0x19 && chararrary_test[2] == 0x03 && chararrary_test[3] == 0x20 &&chararrary_test[4] == 0x0C && chararrary_test[5] == 0x00 && chararrary_test[6] == 0x00 && chararrary_test[7] == 0x00)
 			{
 				printf("%X\n", i3);
 				tag_readaddr = 1;
@@ -2427,7 +2427,7 @@ STOP_USB_FROM_READING_SIGFILES:
 #endif //READ_ALL_ADDRESS
 
 #endif // TEST_READ_PUBKEYSIG_FROM_MTD8
-
+*/
 
 
 		sprintf(addr_str, "0x%X", CFG_KERN_ADDR); //(CFG_FLASH_BASE + (CFG_BOOTLOADER_SIZE + CFG_CONFIG_SIZE + CFG_FACTORY_SIZE)), 0xBC000000+0x30000+0x10000+0x10000
