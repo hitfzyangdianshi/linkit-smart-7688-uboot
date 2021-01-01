@@ -241,7 +241,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/
 	/*unsigned char* p_load_addr;
 	p_load_addr = load_addr;*/
-	raspi_read(load_addr, mtd3_ADDR, fwi_size_old);
+	raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
 	//sha256_csum_wd(p_load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
 	printf("Current Firmware mtd3 sha256 ... ");
 	if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
@@ -281,26 +281,22 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
 	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", publickey_eg1[i]);
 	printf("\n");
+	raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1, ECC_BYTES * 2);
+	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
+	printf("the value of fwi_update is: %d\n", fwi_update);
+	printf("sig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
+	printf("\nsig_old: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
+	printf("sig_new: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_new_eg1[i]);
+	printf("\nsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
 	if (fwi_update == 0) {
-		printf("the value of fwi_update is: %d\n", fwi_update);
-		raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1, ECC_BYTES * 2);
-		printf("sig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
-		printf("\nsig_old: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
 		printf("sig_varify_current_firmware_hash_mtd3: "); signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
 	}
 	else if (fwi_update == 0x01) {
 		unsigned int sig_varify_currentfirmware_result = 0, sig_varify_newfirmware_mtd7_result=0;
-		printf("the value of fwi_update is: %d\n", fwi_update);
-		raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1, ECC_BYTES * 2);
-		raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
-		printf("sig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
-		printf("\nsig_old: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
-		printf("sig_new: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_new_eg1[i]);
-		printf("\nsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
 		printf("sig_varify_current_firmware_hash_mtd3: "); sig_varify_currentfirmware_result=signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1);
 		printf("sig_varify_newfirmware_hash_mtd7: "); sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_eg1);
 		if (sig_varify_currentfirmware_result == 1 && sig_varify_newfirmware_mtd7_result ==1) {
-			printf("current firmware hash sig verified..... flash mtd7 as the new firmware now.....\n");
+			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
 		}
 		else if (sig_varify_currentfirmware_result == -1 || sig_varify_newfirmware_mtd7_result ==-1) {
 			printf("current firmware hash sig is not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
