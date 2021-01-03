@@ -10,11 +10,14 @@ total: 24
 2. E:\linkit-smart-7688-uboot\write_mtd\bin_files\mtd3_1_cut_15991639: 15,991,639  
 F20000:	DE	85	F20001:	AD	19	F20002:	C0	03	F20003:	DE	20	F20004:	FF	0C	F20005:	FF	00	F20006:	FF	00	F20007:	FF	00	F20008:	FF	B1	F20009:	FF	B0	F2000A:	FF	1E	F2000B:	FF	E4
 F30000:	FF	85	F30001:	FF	19	F30002:	FF	03	F30003:	FF	20	F30004:	FF	0C	F30005:	FF	00	F30006:	FF	00	F30007:	FF	00	F30008:	FF	B1	F30009:	FF	B0	F3000A:	FF	1E	F3000B:	FF	E4
-F40000:	DE	85	F40001:	AD	19	F40002:	C0	03	F40003:	DE	20	F40004:	00	0C	F40008:	00	B1	F40009:	00	B0	F4000A:	00	1E	F4000B:	00	E4	F4000C:	7B	FF	F4000D:	20	FF	F4000E:	20	FF
+F40000:	DE	85	F40001:	AD	19	F40002:	C0	03	F40003:	DE	20	F40004:	00	0C													F40008:	00	B1	F40009:	00	B0	F4000A:	00	1E	F4000B:	00	E4	F4000C:	7B	FF	F4000D:	20	FF	F4000E:	20	FF
 F4000F:	22	FF	F40010:	6D	FF	... ...			F40355:	02	FF	F40356:	14	FF
 total: 876 
 
 add additional variable (in mtd8): firstboot_tag (1 or 0), hash_new_firstboot, hash_new_notfirstboot;
+how to build mtd3: 
+	change value of [0xF2000-0xF200B], [0xF3001-0xF300B];
+	make 0xf40000: 85190320 0C000000 B1B01EE4 FFFFFFFF ... ...  FF ;
 NOTE: if update==0, hash_new/hash_new_firstboot is the current hush; if update==1, hash_old is the current hash.
 ----------------------------------------------------------------------------------------------------
 30 Dec 2020
