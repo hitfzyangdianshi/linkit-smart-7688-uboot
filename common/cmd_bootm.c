@@ -289,7 +289,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
 	raspi_read(signature_new_firstboot, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES * 2);
 
-	printf("This is for checking mtd8 reading... ... ... \n")
+	printf("This is for checking mtd8 reading... ... ... \n");
 	printf("the value of fwi_update is: %d\n", fwi_update);
 	printf("the value of fwi_firstboot_tag is: %d\n", fwi_firstboot_tag);
 	printf("sig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
@@ -310,7 +310,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("fwi_firstboot_tag !!!= 1... ")
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
 		}
-
 	}
 	else if (fwi_update == 0x01) {
 		unsigned int sig_varify_currentfirmware_result = 0, sig_varify_newfirmware_mtd7_result=0;
