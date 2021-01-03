@@ -332,7 +332,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 				}
 				do_reset(cmdtp, 0, argc, argv);
 			}
-			else printf("it seems that raspi_erase_write() is not successful because the return value is not 0.. .... \n")
+			else printf("it seems that raspi_erase_write() is not successful because the return value is not 0.. .... \n");
 		}
 		else if (sig_varify_currentfirmware_result == -1 || sig_varify_newfirmware_mtd7_result ==-1) {
 			printf("current firmware hash sig is not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
