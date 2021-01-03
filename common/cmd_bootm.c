@@ -195,8 +195,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
 #define mtd7_ADDR 0x1600000 //"fw-new"
 #define mtd3_ADDR   0x50000 //"firmware"
-#define mtd5_ADDR  0x1df91c+0x50000 //"rootfs"
-#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
+//#define mtd5_ADDR  0x1df91c+0x50000 //"rootfs"
+//#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
+#define mtd7_SIZE (mtd8_ADDR-mtd7_ADDR)
 
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	printf("fw-info size: %d\n", sizeof(fw_info_t));
@@ -283,13 +284,13 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t signature_new_eg1[ECC_BYTES * 2];//64
 	uint8_t signature_new_firstboot[ECC_BYTES * 2];
 	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
-	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", publickey_eg1[i]);
-	printf("\n");
 	raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1, ECC_BYTES * 2);
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
 	raspi_read(signature_new_firstboot, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES * 2);
 
 	/*printf("\n\nThis is for checking mtd8 reading... ... ... \n");
+	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", publickey_eg1[i]);
+	printf("\n");
 	printf("the value of fwi_update is: %d\n", fwi_update);
 	printf("the value of fwi_firstboot_tag is: %d\n", fwi_firstboot_tag);
 	printf("sig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
@@ -300,7 +301,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("\tsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new_firstboot, signature_new_firstboot);
 	printf(" mtd8 reading check ends ... ... ... \n\n");*/
 
-	if (fwi_update == 0) {
+	if (fwi_update != 0x01) {
+		if(fwi_update!=0)printf("****** fwi_update is neither 0 nor 1 ........ please check mtd8\n* ");
+
 		printf("sig_varify_current_firmware_hash_mtd3: "); 
 		if (fwi_firstboot_tag == 1){
 			printf("fwi_firstboot_tag==1... ");
@@ -317,6 +320,19 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("sig_varify_newfirmware_hash_mtd7: "); sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_eg1);
 		if (sig_varify_currentfirmware_result == 1 && sig_varify_newfirmware_mtd7_result ==1) {
 			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
+			int raspi_erase_write_result = 1;
+			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
+			raspi_erase_write_result=raspi_erase_write((char*)mtd7_ADDR, CFG_KERN_ADDR - CFG_FLASH_BASE, mtd7_SIZE);
+			if (raspi_erase_write_result == 0)
+			{
+				if (fwi->update != 0) {
+					printf("change fwi->update to 0 .... .... ");
+					fwi->update = 0;
+					raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));
+				}
+				do_reset(cmdtp, 0, argc, argv);
+			}
+			else printf("it seems that raspi_erase_write() is not successful because the return value is not 0.. .... \n")
 		}
 		else if (sig_varify_currentfirmware_result == -1 || sig_varify_newfirmware_mtd7_result ==-1) {
 			printf("current firmware hash sig is not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
@@ -324,9 +340,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		else {
 			printf("ecdsa_verify error\n");
 		}
-	}
-	else {
-		printf("* fwi_update is neither 0 nor 1 ........ please check mtd8\n");
 	}
 	/*printf("publicKey:\n");
 	for (i = 0; i < ECC_BYTES + 1; i++) {
@@ -375,6 +388,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
 		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);
 	}*/
+	printf("\n");
 #endif // TEST_raspi_write_UPDATE_VALUE
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
 
