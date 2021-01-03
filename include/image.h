@@ -155,7 +155,10 @@ typedef struct fw_info {
 	uint32_t	size_new;
 	uint8_t		update;
 	uint8_t		hash_old[32];
-	uint8_t		hash_new[32];
+	uint8_t 	hash_new[32];
+
+	uint8_t		firstboot_tag;
+	uint8_t		hash_new_firstboot[32];
 } fw_info_t;
 
 #endif	/* __IMAGE_H__ */

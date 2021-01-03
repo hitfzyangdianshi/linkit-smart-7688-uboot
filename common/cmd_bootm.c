@@ -210,16 +210,19 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		}
 	}
 	printf("\n");
-	printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+	printf("fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);//printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
 	uint32_t fwi_size_old = fwi->size_old;
 	uint32_t fwi_size_new = fwi->size_new;
 	uint32_t fwi_update = fwi->update;
-	//printf("hash_old:%s\n", fwi->hash_old);
+	uint32_t fwi_firstboot_tag = fwi->firstboot_tag;
 	printf("fwi->hash_old: "); 
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_old + i)); 
-	printf("\fwi->hash_new: ");
+	printf("\nfwi->hash_new: ");
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new + i));
+	printf("\nfwi->hash_new_firstboot: ");
+	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new_firstboot + i));
 	printf("\n");
+	//uint8_t		hash_new_firstboot[32] = { 0x63,0xdf,0xbf,0xeb,0x16,0x73,0xf2,0x0d,0xa7,0x1b,0x43,0xfd,0x5f,0x04,0x8d,0x22,0x05,0x2d,0xe9,0xb4,0xa0,0xa6,0x85,0x50,0x20,0xf1,0x95,0xac,0x5c,0xb0,0x23,0xfa };
 
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
@@ -246,7 +249,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("Current Firmware mtd3 sha256 ... ");
 	if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
-	else						sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
+	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", sha256_sum[i]);
 	}
@@ -278,18 +281,36 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t publickey_eg1[ECC_BYTES + 1];//33
 	uint8_t signature_old_eg1[ECC_BYTES * 2];//64
 	uint8_t signature_new_eg1[ECC_BYTES * 2];//64
+	uint8_t signature_new_firstboot[ECC_BYTES * 2];
 	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
 	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", publickey_eg1[i]);
 	printf("\n");
 	raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1, ECC_BYTES * 2);
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
+	raspi_read(signature_new_firstboot, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES * 2);
+
+	printf("This is for checking mtd8 reading... ... ... \n")
 	printf("the value of fwi_update is: %d\n", fwi_update);
+	printf("the value of fwi_firstboot_tag is: %d\n", fwi_firstboot_tag);
 	printf("sig_old: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_old_eg1[i]);
-	printf("\nsig_old: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
+	printf("\tsig_old: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_old, signature_old_eg1);
 	printf("sig_new: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_new_eg1[i]);
-	printf("\nsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
+	printf("\tsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
+	printf("sig_new_firstboot: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_new_firstboot[i]);
+	printf("\tsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new_firstboot, signature_new_firstboot);
+	printf(" mtd8 reading check ends ... ... ... \n")
+
 	if (fwi_update == 0) {
-		printf("sig_varify_current_firmware_hash_mtd3: "); signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
+		printf("sig_varify_current_firmware_hash_mtd3: "); 
+		if (fwi_firstboot_tag == 1){
+			printf("fwi_firstboot_tag==1... ")
+			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
+		}
+		else {
+			printf("fwi_firstboot_tag !!!= 1... ")
+			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
+		}
+
 	}
 	else if (fwi_update == 0x01) {
 		unsigned int sig_varify_currentfirmware_result = 0, sig_varify_newfirmware_mtd7_result=0;
@@ -302,7 +323,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("current firmware hash sig is not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
 		}
 		else {
-			printf("ecdsa_verify erroe\n");
+			printf("ecdsa_verify error\n");
 		}
 	}
 	else {
@@ -336,6 +357,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("change fwi->update to 0 .... ....\n");
 		fwi->update = 0;
 		raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));//int raspi_erase_write(char *buf, unsigned int offs, int count)
+	}
+	if (fwi->firstboot_tag != 0) {
+		printf("change fwi->firstboot_tag to 0 .... ....\n");
+		fwi->update = 0;
+		raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));
 	}
 	/*if (fwi->update != 1) {
 		uint8_t *update_update =  0x01 ,existupdatevalue[1];

@@ -2,5 +2,3 @@ mtd8_pubsig.bin
 *.bin
 Release
 Release/*
-bin_files
-bin_files/*
