@@ -298,16 +298,16 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("\tsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new, signature_new_eg1);
 	printf("sig_new_firstboot: "); for (i = 0; i < ECC_BYTES * 2; i++)printf("%02x ", signature_new_firstboot[i]);
 	printf("\tsig_new: "); signature_verify_by_pubkey_33(publickey_eg1, fwi->hash_new_firstboot, signature_new_firstboot);
-	printf(" mtd8 reading check ends ... ... ... \n")
+	printf(" mtd8 reading check ends ... ... ... \n");
 
 	if (fwi_update == 0) {
 		printf("sig_varify_current_firmware_hash_mtd3: "); 
 		if (fwi_firstboot_tag == 1){
-			printf("fwi_firstboot_tag==1... ")
+			printf("fwi_firstboot_tag==1... ");
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
 		}
 		else {
-			printf("fwi_firstboot_tag !!!= 1... ")
+			printf("fwi_firstboot_tag !!!= 1... ");
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
 		}
 	}
