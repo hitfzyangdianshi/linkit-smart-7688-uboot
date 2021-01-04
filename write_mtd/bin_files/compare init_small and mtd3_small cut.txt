@@ -1,0 +1,20 @@
+搜索不同
+
+1. E:\linkit-smart-7688-uboot\write_mtd\bin_files\openwrt_smaller_size_0x9f0000_cutoff_after0x940000.bin: 9,699,328 字节
+2. E:\linkit-smart-7688-uboot\write_mtd\bin_files\mtd3_2_cutoff_after0x940000: 9,699,328 字节
+Offsets: 十六进制
+
+930000:	DE	85
+930001:	AD	19
+930002:	C0	03
+930003:	DE	20
+930004:	FF	0C
+930005:	FF	00
+930006:	FF	00
+930007:	FF	00
+930008:	FF	B1
+930009:	FF	B0
+93000A:	FF	1E
+93000B:	FF	E4
+
+12 区别 被发现. 

@@ -1,3 +1,116 @@
+4 Jan 2021
+"Bad Magic Number" issue is solved:
+	code: raspi_erase_write_result=raspi_erase_write((char*)mtd7_ADDR, mtd3_ADDR, mtd7_SIZE);
+	change to:
+		raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
+		raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);                                                                                          0 
+   
+3: System Boot system code via Flash.
+fw-info size: 108
+fw-info raw: 
+57 03 f4 00 57 03 94 00 01 63 df bf eb 16 73 f2 
+0d a7 1b 43 fd 5f 04 8d 22 05 2d e9 b4 a0 a6 85 
+50 20 f1 95 ac 5c b0 23 fa d1 0c b0 5b c8 37 3a 
+b4 02 be 93 61 4d a0 33 37 69 a4 c6 a2 1d 24 11 
+dc f1 7e 58 41 70 97 dc d9 01 d1 0c b0 5b c8 37 
+3a b4 02 be 93 61 4d a0 33 37 69 a4 c6 a2 1d 24 
+11 dc f1 7e 58 41 70 97 dc d9 14 42 
+fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: 1 15991639 9700183 1
+fwi->hash_old: 63dfbfeb1673f20da71b43fd5f048d22052de9b4a0a6855020f195ac5cb023fa
+fwi->hash_new: d10cb05bc8373ab402be93614da0333769a4c6a21d2411dcf17e58417097dcd9
+fwi->hash_new_firstboot: d10cb05bc8373ab402be93614da0333769a4c6a21d2411dcf17e58417097dcd9
+testing sha256... ...
+Current Firmware mtd3 sha256 ... 63dfbfeb1673f20da71b43fd5f048d22052de9b4a0a6855020f195ac5cb023fa
+NeW Firmware mtd7 sha256 ... d10cb05bc8373ab402be93614da0333769a4c6a21d2411dcf17e58417097dcd9
+sig_varify_current_firmware_hash_mtd3: valid
+sig_varify_newfirmware_hash_mtd7: valid
+current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....
+...............................................................................................................................................................
+...............................................................................................................................................................
+Done!
+change fwi->update to 0 .... .... .
+.
+Done!
+     [04020C0D][04020D07]
+DDR Calibration DQS reg = 00008887
+
+
+U-Boot 1.1.3 (Jan  4 2021 - 08:49:13)
+
+Board: Ralink APSoC DRAM:  128 MB
+relocate_code Pointer at: 87f60000
+******************************
+Software System Reset Occurred
+******************************
+flash manufacture id: c2, device id 20 19
+find flash: MX25L25635E
+*** Warning - bad CRC, using default environment
+
+============================================ 
+Ralink UBoot Version: 4.3.0.0
+-------------------------------------------- 
+ASIC 7628_MP (Port5<->None)
+DRAM component: 1024 Mbits DDR, width 16
+DRAM bus: 16 bit
+Total memory: 128 MBytes
+Flash component: SPI Flash
+Date:Jan  4 2021  Time:08:49:13
+============================================ 
+icache: sets:512, ways:4, linesz:32 ,total:65536
+dcache: sets:256, ways:4, linesz:32 ,total:32768 
+
+ ##### The CPU freq = 580 MHZ #### 
+ estimate memory size =128 Mbytes
+RESET MT7628 PHY!!!!!!
+GPIOMODE --> 50054404
+
+GPIOMODE2 --> 5540551
+
+Please choose the operation: 
+   1: Load system code to SDRAM via TFTP. 
+   2: Load system code then write to Flash via TFTP. 
+   3: Boot system code via Flash (default).
+   4: Entr boot command line interface.
+   7: Load Boot Loader code then write to Flash via Serial. 
+   9: Load Boot Loader code then write to Flash via TFTP.                                                                                             0 
+   
+3: System Boot system code via Flash.
+fw-info size: 108
+fw-info raw: 
+57 03 f4 00 57 03 94 00 00 63 df bf eb 16 73 f2 
+0d a7 1b 43 fd 5f 04 8d 22 05 2d e9 b4 a0 a6 85 
+50 20 f1 95 ac 5c b0 23 fa d1 0c b0 5b c8 37 3a 
+b4 02 be 93 61 4d a0 33 37 69 a4 c6 a2 1d 24 11 
+dc f1 7e 58 41 70 97 dc d9 01 d1 0c b0 5b c8 37 
+3a b4 02 be 93 61 4d a0 33 37 69 a4 c6 a2 1d 24 
+11 dc f1 7e 58 41 70 97 dc d9 14 42 
+fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: 0 15991639 9700183 1
+fwi->hash_old: 63dfbfeb1673f20da71b43fd5f048d22052de9b4a0a6855020f195ac5cb023fa
+fwi->hash_new: d10cb05bc8373ab402be93614da0333769a4c6a21d2411dcf17e58417097dcd9
+fwi->hash_new_firstboot: d10cb05bc8373ab402be93614da0333769a4c6a21d2411dcf17e58417097dcd9
+testing sha256... ...
+Current Firmware mtd3 sha256 ... d10cb05bc8373ab402be93614da0333769a4c6a21d2411dcf17e58417097dcd9
+sig_varify_current_firmware_hash_mtd3: fwi_firstboot_tag==1... valid
+change fwi->firstboot_tag to 0 .... ....
+.
+.
+Done!
+
+## Booting image at bc050000 ...
+   Image Name:   MIPS OpenWrt Linux-5.4.82
+   Image Type:   MIPS Linux Kernel Image (lzma compressed)
+   Data Size:    1964252 Bytes =  1.9 MB
+   Load Address: 80000000
+   Entry Point:  80000000
+   Verifying Checksum ... OK
+   Uncompressing Kernel Image ... OK
+No initrd
+## Transferring control to Linux (at address 80000000) ...
+## Giving linux memsize in MB, 128
+
+Starting kernel ...
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 3 Jan 2021     
 /include/image.h      (129):
 	#define IH_MAGIC	0x27051956	/* Image Magic Number		*/

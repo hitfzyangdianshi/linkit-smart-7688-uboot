@@ -241,6 +241,28 @@ int sign_and_print(uint8_t p_privateKey[ECC_BYTES], uint8_t digest[ECC_BYTES]) {
 	return 0;
 }
 
+int getsig_sign_and_print(uint8_t p_privateKey[ECC_BYTES], uint8_t digest[ECC_BYTES], uint8_t p_signature[ECC_BYTES * 2]) {
+
+	int re, i;
+	re = ecdsa_sign(p_privateKey, digest, p_signature);
+	if (re == 0) {
+		printf("error:ecdsa_sign\n");
+		return -2;
+	}
+	printf("p_signature:\n");
+	for (i = 0; i < ECC_BYTES * 2; i++) {
+		printf("%c", p_signature[i]);
+	}
+	printf("\n{");
+	for (i = 0; i < ECC_BYTES * 2; i++) {
+		if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", p_signature[i]);
+		else printf("0x%02X , ", p_signature[i]);
+	}
+	printf("};\n");
+
+	return 0;
+}
+
 int signature_verify_by_pubkey_33(uint8_t p_publicKey[ECC_BYTES + 1], uint8_t digest[ECC_BYTES], uint8_t p_signature1[ECC_BYTES * 2]) {
 
 	//*******************ecdsa_verify*************

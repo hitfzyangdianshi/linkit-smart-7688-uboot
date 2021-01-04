@@ -322,7 +322,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
 			int raspi_erase_write_result = 1;
 			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
+			printf("reading.# ");
 			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
+			printf("    writing.# ");
 			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 			if (raspi_erase_write_result == 0)
 			{
