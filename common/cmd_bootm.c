@@ -197,7 +197,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define mtd3_ADDR   0x50000 //"firmware"
 //#define mtd5_ADDR  0x1df91c+0x50000 //"rootfs"
 //#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
-#define mtd7_SIZE (mtd8_ADDR-mtd7_ADDR)
+#define mtd7_SIZE	(mtd8_ADDR-mtd7_ADDR)
 
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	printf("fw-info size: %d\n", sizeof(fw_info_t));
@@ -322,7 +322,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
 			int raspi_erase_write_result = 1;
 			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
-			raspi_erase_write_result=raspi_erase_write((char*)mtd7_ADDR, CFG_KERN_ADDR - CFG_FLASH_BASE, mtd7_SIZE);
+			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
+			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 			if (raspi_erase_write_result == 0)
 			{
 				if (fwi->update != 0) {
