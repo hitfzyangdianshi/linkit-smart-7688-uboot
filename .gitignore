@@ -10,11 +10,14 @@
 /ecdsa/x64/Release
 /ecdsa/x64/Debug
 uboot.bin
+uboot.img 
 u-boot
 !/include/u-boot
+!/*/u-boot
 u-boot.map
 u-boot.srec
 System.map
+uboot_a.bin 
 CyberChef_v9.21.0.zip
 Release
 Release/*
@@ -22,3 +25,4 @@ Debug
 Debug/*
 ecdsa_openssl
 ecdsa_openssl/*
+
