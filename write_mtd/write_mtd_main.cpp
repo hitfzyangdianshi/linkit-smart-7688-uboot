@@ -3,9 +3,9 @@
 #include<string>
 #include "../ecdsa_lightweight/easy_ecc_main.c"
 #include "../include/image.h"
-#define USE_HOSTCC
+/*#define USE_HOSTCC
 #include "../include/u-boot/sha256.h"
-#include "../lib_generic/sha256.c"
+#include "../lib_generic/sha256.c"*/
 using namespace std;
 /*typedef struct fw_info {
 	uint32_t	size_old;
