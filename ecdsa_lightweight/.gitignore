@@ -2,4 +2,5 @@ Debug/*
 Release/*
 x64/*
 .vs/*
-/print_key_sig/*
+print_key_sig
+print_key_sig/*
