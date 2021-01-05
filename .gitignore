@@ -20,5 +20,5 @@ Release
 Release/*
 Debug
 Debug/*
-ecdsa_openssl
-ecdsa_openssl/*
+#ecdsa_openssl
+#ecdsa_openssl/*

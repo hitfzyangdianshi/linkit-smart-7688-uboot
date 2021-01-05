@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ecdsa_lightweight", "ecdsa_lightweight\ecdsa_lightweight.vcxproj", "{C0BFD6BE-6A6F-4669-BE12-B3133289B539}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ecdsa_with_openssl", "ecdsa_openssl\ecdsa-ub.vcxproj", "{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ecdsa_with_openssl", "ecdsa_openssl\ecdsa-openssl.vcxproj", "{1855F084-5CC3-4D25-9B4F-50DEB75CC5AA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "write_mtd", "write_mtd\write_mtd.vcxproj", "{BC975E73-349B-45B6-B2B3-642C68540884}"
 EndProject
