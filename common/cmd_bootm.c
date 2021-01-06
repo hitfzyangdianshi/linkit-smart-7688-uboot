@@ -338,7 +338,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #ifdef USE_GET_TIMER
 			timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
-			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1)
+			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
 #ifdef USE_GET_TIMER
 			ulong timer_3 = get_timer(timer_0);
 			printf("[TIME] timer_0 (based on 0) = %ld\n", timer_0);
