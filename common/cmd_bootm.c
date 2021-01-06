@@ -188,9 +188,12 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	} else {
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
-
 #define READ_BYTES_FROM_mtd8_DURING_BOOT
 #define TEST_HASH_SHA256_
+#define TEST_ECDSA_mtd8
+#define TEST_raspi_write_UPDATE_VALUE
+#define USE_GET_TIMER
+
 #ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
 #define mtd7_ADDR 0x1600000 //"fw-new"
@@ -223,7 +226,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("\nfwi->hash_new_firstboot: ");
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new_firstboot + i));
 	printf("\n");
-	//uint8_t		hash_new_firstboot[32] = { 0x63,0xdf,0xbf,0xeb,0x16,0x73,0xf2,0x0d,0xa7,0x1b,0x43,0xfd,0x5f,0x04,0x8d,0x22,0x05,0x2d,0xe9,0xb4,0xa0,0xa6,0x85,0x50,0x20,0xf1,0x95,0xac,0x5c,0xb0,0x23,0xfa };
 
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
@@ -245,12 +247,35 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/
 	/*unsigned char* p_load_addr;
 	p_load_addr = load_addr;*/
+
+#ifdef USE_GET_TIMER
+	ulong timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
+
 	raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
-	//sha256_csum_wd(p_load_addr, mtd6_ADDR - mtd5_ADDR, sha256_sum, CHUNKSZ_SHA256);
+
+#ifdef USE_GET_TIMER
+	ulong timer_1 = get_timer(timer_0);
+	printf("[TIME] timer_0 (based on 0) = %ld\n", timer_0);
+	printf("[TIME] timer_1 (based on timer_0) = %ld\n", timer_1);
+#endif // USE_GET_TIMER
+
 	printf("Current Firmware mtd3 sha256 ... ");
+
+#ifdef USE_GET_TIMER
+	timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
+
 	if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
 	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
+
+#ifdef USE_GET_TIMER
+	ulong timer_2 = get_timer(timer_0);
+	printf("[TIME] timer_0 (based on 0) = %ld\n", timer_0);
+	printf("[TIME] timer_2 (based on timer_0) = %ld\n", timer_2);
+#endif // USE_GET_TIMER
+
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", sha256_sum[i]);
 	}
@@ -275,7 +300,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #endif // TEST_HASH_SHA256_
 
-#define TEST_ECDSA_mtd8
 #ifdef TEST_ECDSA_mtd8
 #include "../ecdsa_lightweight/easy_ecc_main.c"
 	//unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
@@ -311,7 +335,15 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		}
 		else {
 			printf("fwi_firstboot_tag !!!= 1... ");
-			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
+#ifdef USE_GET_TIMER
+			timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
+			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1)
+#ifdef USE_GET_TIMER
+			ulong timer_3 = get_timer(timer_0);
+			printf("[TIME] timer_0 (based on 0) = %ld\n", timer_0);
+			printf("[TIME] timer_3 (based on timer_0) = %ld\n", timer_3);
+#endif // USE_GET_TIMER
 		}
 	}
 	else if (fwi_update == 0x01) {
@@ -333,6 +365,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 					fwi->update = 0;
 					raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));
 				}
+				printf("upgrade process finishes ....  reboot now ...\n");
 				do_reset(cmdtp, 0, argc, argv);
 			}
 			else printf("it seems that raspi_erase_write() is not successful because the return value is not 0.. .... \n");
@@ -366,7 +399,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("};\n");*/
 #endif // TEST_ECDSA_mtd8
 
-#define TEST_raspi_write_UPDATE_VALUE
 #ifdef TEST_raspi_write_UPDATE_VALUE
 	if (fwi->update != 0) {
 		printf("change fwi->update to 0 .... ....\n");
