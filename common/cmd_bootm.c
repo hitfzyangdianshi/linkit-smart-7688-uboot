@@ -262,7 +262,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("[TIME] timer_0 (based on 0, mips_count) =      %lu\n", timer_0);
 	printf("[TIME] timer_1 (based on timer_0,mips_count) = %lu\n", timer_1);
 	printf("[TIME] timer_1 used: (usec)                    %lu\n", timer_1 / ((mips_cpu_feq / 2) / 1000000));
-	printf("[TIME] timer_1 used: (second)                  %lf\n", (timer_1/((mips_cpu_feq/2)/1000000))/1000000.000000);
+	printf("[TIME] timer_1 used: (msec)                    %lu\n", (timer_1 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+	printf("[TIME] timer_1 used: (second)                  %lu\n", (timer_1/((mips_cpu_feq/2)/1000000))/1000000);
 	//printf("[TIME] timer_1_0(based on timer_0)= %lu\n", timer_1_0);
 #endif // USE_GET_TIMER
 
@@ -283,7 +284,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
 	printf("[TIME] timer_2 (based on timer_0,mips_count) = %lu\n", timer_2);
 	printf("[TIME] timer_2 used: (usec)                    %lu\n", timer_2 / ((mips_cpu_feq / 2) / 1000000));
-	printf("[TIME] timer_2 used: (second)                  %lf\n", (timer_2 / ((mips_cpu_feq / 2) / 1000000)) / 1000000.000000);
+	printf("[TIME] timer_2 used: (msec)                    %lu\n", (timer_2 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+	printf("[TIME] timer_2 used: (second)                  %lu\n", (timer_2 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
 #endif // USE_GET_TIMER
 
 	for (i = 0; i < 32; i++) {
@@ -359,7 +361,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
 			printf("[TIME] timer_3 (based on timer_0,mips_count) = %lu\n", timer_3);
 			printf("[TIME] timer_3 used: (usec)                    %lu\n", timer_3 / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_3 used: (second)                  %lf\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000000.000000);
+			printf("[TIME] timer_3 used: (msec)                    %lu\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+			printf("[TIME] timer_3 used: (second)                  %lu\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
 #endif // USE_GET_TIMER
 		}
 	}
