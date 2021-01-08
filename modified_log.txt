@@ -1,3 +1,7 @@
+#define CFG_HZ			CPU_CLOCK_RATE/2
+#define CPU_CLOCK_RATE	600000000 
+CFG_HZ	== 300 000 000
+
 4 Jan 2021
 "Bad Magic Number" issue is solved:
 	code: raspi_erase_write_result=raspi_erase_write((char*)mtd7_ADDR, mtd3_ADDR, mtd7_SIZE);
