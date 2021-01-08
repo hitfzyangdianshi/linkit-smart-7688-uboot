@@ -1,6 +1,15 @@
-#define CFG_HZ			CPU_CLOCK_RATE/2
-#define CPU_CLOCK_RATE	600000000 
-CFG_HZ	== 300 000 000
+unsigned long mips_cpu_feq == 580 000 000 
+__attribute__((nomips16)) void udelay (unsigned long usec)
+{
+	ulong tmo;
+	ulong start = get_timer(0);
+
+	tmo = usec * ((mips_cpu_feq/2) / 1000000);
+	while ((ulong)((mips_count_get() - start)) < tmo)
+		/*NOP*/;
+}
+
+-- > 1usec <---->290 counts
 
 4 Jan 2021
 "Bad Magic Number" issue is solved:
