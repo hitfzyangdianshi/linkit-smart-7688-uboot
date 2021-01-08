@@ -249,14 +249,15 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	p_load_addr = load_addr;*/
 
 #ifdef USE_GET_TIMER
+	ulong timer_0, timer_1;
 	timer_init();
-	ulong timer_0 = get_timer(0);
+	timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
 
 	raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
 
 #ifdef USE_GET_TIMER
-	ulong timer_1 = get_timer(timer_0);
+	timer_1 = get_timer(timer_0);
 	printf("[TIME] timer_0 (based on 0) =       %ld\n", timer_0);
 	printf("[TIME] timer_1 (based on timer_0) = %ld\n", timer_1);
 #endif // USE_GET_TIMER
@@ -264,6 +265,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("Current Firmware mtd3 sha256 ... \n");
 
 #ifdef USE_GET_TIMER
+	ulong timer_2;
 	timer_init();
 	timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
@@ -273,7 +275,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
 
 #ifdef USE_GET_TIMER
-	ulong timer_2 = get_timer(timer_0);
+	timer_2 = get_timer(timer_0);
 	printf("[TIME] timer_0 (based on 0) =       %ld\n", timer_0);
 	printf("[TIME] timer_2 (based on timer_0) = %ld\n", timer_2);
 #endif // USE_GET_TIMER
@@ -339,13 +341,15 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("fwi_firstboot_tag !!!= 1... ");
 
 #ifdef USE_GET_TIMER
+			ulong timer_3;
+			timer_init();
 			timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
 
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
 
 #ifdef USE_GET_TIMER
-			ulong timer_3 = get_timer(timer_0);
+			timer_3 = get_timer(timer_0);
 			printf("[TIME] timer_0 (based on 0) =       %ld\n", timer_0);
 			printf("[TIME] timer_3 (based on timer_0) = %ld\n", timer_3);
 #endif // USE_GET_TIMER
