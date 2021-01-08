@@ -165,7 +165,7 @@ static inline void mips_cache_set(u32 v)
 	asm volatile ("mtc0 %0, $16" : : "r" (v));
 }
 
-
+extern unsigned long mips_cpu_feq;
 
 int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 {
@@ -230,7 +230,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
-	printf("testing sha256... ...\n");
+	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256... \ncopy mtd3_fwi_size to raspi_read...\n", mips_cpu_feq);
 	/*int chunk = 64;
 	int empty = 0,j;
 	ulong k,i1;*/
