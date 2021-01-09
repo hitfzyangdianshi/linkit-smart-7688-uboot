@@ -349,7 +349,21 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("sig_varify_current_firmware_hash_mtd3: "); 
 		if (fwi_firstboot_tag == 1){
 			printf("fwi_firstboot_tag==1... ");
+#ifdef USE_GET_TIMER
+			ulong timer_3f;
+			timer_init();
+			timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
+#ifdef USE_GET_TIMER
+			timer_3f = get_timer(timer_0);
+			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
+			printf("[TIME] timer_3f (based on timer_0,mips_count)= %lu\n", timer_3f);
+			printf("[TIME] timer_3f used: (usec)                   %lu\n", timer_3f / ((mips_cpu_feq / 2) / 1000000));
+			printf("[TIME] timer_3f used: (msec)                   %lu\n", (timer_3f / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+			printf("[TIME] timer_3f used: (second)                 %lu\n", (timer_3f / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
+#endif // USE_GET_TIMER
+
 		}
 		else {
 			printf("fwi_firstboot_tag !!!= 1... ");
