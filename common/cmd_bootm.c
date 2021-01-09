@@ -230,7 +230,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
-	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256... \ncopy mtd3_fwi_size to raspi_read...\n", mips_cpu_feq);
+	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256...     copy mtd3_fwi_size to load_addr by raspi_read...\n", mips_cpu_feq);
 	/*int chunk = 64;
 	int empty = 0,j;
 	ulong k,i1;*/
@@ -248,13 +248,18 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	/*unsigned char* p_load_addr;
 	p_load_addr = load_addr;*/
 
+	uint32_t fwi_size_forupdate;
+	if (fwi_update == 0x01)		fwi_size_forupdate= fwi_size_old;
+	else if (fwi_update == 0)	fwi_size_forupdate= fwi_size_new;
+	else						fwi_size_forupdate= fwi_size_new;
 #ifdef USE_GET_TIMER
 	ulong timer_0, timer_1;//,timer_1_0;
 	timer_init();
 	timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
 
-	raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
+	//raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
+	raspi_read(load_addr, mtd3_ADDR, fwi_size_forupdate);
 
 #ifdef USE_GET_TIMER
 	timer_1 = get_timer(timer_0);
@@ -275,9 +280,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
 
-	if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
+	/*if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
-	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
+	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);*/
+	sha256_csum_wd((char*)load_addr, fwi_size_forupdate, sha256_sum, CHUNKSZ_SHA256);
 
 #ifdef USE_GET_TIMER
 	timer_2 = get_timer(timer_0);

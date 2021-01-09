@@ -26,3 +26,4 @@ Debug/*
 ecdsa_openssl
 ecdsa_openssl/*
 uboot.bin.init
+~$*.xlsx

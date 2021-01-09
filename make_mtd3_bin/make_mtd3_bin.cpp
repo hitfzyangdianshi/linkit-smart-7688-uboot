@@ -37,7 +37,7 @@ uint8_t _851903200C000000[] ={ 0x85, 0x19 ,0x03, 0x20 ,0x0C ,0x00 ,0x00 ,0x00   
 
 int main()
 {
-    char init_filename[] = "../write_mtd/bin_files/openwrt_smaller_size_0x9f0000.bin";   //"../write_mtd/bin_files/big_init.bin";
+    char init_filename[] = "../make_mtd8/bin_files/openwrt_smaller_size_0x9f0000.bin";   //"../write_mtd/bin_files/big_init.bin";
     long init_file_length = file_size2(init_filename),i;
     FILE* init_file = fopen(init_filename, "rb");
     FILE* output_file = fopen("output_file.bin", "wb");
