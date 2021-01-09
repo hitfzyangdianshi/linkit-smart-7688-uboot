@@ -381,9 +381,38 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			int raspi_erase_write_result = 1;
 			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
 			printf("reading.# ");
+
+#ifdef USE_GET_TIMER
+			ulong timer_u1;
+			timer_init();
+			timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
 			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
+#ifdef USE_GET_TIMER
+			timer_u1 = get_timer(timer_0);
+			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
+			printf("[TIME] timer_u1 (based on timer_0,mips_count)= %lu\n", timer_u1);
+			printf("[TIME] timer_u1 used: (usec)                   %lu\n", timer_u1 / ((mips_cpu_feq / 2) / 1000000));
+			printf("[TIME] timer_u1 used: (msec)                   %lu\n", (timer_u1 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+			printf("[TIME] timer_u1 used: (second)                 %lu\n", (timer_u1 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
+#endif // USE_GET_TIMER
+
 			printf("    writing.# ");
+#ifdef USE_GET_TIMER
+			ulong timer_u2;
+			timer_init();
+			timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
 			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
+#ifdef USE_GET_TIMER
+			timer_u2 = get_timer(timer_0);
+			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
+			printf("[TIME] timer_u2 (based on timer_0,mips_count)= %lu\n", timer_u2);
+			printf("[TIME] timer_u2 used: (usec)                   %lu\n", timer_u2 / ((mips_cpu_feq / 2) / 1000000));
+			printf("[TIME] timer_u2 used: (msec)                   %lu\n", (timer_u2 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+			printf("[TIME] timer_u2 used: (second)                 %lu\n", (timer_u2 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
+#endif // USE_GET_TIMER
+
 			if (raspi_erase_write_result == 0)
 			{
 				if (fwi->update != 0) {
