@@ -231,23 +231,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
 	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256...     copy mtd3_fwi_size to load_addr by raspi_read...\n", mips_cpu_feq);
-	/*int chunk = 64;
-	int empty = 0,j;
-	ulong k,i1;*/
-	/*for ( k = 0; (empty==0) && (k<mtd6_ADDR - mtd5_ADDR)  ;  k += chunk) {
-		empty = 1;
-		raspi_read(load_addr+k, mtd5_ADDR+k, chunk);							//int raspi_read(char *buf, unsigned int from, int len)
-		for (j = 0; j < chunk; j++) {
-			if (*(uint8_t*)(load_addr + k + j) != 0xff)
-				empty = 0;
-			break;
-		}	
-	}//raspi_read(load_addr + k, mtd5_ADDR + k, chunk);
-	printf("%ld bytes \n", k - chunk); // size = k - chunk (excluding last chunk) 
-	sha256_csum_wd((char*)load_addr, k - chunk, sha256_sum, CHUNKSZ_SHA256);*/
-	/*unsigned char* p_load_addr;
-	p_load_addr = load_addr;*/
-
 	uint32_t fwi_size_forupdate;
 	if (fwi_update == 0x01)		fwi_size_forupdate= fwi_size_old;
 	else if (fwi_update == 0)	fwi_size_forupdate= fwi_size_new;
@@ -307,9 +290,38 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}*/
 	printf("\n");
 	if (fwi_update == 0x01) {
+#ifdef USE_GET_TIMER
+		ulong timer_u0;
+		timer_init();
+		timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
 		raspi_read(load_addr, mtd7_ADDR, fwi_size_new);
+#ifdef USE_GET_TIMER
+		timer_u0 = get_timer(timer_0);
+		printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
+		printf("[TIME] timer_u0 (based on timer_0,mips_count)= %lu\n", timer_u0);
+		printf("[TIME] timer_u0 used: (usec)                   %lu\n", timer_u0 / ((mips_cpu_feq / 2) / 1000000));
+		printf("[TIME] timer_u0 used: (msec)                   %lu\n", (timer_u0 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+		printf("[TIME] timer_u0 used: (second)                 %lu\n", (timer_u0 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
+#endif // USE_GET_TIMER
+
 		printf("NeW Firmware mtd7 sha256 ... ");
+
+#ifdef USE_GET_TIMER
+		ulong timer_u0h;
+		timer_init();
+		timer_0 = get_timer(0);
+#endif // USE_GET_TIMER
 		sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum_mtd7, CHUNKSZ_SHA256);
+#ifdef USE_GET_TIMER
+		timer_u0h = get_timer(timer_0);
+		printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
+		printf("[TIME] timer_u0h (based on timer_0,mips_count)=%lu\n", timer_u0h);
+		printf("[TIME] timer_u0h used: (usec)                  %lu\n", timer_u0h / ((mips_cpu_feq / 2) / 1000000));
+		printf("[TIME] timer_u0h used: (msec)                  %lu\n", (timer_u0h / ((mips_cpu_feq / 2) / 1000000)) / 1000);
+		printf("[TIME] timer_u0h used: (second)                %lu\n", (timer_u0h / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
+#endif // USE_GET_TIMER
+
 		for (i = 0; i < 32; i++) {
 			printf("%02lx", sha256_sum_mtd7[i]);
 		}

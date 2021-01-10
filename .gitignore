@@ -27,3 +27,7 @@ ecdsa_openssl
 ecdsa_openssl/*
 uboot.bin.init
 ~$*.xlsx
+~$*
+*.vsdx
+*.xlsx
+timer_count.xlsx
