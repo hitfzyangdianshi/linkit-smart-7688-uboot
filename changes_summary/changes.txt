@@ -1,0 +1,53 @@
+cmd_bootm.c:  
+/include/image.h:  
+/lib_generic/Makefile: 
++easy_ecc_main.c:  
+
+
++ecdsa_lightweight library:
+	library: easyecc: https://github.com/jestan/easy-ecc
+		ecc.c
+		ecc.h
++other library:
+	buildroot-gcc:
+		/include:
+			endian.h
+			fcntl.h
+			features.h
+			string.h
+			time.h
+			unistd.h
+		/include/bits: 
+			confname.h  
+			fcntl.h   
+			kernel_types.h  
+			pthreadtypes.h  
+			select.h  
+			time.h   
+			uClibc_config.h
+			endian.h    
+			getopt.h  
+			posix_opt.h     
+			sched.h         
+			sigset.h  
+			types.h
+		/include/sys:
+			cdefs.h  
+			select.h  
+			sysmacros.h  
+			types.h
+	u-boot-2021.01-rc4:
+		/lib_generic:
+			sha256.c
+		/include:
+			stdint.h
+			stdio.h
+		/include/linux:
+			typecheck.h
+		/include/u-boot:
+			sha256.h
+		
+
+
+
+
