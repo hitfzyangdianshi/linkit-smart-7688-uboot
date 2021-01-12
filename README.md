@@ -11,3 +11,5 @@ There are also some head files and source codes from u-boot-2021.01-rc4 (https:/
 
 The file changelog is [changes_summary/changes.txt](changes_summary/changes.txt)
 
+# NOTICE
+The head file "stdio.h" is not used and cannot be used here, because functions about printing are defined in other files, so I make it as an empty file. 
