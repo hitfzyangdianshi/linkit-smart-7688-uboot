@@ -1,18 +1,13 @@
-# linkit-smart-uboot
-This feeds holds the UBoot bootloader source code for the LinkIt Smart 7688 (Duo)
+# (modified) linkit-smart-uboot
+This is forked from MediaTek-Labs/linkit-smart-7688-uboot (https://github.com/MediaTek-Labs/linkit-smart-7688-uboot).
 
-# Compile
+The initial README file is referred to https://github.com/MediaTek-Labs/linkit-smart-7688-uboot/blob/master/README.md 
 
-Start by cloning the tree
+The codes are modified for firmware signature verify with ECDSA, and secure firmware update. Additional changes on the firmware/device partitions are needed for storing new firmware and update information. 
 
-`git clone https://github.com/MediaTek-Labs/linkit-smart-uboot.git`
+The ECDSA library from https://github.com/jestan/easy-ecc is used. 
 
-We need to install the cross toolchain required to build the source
+There are also some head files and source codes from u-boot-2021.01-rc4 (https://github.com/u-boot/u-boot/releases/tag/v2021.01-rc4) and from buildroot-gcc342 (https://github.com/MediaTek-Labs/linkit-smart-7688-uboot/blob/master/buildroot-gcc342.tar.bz2) are used.
 
-`sudo tar xjf buildroot-gcc342.tar.bz2 -C /opt/`
+The file changelog is [changes_summary/changes.txt](changes_summary/changes.txt)
 
-Finally we can start building the source
-
-`make`
-
-Notes: Uboot firmware is uboot.bin NOT uboot.img
