@@ -1,4 +1,4 @@
-cmd_bootm.c:			line 197 - line 509
+cmd_bootm.c:			line 191 - line 509
 /include/image.h:		add "struct fw_info" at the end
 /lib_generic/Makefile:	OBJS +sha256.o
 +easy_ecc_main.c:  
