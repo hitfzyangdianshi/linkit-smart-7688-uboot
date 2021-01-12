@@ -1,7 +1,7 @@
 # (modified) linkit-smart-uboot
 This is forked from MediaTek-Labs/linkit-smart-7688-uboot (https://github.com/MediaTek-Labs/linkit-smart-7688-uboot).
 
-The initial README file is referred to https://github.com/MediaTek-Labs/linkit-smart-7688-uboot/blob/master/README.md 
+The initial README file refers to https://github.com/MediaTek-Labs/linkit-smart-7688-uboot/blob/master/README.md 
 
 The codes are modified for firmware signature verify with ECDSA, and secure firmware update. Additional changes on the firmware/device partitions are needed for storing new firmware and update information. 
 
