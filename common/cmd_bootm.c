@@ -227,8 +227,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new_firstboot + i));
 	printf("\n");
 
-	if (fwi_size_old < 0)fwi_size_old = 0;
-	if (fwi_size_new < 0)fwi_size_new = 0; 
+	if (fwi->size_old < 0)fwi_size_old = 0;
+	if (fwi->size_new < 0)fwi_size_new = 0;
 
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
