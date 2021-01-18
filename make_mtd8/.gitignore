@@ -14,3 +14,6 @@ mtd8_pubsig.bin9
 *.bin
 Release
 Release/*
+
+bin_files1
+bin_files1/*
