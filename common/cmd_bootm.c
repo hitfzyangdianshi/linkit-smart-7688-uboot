@@ -192,7 +192,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define TEST_HASH_SHA256_
 #define TEST_ECDSA_mtd8
 #define TEST_raspi_write_UPDATE_VALUE
-#define USE_GET_TIMER
+//#define USE_GET_TIMER
+//#define DEMO_PRINT
 
 #ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
@@ -203,10 +204,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define mtd7_SIZE	(mtd8_ADDR-mtd7_ADDR)
 
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
-	printf("fw-info size: %d\n", sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
-	printf("fw-info raw: \n");
 	uint8_t* p = (uint8_t*)fwi;
+#ifdef DEMO_PRINT
+	printf("fw-info size: %d\n", sizeof(fw_info_t));
+	printf("fw-info raw: \n");
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		printf("%02x ", p[i]);
 		if ((i + 1) % 16 == 0) {
@@ -214,11 +216,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		}
 	}
 	printf("\n");
+#endif // DEMO_PRINT
 	printf("fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);//printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
 	uint32_t fwi_size_old = fwi->size_old;
 	uint32_t fwi_size_new = fwi->size_new;
 	uint32_t fwi_update = fwi->update;
 	uint32_t fwi_firstboot_tag = fwi->firstboot_tag;
+#ifdef DEMO_PRINT
+	printf("the following hash values stored in mtd8 are for demo only. they are not used for fw sig verify.\n");
 	printf("fwi->hash_old: "); 
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_old + i)); 
 	printf("\nfwi->hash_new: ");
@@ -226,7 +231,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("\nfwi->hash_new_firstboot: ");
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new_firstboot + i));
 	printf("\n");
-
+#endif // DEMO_PRINT
 	if (fwi->size_old < 0 || fwi->size_old>32*1024*1024) {
 		fwi_size_old = 1;
 		printf("fwi->size_old size out of range\n");
@@ -239,7 +244,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
+#ifdef USE_GET_TIMER
 	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256...     copy mtd3_fwi_size to load_addr by raspi_read...\n", mips_cpu_feq);
+#else // USE_GET_TIMER
+	printf("testing sha256...     copy mtd3 within fwi_size to load_addr...\n");
+#endif // USE_GET_TIMER
 	uint32_t fwi_size_forupdate;
 	if (fwi_update == 0x01)		fwi_size_forupdate= fwi_size_old;
 	else if (fwi_update == 0)	fwi_size_forupdate= fwi_size_new;
@@ -369,7 +378,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 		printf("sig_varify_current_firmware_hash_mtd3: "); 
 		if (fwi_firstboot_tag == 1){
-			printf("fwi_firstboot_tag==1... ");
+			printf("(fwi_firstboot_tag==1)... :\t");
 #ifdef USE_GET_TIMER
 			ulong timer_3f;
 			timer_init();
@@ -387,7 +396,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 		}
 		else {
-			printf("fwi_firstboot_tag !!!= 1... ");
+			printf("(fwi_firstboot_tag is not 1)... :\t");
 
 #ifdef USE_GET_TIMER
 			ulong timer_3;
