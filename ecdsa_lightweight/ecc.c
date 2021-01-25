@@ -90,7 +90,7 @@ static int getRandomNumber(uint64_t* p_vli)
 }
 
 #else /* _WIN32 */
-
+typedef unsigned int uint;
 /* Assume that we are using a POSIX-like system with /dev/urandom or /dev/random. */
 #include <linux/types.h>
 #include <fcntl.h>
