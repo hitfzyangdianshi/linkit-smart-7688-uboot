@@ -197,7 +197,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
-#define mtd7_ADDR 0x1600000 //"fw-new"
+#define mtd7_ADDR 0x1360000 //"fw-new"
 #define mtd3_ADDR   0x50000 //"firmware"
 //#define mtd5_ADDR  0x1df91c+0x50000 //"rootfs"
 //#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
