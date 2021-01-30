@@ -1,13 +1,21 @@
-cmd_bootm.c:			line 191 - line 509
+cmd_bootm.c:			line 191 - line 529   (around)
+		from:		if (argc < 2) {
+						addr = load_addr;
+					} else {
+						addr = simple_strtoul(argv[1], NULL, 16);
+					}
+		to:			SHOW_BOOT_PROGRESS (1);
+					printf ("## Booting image at %08lx ...\n", addr);
+
 /include/image.h:		add "struct fw_info" at the end
 /lib_generic/Makefile:	OBJS +sha256.o
 +easy_ecc_main.c:  
 
 
-+ecdsa_lightweight library:
++ecdsa_lightweight library:    
 	library: easyecc: https://github.com/jestan/easy-ecc
 		ecc.c
-		ecc.h
+		ecc.h    (there are some minor changes in codes comparing to the initial easyecc codes)
 +other library:
 	buildroot-gcc:
 		/include:

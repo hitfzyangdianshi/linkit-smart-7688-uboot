@@ -194,6 +194,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #define TEST_raspi_write_UPDATE_VALUE
 //#define USE_GET_TIMER
 //#define DEMO_PRINT
+#define CHECK_FWUPDATE_ONLY
+
 
 #ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
@@ -217,7 +219,15 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	printf("\n");
 #endif // DEMO_PRINT
-	printf("fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);//printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+
+#ifdef CHECK_FWUPDATE_ONLY
+	if (fwi->firstboot_tag != 1)
+		goto boot_start_point;
+#endif // CHECK_FWUPDATE_ONLY
+
+
+	//printf("fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);//printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+	printf("fw-info data: ->update, ->size_new, fwi->firstboot_tag: %d %d %d\n", fwi->update, fwi->size_new, fwi->firstboot_tag);
 	uint32_t fwi_size_old = fwi->size_old;
 	uint32_t fwi_size_new = fwi->size_new;
 	uint32_t fwi_update = fwi->update;
@@ -229,9 +239,12 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf("\nfwi->hash_new: ");
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new + i));
 	printf("\nfwi->hash_new_firstboot: ");
+#endif // DEMO_PRINT
+#ifdef CHECK_FWUPDATE_ONLY
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new_firstboot + i));
 	printf("\n");
-#endif // DEMO_PRINT
+#endif // CHECK_FWUPDATE_ONLY
+
 	if (fwi->size_old < 0 || fwi->size_old>32*1024*1024) {
 		fwi_size_old = 1;
 		printf("fwi->size_old size out of range\n");
@@ -241,8 +254,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("fwi->size_new size out of range\n");
 	}
 
-	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
-#ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
+
+
+	uint8_t sha256_sum[32], sha256_sum_mtd7[32];					//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
 #ifdef USE_GET_TIMER
 	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256...     copy mtd3_fwi_size to load_addr by raspi_read...\n", mips_cpu_feq);
@@ -259,6 +273,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
 
+
+#ifndef CHECK_FWUPDATE_ONLY
 	//raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
 	raspi_read(load_addr, mtd3_ADDR, fwi_size_forupdate);
 
@@ -307,6 +323,19 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("\n");
 	}*/
 	printf("\n");
+#else
+	if (fwi_update == 0) {
+		raspi_read(load_addr, mtd3_ADDR, fwi_size_forupdate);
+		printf("Current Firmware mtd3 sha256 ... \n");
+		sha256_csum_wd((char*)load_addr, fwi_size_forupdate, sha256_sum, CHUNKSZ_SHA256);
+		for (i = 0; i < 32; i++) {
+			printf("%02lx", sha256_sum[i]);
+		}
+		printf("\n");
+	}
+#endif // !CHECK_FWUPDATE_ONLY
+
+
 	if (fwi_update == 0x01) {
 #ifdef USE_GET_TIMER
 		ulong timer_u0;
@@ -323,7 +352,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("[TIME] timer_u0 used: (second)                 %lu\n", (timer_u0 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
 #endif // USE_GET_TIMER
 
-		printf("NeW Firmware mtd7 sha256 ... ");
+		printf("New Firmware mtd7 sha256 ... ");
 
 #ifdef USE_GET_TIMER
 		ulong timer_u0h;
@@ -346,11 +375,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("\n");
 	}
 
-#endif // TEST_HASH_SHA256_
+ 
 
-#ifdef TEST_ECDSA_mtd8
+
 #include "../ecdsa_lightweight/easy_ecc_main.c"
-	//unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
 	uint8_t publickey_eg1[ECC_BYTES + 1];//33
 	uint8_t signature_old_eg1[ECC_BYTES * 2];//64
 	uint8_t signature_new_eg1[ECC_BYTES * 2];//64
@@ -379,51 +407,26 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("sig_varify_current_firmware_hash_mtd3: "); 
 		if (fwi_firstboot_tag == 1){
 			printf("(fwi_firstboot_tag==1)... :\t");
-#ifdef USE_GET_TIMER
-			ulong timer_3f;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
-#ifdef USE_GET_TIMER
-			timer_3f = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_3f (based on timer_0,mips_count)= %lu\n", timer_3f);
-			printf("[TIME] timer_3f used: (usec)                   %lu\n", timer_3f / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_3f used: (msec)                   %lu\n", (timer_3f / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_3f used: (second)                 %lu\n", (timer_3f / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
-
 		}
+#ifndef CHECK_FWUPDATE_ONLY
 		else {
 			printf("(fwi_firstboot_tag is not 1)... :\t");
-
-#ifdef USE_GET_TIMER
-			ulong timer_3;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
-
 			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
-
-#ifdef USE_GET_TIMER
-			timer_3 = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_3 (based on timer_0,mips_count) = %lu\n", timer_3);
-			printf("[TIME] timer_3 used: (usec)                    %lu\n", timer_3 / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_3 used: (msec)                    %lu\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_3 used: (second)                  %lu\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
 		}
+#endif // !CHECK_FWUPDATE_ONLY
 	}
 	else if (fwi_update == 0x01) {
 		unsigned int sig_varify_currentfirmware_result = 0, sig_varify_newfirmware_mtd7_result=0;
-		printf("sig_varify_current_firmware_hash_mtd3: "); sig_varify_currentfirmware_result=signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1);
+#ifndef CHECK_FWUPDATE_ONLY 
+		printf("sig_varify_current_firmware_hash_mtd3: "); sig_varify_currentfirmware_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1);
+#else // !CHECK_FWUPDATE_ONLY
+		sig_varify_currentfirmware_result = 1;
+#endif // !CHECK_FWUPDATE_ONLY
 		printf("sig_varify_newfirmware_hash_mtd7: "); sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot);
 		if (sig_varify_currentfirmware_result == 1 && sig_varify_newfirmware_mtd7_result ==1) {
-			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
+			printf("  sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
 			int raspi_erase_write_result = 1;
-			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
 			printf("reading.# ");
 
 #ifdef USE_GET_TIMER
@@ -431,7 +434,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			timer_init();
 			timer_0 = get_timer(0);
 #endif // USE_GET_TIMER
-			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
+			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE); //raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
 #ifdef USE_GET_TIMER
 			timer_u1 = get_timer(timer_0);
 			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
@@ -442,20 +445,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #endif // USE_GET_TIMER
 
 			printf("    writing.# ");
-#ifdef USE_GET_TIMER
-			ulong timer_u2;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
-			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
-#ifdef USE_GET_TIMER
-			timer_u2 = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_u2 (based on timer_0,mips_count)= %lu\n", timer_u2);
-			printf("[TIME] timer_u2 used: (usec)                   %lu\n", timer_u2 / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_u2 used: (msec)                   %lu\n", (timer_u2 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_u2 used: (second)                 %lu\n", (timer_u2 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
+			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);//raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new);
 
 			if (raspi_erase_write_result == 0)
 			{
@@ -496,9 +486,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		else printf("0x%02X , ", signature_eg1[i]);
 	}
 	printf("};\n");*/
-#endif // TEST_ECDSA_mtd8
 
-#ifdef TEST_raspi_write_UPDATE_VALUE
+
 	if (fwi->update != 0) {
 		printf("change fwi->update to 0 .... ....\n");
 		fwi->update = 0;
@@ -523,10 +512,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);
 	}*/
 	printf("\n");
-#endif // TEST_raspi_write_UPDATE_VALUE
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
 
-	
+boot_start_point:	
 	SHOW_BOOT_PROGRESS (1);
 	printf ("## Booting image at %08lx ...\n", addr);
 
