@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_mtd3_bin", "make_mtd3_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_mtd8", "make_mtd8\make_mtd8.vcxproj", "{55C93C91-4A6E-4D72-B538-C15E28E562D7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_mtd8_auto", "make_mtd8_auto\make_mtd8_auto.vcxproj", "{DC900CC6-3103-4461-A429-D6CC2E5FD562}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{55C93C91-4A6E-4D72-B538-C15E28E562D7}.Release|x64.Build.0 = Release|x64
 		{55C93C91-4A6E-4D72-B538-C15E28E562D7}.Release|x86.ActiveCfg = Release|Win32
 		{55C93C91-4A6E-4D72-B538-C15E28E562D7}.Release|x86.Build.0 = Release|Win32
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Debug|x64.ActiveCfg = Debug|x64
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Debug|x64.Build.0 = Debug|x64
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Debug|x86.ActiveCfg = Debug|Win32
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Debug|x86.Build.0 = Debug|Win32
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Release|x64.ActiveCfg = Release|x64
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Release|x64.Build.0 = Release|x64
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Release|x86.ActiveCfg = Release|Win32
+		{DC900CC6-3103-4461-A429-D6CC2E5FD562}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
