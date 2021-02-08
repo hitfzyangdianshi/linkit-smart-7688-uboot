@@ -1,0 +1,308 @@
+U-Boot 1.1.3 (Feb  2 2021 - 19:28:13)
+
+Board: Ralink APSoC DRAM:  128 MB
+relocate_code Pointer at: 87f60000
+******************************
+Software System Reset Occurred
+******************************
+flash manufacture id: c2, device id 20 19
+find flash: MX25L25635E
+*** Warning - bad CRC, using default environment
+
+============================================ 
+Ralink UBoot Version: 4.3.0.0
+-------------------------------------------- 
+ASIC 7628_MP (Port5<->None)
+DRAM component: 1024 Mbits DDR, width 16
+DRAM bus: 16 bit
+Total memory: 128 MBytes
+Flash component: SPI Flash
+Date:Feb  2 2021  Time:19:28:13
+============================================ 
+icache: sets:512, ways:4, linesz:32 ,total:65536
+dcache: sets:256, ways:4, linesz:32 ,total:32768 
+
+ ##### The CPU freq = 580 MHZ #### 
+ estimate memory size =128 Mbytes
+RESET MT7628 PHY!!!!!!
+GPIOMODE --> 50054404
+
+GPIOMODE2 --> 5540551
+
+Please choose the operation: 
+   1: Load system code to SDRAM via TFTP. 
+   2: Load system code then write to Flash via TFTP. 
+   3: Boot system code via Flash (default).
+   4: Entr boot command line interface.
+   7: Load Boot Loader code then write to Flash via Serial. 
+   9: Load Boot Loader code then write to Flash via TFTP.                       0 
+   
+3: System Boot system code via Flash.
+fw-info data: ->update, ->size_new, fwi->firstboot_tag: 0 12583767 1
+2d5dd2c4262a9e2d5dbb2c004329847b42c6e1b42a2b1282a4c5115063c60892
+testing sha256...     copy mtd3 within fwi_size to load_addr...
+Current Firmware mtd3 sha256 ... 
+2d5dd2c4262a9e2d5dbb2c004329847b42c6e1b42a2b1282a4c5115063c60892
+sig_varify_current_firmware_hash_mtd3: (fwi_firstboot_tag==1)... :	valid
+change fwi->firstboot_tag to 0 .... ....
+.
+.
+Done!
+
+## Booting image at bc050000 ...
+   Image Name:   MIPS OpenWrt Linux-5.4.82
+   Image Type:   MIPS Linux Kernel Image (lzma compressed)
+   Data Size:    1964251 Bytes =  1.9 MB
+   Load Address: 80000000
+   Entry Point:  80000000
+   Verifying Checksum ... OK
+   Uncompressing Kernel Image ... OK
+No initrd
+## Transferring control to Linux (at address 80000000) ...
+## Giving linux memsize in MB, 128
+
+Starting kernel ...
+
+[    0.000000] Linux version 5.4.82 (qwer@qwer) (gcc version 8.4.0 (OpenWrt GCC 8.4.0 r14574-96023cd4ba)) #0 Thu Dec 10 19:33:51 2020
+[    0.000000] Board has DDR2
+[    0.000000] Analog PMU set to hw control
+[    0.000000] Digital PMU set to hw control
+[    0.000000] SoC Type: MediaTek MT7688 ver:1 eco:2
+[    0.000000] printk: bootconsole [early0] enabled
+[    0.000000] CPU0 revision is: 00019655 (MIPS 24KEc)
+[    0.000000] MIPS: machine is MediaTek LinkIt Smart 7688
+[    0.000000] Initrd not found or empty - disabling initrd
+[    0.000000] Primary instruction cache 64kB, VIPT, 4-way, linesize 32 bytes.
+[    0.000000] Primary data cache 32kB, 4-way, PIPT, no aliases, linesize 32 bytes
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 32480
+[    0.000000] Kernel command line: console=ttyS2,57600 rootfstype=squashfs,jffs2
+[    0.000000] Dentry cache hash table entries: 16384 (order: 4, 65536 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 8192 (order: 3, 32768 bytes, linear)
+[    0.000000] Writing ErrCtl register=00032140
+[    0.000000] Readback ErrCtl register=00032140
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Memory: 122428K/131072K available (4649K kernel code, 199K rwdata, 1036K rodata, 1212K init, 197K bss, 8644K reserved, 0K cma-reserved)
+[    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] NR_IRQS: 256
+[    0.000000] intc: using register map from devicetree
+[    0.000000] random: get_random_bytes called from start_kernel+0x32c/0x518 with crng_init=0
+[    0.000000] CPU Clock: 580MHz
+[    0.000000] timer_probe: no matching timers found
+[    0.000000] clocksource: MIPS: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 6590553264 ns
+[    0.000010] sched_clock: 32 bits at 290MHz, resolution 3ns, wraps every 7405115902ns
+[    0.015376] Calibrating delay loop... 385.02 BogoMIPS (lpj=770048)
+[    0.059456] pid_max: default: 32768 minimum: 301
+[    0.068777] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.083108] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.104635] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.123840] futex hash table entries: 256 (order: -1, 3072 bytes, linear)
+[    0.137363] pinctrl core: initialized pinctrl subsystem
+[    0.148745] NET: Registered protocol family 16
+[    0.192613] workqueue: max_active 576 requested for napi_workq is out of range, clamping between 1 and 512
+[    0.215055] clocksource: Switched to clocksource MIPS
+[    0.226349] NET: Registered protocol family 2
+[    0.235828] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.252301] TCP established hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.267386] TCP bind hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.281311] TCP: Hash tables configured (established 1024 bind 1024)
+[    0.294010] UDP hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.306854] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.320898] NET: Registered protocol family 1
+[    0.329449] PCI: CLS 0 bytes, default 32
+[    0.341933] workingset: timestamp_bits=14 max_order=15 bucket_order=1
+[    0.363131] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.374540] jffs2: version 2.2 (NAND) (SUMMARY) (LZMA) (RTIME) (CMODE_PRIORITY) (c) 2001-2006 Red Hat, Inc.
+[    0.412674] mt7621_gpio 10000600.gpio: registering 32 gpios
+[    0.423941] mt7621_gpio 10000600.gpio: registering 32 gpios
+[    0.435227] mt7621_gpio 10000600.gpio: registering 32 gpios
+[    0.446467] Serial: 8250/16550 driver, 3 ports, IRQ sharing disabled
+[    0.460245] 10000c00.uartlite: ttyS0 at MMIO 0x10000c00 (irq = 28, base_baud = 2500000) is a 16550A
+[    0.478776] 10000d00.uart1: ttyS1 at MMIO 0x10000d00 (irq = 29, base_baud = 2500000) is a 16550A
+[    0.496774] 10000e00.uart2: ttyS2 at MMIO 0x10000e00 (irq = 30, base_baud = 2500000) is a 16550A
+[    0.514133] printk: console [ttyS2] enabled
+[    0.514133] printk: console [ttyS2] enabled
+[    0.530545] printk: bootconsole [early0] disabled
+[    0.530545] printk: bootconsole [early0] disabled
+[    0.550575] spi-mt7621 10000b00.spi: sys_freq: 193333333
+[    0.569662] spi-nor spi0.0: mx25l25635e (32768 Kbytes)
+[    0.579969] 6 fixed-partitions partitions found on MTD device spi0.0
+[    0.592556] Creating 6 MTD partitions on "spi0.0":
+[    0.602061] 0x000000000000-0x000000030000 : "u-boot"
+[    0.612979] 0x000000030000-0x000000040000 : "u-boot-env"
+[    0.624564] 0x000000040000-0x000000050000 : "factory"
+[    0.635772] 0x000000050000-0x000001360000 : "firmware"
+[    0.650389] 2 uimage-fw partitions found on MTD device firmware
+[    0.662189] Creating 2 MTD partitions on "firmware":
+[    0.672041] 0x000000000000-0x0000001df91b : "kernel"
+[    0.682923] 0x0000001df91b-0x000001310000 : "rootfs"
+[    0.693779] mtd: device 5 (rootfs) set to be root filesystem
+[    0.706771] 1 squashfs-split partitions found on MTD device rootfs
+[    0.719109] 0x000000c00000-0x000001310000 : "rootfs_data"
+[    0.730884] 0x000001360000-0x000001ff0000 : "fw-new"
+[    0.741813] 0x000001ff0000-0x000002000000 : "fw-info"
+[    0.753908] libphy: Fixed MDIO Bus: probed
+[    0.775044] rt3050-esw 10110000.esw: link changed 0x00
+[    0.787354] mtk_soc_eth 10100000.ethernet eth0: mediatek frame engine at 0xb0100000, irq 5
+[    0.805704] NET: Registered protocol family 10
+[    0.819174] Segment Routing with IPv6
+[    0.826608] NET: Registered protocol family 17
+[    0.835495] 8021q: 802.1Q VLAN Support v1.8
+[    0.845044] mtk-linkit bootstrap: Version  : LINKITS7688
+[    0.855645] mtk-linkit bootstrap: Revision : REV3
+[    0.864965] mtk-linkit bootstrap: setting up bootstrap latch
+[    0.876183] mtk-linkit bootstrap: failed to setup bootstrap gpio
+[    0.888102] mtk-linkit: probe of bootstrap failed with error -1
+[    0.903551] VFS: Mounted root (squashfs filesystem) readonly on device 31:5.
+[    0.924498] Freeing unused kernel memory: 1212K
+[    0.933496] This architecture does not have kernel memory protection.
+[    0.946251] Run /sbin/init as init process
+[    1.523064] random: fast init done
+[    1.733671] init: Console is alive
+[    1.740830] init: - watchdog -
+[    3.429718] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[    3.660161] usbcore: registered new interface driver usbfs
+[    3.671183] usbcore: registered new interface driver hub
+[    3.681842] usbcore: registered new device driver usb
+[    3.730757] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    3.753023] SCSI subsystem initialized
+[    3.766753] ehci-fsl: Freescale EHCI Host controller driver
+[    3.780085] ehci-platform: EHCI generic platform driver
+[    3.800848] phy phy-10120000.usbphy.0: remote usb device wakeup disabled
+[    3.814135] phy phy-10120000.usbphy.0: UTMI 16bit 30MHz
+[    3.824490] ehci-platform 101c0000.ehci: EHCI Host Controller
+[    3.835911] ehci-platform 101c0000.ehci: new USB bus registered, assigned bus number 1
+[    3.851742] ehci-platform 101c0000.ehci: irq 26, io mem 0x101c0000
+[    3.879062] ehci-platform 101c0000.ehci: USB 2.0 started, EHCI 1.00
+[    3.892552] hub 1-0:1.0: USB hub found
+[    3.900498] hub 1-0:1.0: 1 port detected
+[    3.914978] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    3.928720] ohci-platform: OHCI generic platform driver
+[    3.939451] ohci-platform 101c1000.ohci: Generic Platform OHCI controller
+[    3.952967] ohci-platform 101c1000.ohci: new USB bus registered, assigned bus number 2
+[    3.968786] ohci-platform 101c1000.ohci: irq 26, io mem 0x101c1000
+[    4.044116] hub 2-0:1.0: USB hub found
+[    4.052066] hub 2-0:1.0: 1 port detected
+[    4.064001] uhci_hcd: USB Universal Host Controller Interface driver
+[    4.119268] sdhci: Secure Digital Host Controller Interface driver
+[    4.131556] sdhci: Copyright(c) Pierre Ossman
+[    4.142320] sdhci-pltfm: SDHCI platform and OF driver helper
+[    4.158523] usbcore: registered new interface driver usb-storage
+[    4.175501] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[    4.200458] init: - preinit -
+[    4.251192] usb 1-1: new high-speed USB device number 2 using ehci-platform
+[    4.529857] mmc0: new high speed SDXC card at address aaaa
+[    4.547669] mmcblk0: mmc0:aaaa SC128 119 GiB 
+[    4.561605]  mmcblk0: p1
+[    4.860534] hub 1-1:1.0: USB hub found
+[    4.951141] hub 1-1:1.0: 4 ports detected
+[    5.071022] random: procd: uninitialized urandom read (4 bytes read)
+[    5.568391] usb 1-1.1: new high-speed USB device number 3 using ehci-platform
+[    5.746702] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.763937] usb-storage 1-1.1:1.0: USB Mass Storage device detected
+[    5.795148] scsi host0: usb-storage 1-1.1:1.0
+[    5.871894] random: jshn: uninitialized urandom read (4 bytes read)
+[    5.891170] usb 1-1.4: new high-speed USB device number 4 using ehci-platform
+[    6.024842] usb-storage 1-1.4:1.0: USB Mass Storage device detected
+[    6.059157] scsi host1: usb-storage 1-1.4:1.0
+[    6.083607] urandom_read: 2 callbacks suppressed
+[    6.083617] random: jshn: uninitialized urandom read (4 bytes read)
+[    6.435766] rt3050-esw 10110000.esw: link changed 0x00
+Press the [f] key and hit [enter] to enter failsafe mode
+Press the [1], [2], [3] or [4] key and hit [enter] to select the debug level
+[    6.828301] scsi 0:0:0:0: Direct-Access     Kingston DataTraveler 3.0 PMAP PQ: 0 ANSI: 6
+[    7.084809] scsi 1:0:0:0: Direct-Access     Generic  STORAGE DEVICE   1404 PQ: 0 ANSI: 6
+[    7.164101] sd 0:0:0:0: [sda] 61472768 512-byte logical blocks: (31.5 GB/29.3 GiB)
+[    7.180708] sd 0:0:0:0: [sda] Write Protect is off
+[    7.191836] sd 0:0:0:0: [sda] No Caching mode page found
+[    7.202398] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[    7.221866]  sda: sda1
+[    7.232226] sd 0:0:0:0: [sda] Attached SCSI removable disk
+[    7.315971] sd 1:0:0:0: [sdb] Attached SCSI removable disk
+[   10.931886] mount_root: loading kmods from internal overlay
+[   10.981064] kmodloader: loading kernel modules from //etc/modules-boot.d/*
+[   10.996776] kmodloader: done loading kernel modules from //etc/modules-boot.d/*
+[   11.371241] block: attempting to load /etc/config/fstab
+[   11.458424] block: extroot: not configured
+[   11.467654] mount_root: jffs2 not ready yet, using temporary tmpfs overlay
+[   11.492104] urandom-seed: Seed file not found (/etc/urandom.seed)
+[   11.620962] procd: - early -
+[   11.626886] procd: - watchdog -
+[   12.313013] procd: - watchdog -
+[   12.454164] procd: - ubus -
+[   12.567157] random: ubusd: uninitialized urandom read (4 bytes read)
+[   12.581241] random: ubusd: uninitialized urandom read (4 bytes read)
+[   12.594800] random: ubusd: uninitialized urandom read (4 bytes read)
+[   12.612019] procd: - init -
+Please press Enter to activate this console.
+[   14.278852] kmodloader: loading kernel modules from /etc/modules.d/*
+[   14.301238] EXT4-fs (mmcblk0p1): mounted filesystem with ordered data mode. Opts: 
+[   14.751659] urngd: v1.0.2 started.
+[   14.903141] fuse: init (API version 7.31)
+[   14.946976] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[   14.972970] Loading modules backported from Linux version v5.8-0-gbcf876870b95
+[   14.987338] Backport generated by backports.git v5.8-1-0-g79400d9e
+[   15.128459] xt_time: kernel timezone is -0000
+[   15.443424] mt76_wmac 10300000.wmac: ASIC revision: 76280001
+[   15.476680] random: crng init done
+[   15.483458] random: 1 urandom warning(s) missed due to ratelimiting
+[   16.497202] mt76_wmac 10300000.wmac: Firmware Version: 20151201
+[   16.509004] mt76_wmac 10300000.wmac: Build Time: 20151201183641
+[   16.567063] mt76_wmac 10300000.wmac: firmware init done
+[   16.959701] kmodloader: done loading kernel modules from /etc/modules.d/*
+[   34.927459] br-lan: port 1(eth0) entered blocking state
+[   34.937887] br-lan: port 1(eth0) entered disabled state
+[   34.948650] device eth0 entered promiscuous mode
+[   35.051195] br-lan: port 1(eth0) entered blocking state
+[   35.061575] br-lan: port 1(eth0) entered forwarding state
+[   35.947181] IPv6: ADDRCONF(NETDEV_CHANGE): br-lan: link becomes ready
+[   36.647284] jffs2_scan_eraseblock(): End of filesystem marker found at 0x0
+[   36.697109] jffs2_build_filesystem(): unlocking the mtd device... 
+[   36.697118] done.
+[   36.713242] jffs2_build_filesystem(): erasing all blocks after the end marker... 
+[   39.223831] br-lan: port 2(wlan0-1) entered blocking state
+[   39.249621] br-lan: port 2(wlan0-1) entered disabled state
+[   39.260923] device wlan0-1 entered promiscuous mode
+[   43.087302] wlan0: authenticate with 52:e0:85:50:f9:fb
+[   43.128451] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[   43.140925] wlan0: authenticated
+[   43.175159] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[   43.335174] wlan0: associate with 52:e0:85:50:f9:fb (try 2/3)
+[   43.369915] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=6)
+[   43.385507] wlan0: associated
+[   43.860947] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+[   43.926471] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0-1: link becomes ready
+[   43.939734] br-lan: port 2(wlan0-1) entered blocking state
+[   43.950648] br-lan: port 2(wlan0-1) entered forwarding state
+
+
+
+BusyBox v1.31.1 () built-in shell (ash)
+
+  _______                     ________        __
+ |       |.-----.-----.-----.|  |  |  |.----.|  |_
+ |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+ |_______||   __|_____|__|__||________||__|  |____|
+          |__| W I R E L E S S   F R E E D O M
+ -----------------------------------------------------
+ OpenWrt SNAPSHOT, r15182-8663072854
+ -----------------------------------------------------
+root@OpenWrt:/# [   72.239856] done.
+[   72.243764] jffs2: notice: (2078) jffs2_build_xattr_subsystem: complete building xattr subsystem, 0 of xdatum (0 unchecked, 0 orphan) and 0 of xref (0 dead, 0 orphan) found.
+[   72.527371] overlayfs: upper fs does not support tmpfile.
+[   78.561635] wlan0: authenticate with 52:e0:85:50:f9:fb
+[   78.572353] wlan0: send auth to 52:e0:85:50:f9:fb (try 1/3)
+[   78.587907] wlan0: authenticated
+[   78.595923] br-lan: port 2(wlan0-1) entered disabled state
+[   78.611131] wlan0: associate with 52:e0:85:50:f9:fb (try 1/3)
+[   78.644071] wlan0: RX AssocResp from 52:e0:85:50:f9:fb (capab=0x8731 status=0 aid=7)
+[   78.659662] wlan0: associated
+[   78.689246] br-lan: port 2(wlan0-1) entered blocking state
+[   78.700201] br-lan: port 2(wlan0-1) entered forwarding state
+
+root@OpenWrt:/# 

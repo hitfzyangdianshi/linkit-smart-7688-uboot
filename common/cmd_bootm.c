@@ -445,7 +445,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #endif // USE_GET_TIMER
 
 			printf("    writing.# ");
-			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);//raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new);
+			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new);//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 
 			if (raspi_erase_write_result == 0)
 			{
