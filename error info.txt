@@ -1,0 +1,60 @@
+[   42.058622] ------------[ cut here ]------------
+[   42.067831] WARNING: CPU: 0 PID: 1559 at net/sched/sch_generic.c:448 dev_watchdog+0x26c/0x274
+[   42.084738] NETDEV WATCHDOG: eth0 (mtk_soc_eth): transmit queue 0 timed out
+[   42.098526] Modules linked in: iptable_nat xt_state xt_nat xt_conntrack xt_REDIRECT xt_MASQUERADE xt_FLOWOFFLOAD nf_nat nf_flow_table_hw nf_flow_table nf_conntrack_rtcache nf_conntrack mt76x2e mt76x2_common mt76x02_lib mt7603e mt76 mac80211 ipt_REJECT cfg80211 xt_time xt_tcpudp xt_multiport xt_mark xt_mac xt_limit xt_comment xt_TCPMSS xt_LOG nf_reject_ipv4 nf_log_ipv4 nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_mangle iptable_filter ip_tables exfat crc_ccitt compat fuse nf_log_ipv6 nf_log_common ip6table_mangle ip6table_filter ip6_tables ip6t_REJECT x_tables nf_reject_ipv6 vfat fat nls_utf8 nls_iso8859_1 nls_cp437 sha256_generic libsha256 usb_storage fsl_mph_dr_of ehci_platform ehci_fsl sd_mod scsi_mod ehci_hcd ext4 mbcache jbd2 usbcore nls_base usb_common crc16 crc32c_generic crypto_hash
+[   42.237808] CPU: 0 PID: 1559 Comm: mount_root Not tainted 5.4.82 #0
+[   42.250225] Stack : 805c0000 8055e5c8 00000000 00000000 8055d798 87c0be14 87d3919c 80593ce3
+[   42.266779]         8050c284 00000617 806f33bc 805b0000 00200000 00000001 87c0bdc8 4ae3a797
+[   42.283339]         00000000 00000000 80720000 00000000 00000030 000000cc 6465746e 342e3520
+[   42.299900]         00000000 00000001 00000000 0003a0f0 80000000 00000009 00000000 80364f98
+[   42.316456]         00000009 805b0000 00200000 00000122 00000002 8029efe8 00000000 806f0000
+[   42.333014]         ...
+[   42.337860] Call Trace:
+[   42.342730] [<80009d60>] show_stack+0x30/0x100
+[   42.351543] [<80023afc>] __warn+0xc0/0x10c
+[   42.359661] [<80023bd4>] warn_slowpath_fmt+0x8c/0xac
+[   42.369510] [<80364f98>] dev_watchdog+0x26c/0x274
+[   42.378848] [<80067784>] call_timer_fn.isra.34+0x20/0x90
+[   42.389379] [<8006799c>] run_timer_softirq+0x1a8/0x1f4
+[   42.399578] [<80487ba0>] __do_softirq+0x110/0x298
+[   42.408906] [<80005750>] except_vec_vi_end+0xb8/0xc4
+[   42.418766] [<80482704>] __bzero+0x44/0x180
+[   42.427062] [<802e0cb0>] spi_mem_exec_op+0x3c/0x404
+[   42.436733] [<802d69d8>] read_sr+0x60/0xc4
+[   42.444859] [<802d7ca0>] spi_nor_wait_till_ready_with_timeout+0x160/0x300
+[   42.458314] [<802db7e0>] spi_nor_erase+0x100/0x5e8
+[   42.467820] [<802c9028>] part_erase+0x140/0x3c8
+[   42.476797] [<802c9028>] part_erase+0x140/0x3c8
+[   42.485796] [<801cb6c0>] jffs2_erase_pending_blocks+0x3a4/0x7e4
+[   42.497534] [<801caa04>] jffs2_do_mount_fs+0x258/0x890
+[   42.507720] [<801cd394>] jffs2_do_fill_super+0x10c/0x2c0
+[   42.518246] [<802c5634>] mtd_get_sb+0xac/0xf8
+[   42.526881] [<802c586c>] get_tree_mtd+0x158/0x1d0
+[   42.536221] [<80136bf8>] vfs_get_tree+0x2c/0xf8
+[   42.545213] [<8015b754>] do_mount+0x72c/0x8c4
+[   42.553849] [<8015bd60>] ksys_mount+0x100/0x114
+[   42.562829] [<8000e9cc>] syscall_common+0x34/0x58
+[   42.572152] ---[ end trace 1d5977f8fb767868 ]---
+[   42.581310] mtk_soc_eth 10100000.ethernet eth0: transmit timed out
+[   42.593564] mtk_soc_eth 10100000.ethernet eth0: dma_cfg:00000057
+[   42.605480] mtk_soc_eth 10100000.ethernet eth0: tx_ring=0, base=0719c000, max=1024, ctx=2, dtx=0, fdx=0, next=2
+[   42.625475] mtk_soc_eth 10100000.ethernet eth0: rx_ring=0, base=071b0000, max=1024, calc=1023, drx=0
+[   53.066589] mtk_soc_eth 10100000.ethernet eth0: transmit timed out
+[   53.078872] mtk_soc_eth 10100000.ethernet eth0: dma_cfg:00000057
+[   53.090793] mtk_soc_eth 10100000.ethernet eth0: tx_ring=0, base=07124000, max=1024, ctx=2, dtx=0, fdx=0, next=2
+[   53.110790] mtk_soc_eth 10100000.ethernet eth0: rx_ring=0, base=073ec000, max=1024, calc=1023, drx=0
+[   63.050549] mtk_soc_eth 10100000.ethernet eth0: transmit timed out
+[   63.062817] mtk_soc_eth 10100000.ethernet eth0: dma_cfg:00000057
+[   63.074766] mtk_soc_eth 10100000.ethernet eth0: tx_ring=0, base=07124000, max=1024, ctx=3, dtx=0, fdx=0, next=3
+[   63.094769] mtk_soc_eth 10100000.ethernet eth0: rx_ring=0, base=0719c000, max=1024, calc=1023, drx=0
+[   70.236586] done.
+[   70.240568] jffs2: notice: (1559) jffs2_build_xattr_subsystem: complete building xattr subsystem, 0 of xdatum (0 unchecked, 0 orphan) and 0 of xref (0 dead, 0 orphan) found.
+[   70.499124] overlayfs: upper fs does not support tmpfile.
+[   74.058543] mtk_soc_eth 10100000.ethernet eth0: transmit timed out
+[   74.070812] mtk_soc_eth 10100000.ethernet eth0: dma_cfg:00000057
+[   74.082732] mtk_soc_eth 10100000.ethernet eth0: tx_ring=0, base=07124000, max=1024, ctx=2, dtx=0, fdx=0, next=2
+[   74.102737] mtk_soc_eth 10100000.ethernet eth0: rx_ring=0, base=073ec000, max=1024, calc=1023, drx=0
+[   85.066548] mtk_soc_eth 10100000.ethernet eth0: transmit timed out
+[   85.078817] mtk_soc_eth 10100000.ethernet eth0: dma_cfg:00000057
+[   85.090744] mtk_soc_eth 10100000.ethernet eth0: tx_ring=0, base=07124000, max=1024, ctx=2, dtx=0, fdx=0, next=2
+[   85.110763] mtk_soc_eth 10100000.ethernet eth0: rx_ring=0, base=0719c000, max=1024, calc=1023, drx=0
