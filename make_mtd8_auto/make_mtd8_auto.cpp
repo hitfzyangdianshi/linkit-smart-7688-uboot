@@ -1,11 +1,12 @@
 ﻿#include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include <time.h> 
 #include <sys/stat.h>  
 #include <sys/statfs.h>
 #include "../ecdsa_lightweight/easy_ecc_main.c"
 #include "../include/image.h"
-
+#define _CRT_SECURE_NO_WARNINGS
 
 typedef		unsigned long		ulong;
 
@@ -18,9 +19,47 @@ uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
 	0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
 	0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
 	0x0A };
+uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
+		0xec,0xd5,0xef,0x8d,0xe7,0x37,0xf4,0x87,
+		0xe4,0xf4,0x2b,0x42,0x30,0x14,0xa1,0x39,
+		0x15,0xe9,0x7f,0x97,0xe1,0xdf,0xe9,0xb3 };
+uint8_t publickey_eg2[] = { 0x03 , 0x03 , 0xEC , 0xBE , 0x5A , 0x0E , 0x9A , 0xF7 , // ECC_BYTES + 1
+	0xAD , 0xDC , 0x15 , 0x34 , 0x9B , 0x96 , 0x3B , 0x29 ,
+	0xC7 , 0x24 , 0x36 , 0x5E , 0x24 , 0xDE , 0x2E , 0xE9 ,
+	0x92 , 0x7C , 0x11 , 0xE9 , 0x2D , 0xF5 , 0xA4 , 0xE1 , 0x80 };
+
+uint8_t privatekey_eg3[] = { 0xc3,0xe0,0x3d,0x91,0xe8,0x12,0x7d,0xdd,
+	0x93,0x86,0xd7,0x37,0xde,0xcc,0x18,0x24,
+	0xb7,0xb1,0xe9,0x42,0x66,0x91,0xeb,0x9f,
+	0x7d,0xb5,0x80,0x3c,0xf5,0x8f,0x09,0xc7 };
+uint8_t publickey_eg3[] = { 0x03, 0x25, 0xA7, 0x91, 0xC4, 0x0B, 0x2B, 0xBB,
+	0x90, 0xC6, 0x9B, 0xA4, 0x09, 0x21, 0x44, 0x77,
+	0x4D, 0x54, 0x88, 0xB7, 0x01, 0x39, 0x19, 0x8D,
+	0x4F, 0x7A, 0x49, 0x6A, 0xDF, 0xFE, 0xD2, 0xF1, 0x13 }; //ECC_BYTES + 1
+uint8_t privatekey_eg4[] = { 0xcc,0x62,0x7f,0xd3,0x99,0xae,0xcc,0x8b,
+	0x48,0x9d,0x29,0xf8,0x77,0xa4,0x05,0xea,
+	0xd0,0xa7,0x8c,0x51,0xae,0x47,0xc6,0xb9,
+	0x49,0xa6,0x8f,0xa7,0xa8,0xa2,0x27,0x11 };
+uint8_t publickey_eg4[] = { 0x03 , 0x75 , 0x60 , 0x99 , 0x3B , 0x5F , 0x74 , 0xCF ,
+	0x10 , 0xD7 , 0x7F , 0x9F , 0x96 , 0x9E , 0x37 , 0x5E ,
+	0x21 , 0x73 , 0x43 , 0x15 , 0xAA , 0x11 , 0xEE , 0x13 ,
+	0x12 , 0x21 , 0x13 , 0x7B , 0x8C , 0x83 , 0x76 , 0xEA , 0x7F };// ECC_BYTES + 1
+
 uint8_t signature_old_eg1[ECC_BYTES * 2];
 uint8_t signature_new_eg1[ECC_BYTES * 2];
-uint8_t signature_new_firstboot[ECC_BYTES * 2];
+uint8_t signature_new_firstboot1[ECC_BYTES * 2];
+
+uint8_t signature_old_eg2[ECC_BYTES * 2];
+uint8_t signature_new_eg2[ECC_BYTES * 2];
+uint8_t signature_new_firstboot2[ECC_BYTES * 2];
+
+uint8_t signature_old_eg3[ECC_BYTES * 2];
+uint8_t signature_new_eg3[ECC_BYTES * 2];
+uint8_t signature_new_firstboot3[ECC_BYTES * 2];
+
+uint8_t signature_old_eg4[ECC_BYTES * 2];
+uint8_t signature_new_eg4[ECC_BYTES * 2];
+uint8_t signature_new_firstboot4[ECC_BYTES * 2];
 
 /*int copy_string_to_unsigned_char(string s, uint8_t ch[]) {
 	int i;
@@ -54,7 +93,7 @@ long file_size2(const char* filename)
 	return size;
 }
 
-long getFsSize(const char* path) {
+/*long getFsSize(const char* path) {
 
 	struct statfs myStatfs;
 	long totalSize;
@@ -67,7 +106,7 @@ long getFsSize(const char* path) {
 	totalSize = ((  long)myStatfs.f_bsize * (  long)myStatfs.f_blocks) ;
 	printf("fssize:%ld\n", totalSize);
 	return totalSize;
-}
+}*/
 
 int shastr64to0x32(char singlechar[64], char hash[32]) {
 	unsigned long i, j;
@@ -101,7 +140,7 @@ int make_mtd3() {
 	char init_filename[] = "/tmp/download_fw.bin";   //"../write_mtd/bin_files/big_init.bin";
     long init_file_length = file_size2(init_filename),i;
     FILE* init_file = fopen(init_filename, "rb");
-    FILE* output_file = fopen("/tmp/output_file.binmtd3", "wb");
+    FILE* output_file = fopen("/tmp/output_file.binmtd3notfirstboot", "wb");
     uint8_t b[16];
     int j;
     bool putFF = false;
@@ -162,8 +201,11 @@ int main(int argc, char** argv)
 	current_fw_cut = fopen("/tmp/current_fw_cut.bin", "wb");
 	char hash_old[32],hash_old_singlechar[64];
 
+
 	system("dd if=/dev/mtd6 of=/tmp/mtd6");
-	fw_info_test.size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6") - 12582912 + 12583767;					//12583767;//12845911;//9700183;//15991639;
+	//fw_info_test.size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6") - 12582912 + 12583767;					//12583767;//12845911;//9700183;//15991639;
+	//note: remove meta info, rootfs_data. 
+	fw_info_test.size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6");
 	remove("/tmp/mtd6");
 	for (i = 0; i < fw_info_test.size_old; i++) {
 		c = fgetc(current_fw);
@@ -179,12 +221,13 @@ int main(int argc, char** argv)
 	printf("\n");
 	/*for (i = 0; i < 32; i++)printf("%02x", hash_old[i]);
 	printf("\n");*/
-	//remove("/tmp/current_fw.bin");
+	remove("/tmp/current_fw.bin");
+
 
 	char hash_new[32], hash_new_singlechar[64];
 	fw_info_test.size_new = file_size2("/tmp/download_fw.bin");																	//9438039;//12583767;//9700183;//12845911;//9700183;//15991639
 	make_mtd3();
-	fpsha256new = popen("sha256sum /tmp/output_file.binmtd3", "r");
+	fpsha256new = popen("sha256sum /tmp/output_file.binmtd3notfirstboot", "r");
 	fgets(hash_new_singlechar, 65, fpsha256new);
 	shastr64to0x32(hash_new_singlechar, hash_new);
 	pclose(fpsha256new);
@@ -192,7 +235,7 @@ int main(int argc, char** argv)
 	printf("\n");
 	/*for (i = 0; i < 32; i++)printf("%02x", hash_new[i]);
 	printf("\n");*/
-	remove("/tmp/output_file.binmtd3");
+	remove("/tmp/output_file.binmtd3notfirstboot");
 
 
 
@@ -215,11 +258,35 @@ int main(int argc, char** argv)
 	fw_info_test.firstboot_tag = 1;
 	copy_char_to_unsigned_char(hash_new_firstboot, fw_info_test.hash_new_firstboot);
 
+	fw_info_test.sig1_tag = 1;
+	fw_info_test.sig2_tag = 1;
+	fw_info_test.sig3_tag = 1;
+	fw_info_test.sig4_tag = 1;
+
+	srand((unsigned)time(NULL));
+	int randomnumber = rand() % 4;
+	if(randomnumber==1)fw_info_test.sig1_tag = 0;
+	else if (randomnumber == 2)fw_info_test.sig2_tag = 0;
+	else if (randomnumber == 3)fw_info_test.sig3_tag = 0;
+	else     fw_info_test.sig4_tag = 0;
 
 
 	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_old, signature_old_eg1);
 	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new, signature_new_eg1);
-	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot);
+	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
+
+	getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_old, signature_old_eg2);
+	getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_new, signature_new_eg2);
+	getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_new_firstboot, signature_new_firstboot2);
+
+	getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_old, signature_old_eg3);
+	getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_new, signature_new_eg3);
+	getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_new_firstboot, signature_new_firstboot3);
+
+	getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_old, signature_old_eg4);
+	getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_new, signature_new_eg4);
+	getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_new_firstboot, signature_new_firstboot4);
+
 
 
 
@@ -233,15 +300,28 @@ int main(int argc, char** argv)
 			printf("\n");
 		}
 	}
-	printf("\nsizeof(fw_info_t): %d\n", sizeof(fw_info_t));
-	//printf("there are three additional 00's here at the end of struct fw_info fw_info_t\n");
+	//printf("\nsizeof(fw_info_t): %d\n", sizeof(fw_info_t));
 
-	for (i = 0; i < ECC_BYTES + 1; i++) {
-		fputc(publickey_eg1[i], mtd8_pubsig);
-	}
+	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg1[i], mtd8_pubsig);
 	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg1[i], mtd8_pubsig);
 	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg1[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot1[i], mtd8_pubsig);
+
+	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg2[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg2[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg2[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot2[i], mtd8_pubsig);
+
+	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg3[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg3[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg3[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot3[i], mtd8_pubsig);
+
+	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg4[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg4[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg4[i], mtd8_pubsig);
+	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot4[i], mtd8_pubsig);
+
 	fclose(mtd8_pubsig);
 
 
@@ -307,3 +387,4 @@ int main(int argc, char** argv)
 
     return 0;
 }
+//  /home/qwer/openwrt19/openwrt/staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-gcc make_mtd8_auto.cpp -o generatemtd8.out

@@ -206,6 +206,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
 	uint8_t* p = (uint8_t*)fwi;
+	// check while first boot only
+	if (fwi->firstboot_tag != 1) {
+		printf("\nnot first boot. skip fw verify.\n\n");
+		goto boot_start_point;
+	}
 #ifdef DEMO_PRINT
 	printf("fw-info size: %d\n", sizeof(fw_info_t));
 	printf("fw-info raw: \n");
@@ -217,11 +222,17 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	printf("\n");
 #endif // DEMO_PRINT
-	printf("fw-info data: ->update, ->size_old, ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);//printf("fw-info data: ->update, ->size_old, ->size_new: %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new);
+	printf("fw-info data: ->update, ->size_old_(kernel+/dev/root), ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);  
 	uint32_t fwi_size_old = fwi->size_old;
 	uint32_t fwi_size_new = fwi->size_new;
 	uint32_t fwi_update = fwi->update;
 	uint32_t fwi_firstboot_tag = fwi->firstboot_tag;
+
+	uint8_t fwi_sig1_tag = fwi->sig1_tag;
+	uint8_t fwi_sig2_tag = fwi->sig2_tag;
+	uint8_t fwi_sig3_tag = fwi->sig3_tag;
+	uint8_t fwi_sig4_tag = fwi->sig4_tag;
+
 #ifdef DEMO_PRINT
 	printf("the following hash values stored in mtd8 are for demo only. they are not used for fw sig verify.\n");
 	printf("fwi->hash_old: "); 
@@ -232,6 +243,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	for (i = 0; i < 32; i++)printf("%02lx", *(fwi->hash_new_firstboot + i));
 	printf("\n");
 #endif // DEMO_PRINT
+
+
 	if (fwi->size_old < 0 || fwi->size_old>32*1024*1024) {
 		fwi_size_old = 1;
 		printf("fwi->size_old size out of range\n");
@@ -244,56 +257,24 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
-#ifdef USE_GET_TIMER
-	printf("extern unsigned long mips_cpu_feq == %lu \ntesting sha256...     copy mtd3_fwi_size to load_addr by raspi_read...\n", mips_cpu_feq);
-#else // USE_GET_TIMER
+
 	printf("testing sha256...     copy mtd3 within fwi_size to load_addr...\n");
-#endif // USE_GET_TIMER
 	uint32_t fwi_size_forupdate;
 	if (fwi_update == 0x01)		fwi_size_forupdate= fwi_size_old;
 	else if (fwi_update == 0)	fwi_size_forupdate= fwi_size_new;
 	else						fwi_size_forupdate= fwi_size_new;
-#ifdef USE_GET_TIMER
-	ulong timer_0, timer_1;//,timer_1_0;
-	timer_init();
-	timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
 
 	//raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
 	raspi_read(load_addr, mtd3_ADDR, fwi_size_forupdate);
 
-#ifdef USE_GET_TIMER
-	timer_1 = get_timer(timer_0);
-	//timer_1_0= get_timer(0);
-	printf("[TIME] timer_0 (based on 0, mips_count) =      %lu\n", timer_0);
-	printf("[TIME] timer_1 (based on timer_0,mips_count) = %lu\n", timer_1);
-	printf("[TIME] timer_1 used: (usec)                    %lu\n", timer_1 / ((mips_cpu_feq / 2) / 1000000));
-	printf("[TIME] timer_1 used: (msec)                    %lu\n", (timer_1 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-	printf("[TIME] timer_1 used: (second)                  %lu\n", (timer_1/((mips_cpu_feq/2)/1000000))/1000000);
-	//printf("[TIME] timer_1_0(based on timer_0)= %lu\n", timer_1_0);
-#endif // USE_GET_TIMER
 
-	printf("Current Firmware mtd3 sha256 ... \n");
+	printf("current firmware (kernel+/dev/root, +metadata if firstboot) sha256 ... \n");
 
-#ifdef USE_GET_TIMER
-	ulong timer_2;
-	timer_init();
-	timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
 
 	/*if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
 	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);*/
 	sha256_csum_wd((char*)load_addr, fwi_size_forupdate, sha256_sum, CHUNKSZ_SHA256);
-
-#ifdef USE_GET_TIMER
-	timer_2 = get_timer(timer_0);
-	printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-	printf("[TIME] timer_2 (based on timer_0,mips_count) = %lu\n", timer_2);
-	printf("[TIME] timer_2 used: (usec)                    %lu\n", timer_2 / ((mips_cpu_feq / 2) / 1000000));
-	printf("[TIME] timer_2 used: (msec)                    %lu\n", (timer_2 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-	printf("[TIME] timer_2 used: (second)                  %lu\n", (timer_2 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
 
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", sha256_sum[i]);
@@ -308,37 +289,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}*/
 	printf("\n");
 	if (fwi_update == 0x01) {
-#ifdef USE_GET_TIMER
-		ulong timer_u0;
-		timer_init();
-		timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
 		raspi_read(load_addr, mtd7_ADDR, fwi_size_new);
-#ifdef USE_GET_TIMER
-		timer_u0 = get_timer(timer_0);
-		printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-		printf("[TIME] timer_u0 (based on timer_0,mips_count)= %lu\n", timer_u0);
-		printf("[TIME] timer_u0 used: (usec)                   %lu\n", timer_u0 / ((mips_cpu_feq / 2) / 1000000));
-		printf("[TIME] timer_u0 used: (msec)                   %lu\n", (timer_u0 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-		printf("[TIME] timer_u0 used: (second)                 %lu\n", (timer_u0 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
 
-		printf("NeW Firmware mtd7 sha256 ... ");
+		printf("new firmware mtd7 sha256 ... \n");
 
-#ifdef USE_GET_TIMER
-		ulong timer_u0h;
-		timer_init();
-		timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
 		sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum_mtd7, CHUNKSZ_SHA256);
-#ifdef USE_GET_TIMER
-		timer_u0h = get_timer(timer_0);
-		printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-		printf("[TIME] timer_u0h (based on timer_0,mips_count)=%lu\n", timer_u0h);
-		printf("[TIME] timer_u0h used: (usec)                  %lu\n", timer_u0h / ((mips_cpu_feq / 2) / 1000000));
-		printf("[TIME] timer_u0h used: (msec)                  %lu\n", (timer_u0h / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-		printf("[TIME] timer_u0h used: (second)                %lu\n", (timer_u0h / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
 
 		for (i = 0; i < 32; i++) {
 			printf("%02lx", sha256_sum_mtd7[i]);
@@ -350,15 +305,93 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 #ifdef TEST_ECDSA_mtd8
 #include "../ecdsa_lightweight/easy_ecc_main.c"
-	//unsigned char current_hash_test[] = "e7eb4cd2a61df11fa56bdcb2e8744f668810311676d3d50b205f5ee78b1fdf6f";
-	uint8_t publickey_eg1[ECC_BYTES + 1];//33
+	/*uint8_t privatekey_eg1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
+									  0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
+		0x58,0xb9,0x49,0x8c,0xbd,0xbd,0x1a,0xfd,
+		0xb2,0xc0,0x13,0xdf,0x65,0x8f,0xcc,0xb9 };*/
+
+	uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
+		0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
+		0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
+		0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
+		0x0A };
+
+	/*uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
+		0xec,0xd5,0xef,0x8d,0xe7,0x37,0xf4,0x87,
+		0xe4,0xf4,0x2b,0x42,0x30,0x14,0xa1,0x39,
+		0x15,0xe9,0x7f,0x97,0xe1,0xdf,0xe9,0xb3 };*/
+	uint8_t publickey_eg2[] = { 0x03 , 0x03 , 0xEC , 0xBE , 0x5A , 0x0E , 0x9A , 0xF7 , // ECC_BYTES + 1
+		0xAD , 0xDC , 0x15 , 0x34 , 0x9B , 0x96 , 0x3B , 0x29 ,
+		0xC7 , 0x24 , 0x36 , 0x5E , 0x24 , 0xDE , 0x2E , 0xE9 ,
+		0x92 , 0x7C , 0x11 , 0xE9 , 0x2D , 0xF5 , 0xA4 , 0xE1 , 0x80 };
+
+	/*uint8_t privatekey_eg3[] = { 0xc3,0xe0,0x3d,0x91,0xe8,0x12,0x7d,0xdd,
+		0x93,0x86,0xd7,0x37,0xde,0xcc,0x18,0x24,
+		0xb7,0xb1,0xe9,0x42,0x66,0x91,0xeb,0x9f,
+		0x7d,0xb5,0x80,0x3c,0xf5,0x8f,0x09,0xc7 };*/
+	uint8_t publickey_eg3[] = { 0x03, 0x25, 0xA7, 0x91, 0xC4, 0x0B, 0x2B, 0xBB,
+		0x90, 0xC6, 0x9B, 0xA4, 0x09, 0x21, 0x44, 0x77,
+		0x4D, 0x54, 0x88, 0xB7, 0x01, 0x39, 0x19, 0x8D,
+		0x4F, 0x7A, 0x49, 0x6A, 0xDF, 0xFE, 0xD2, 0xF1, 0x13 }; //ECC_BYTES + 1
+	/*uint8_t privatekey_eg4[] = { 0xcc,0x62,0x7f,0xd3,0x99,0xae,0xcc,0x8b,
+		0x48,0x9d,0x29,0xf8,0x77,0xa4,0x05,0xea,
+		0xd0,0xa7,0x8c,0x51,0xae,0x47,0xc6,0xb9,
+		0x49,0xa6,0x8f,0xa7,0xa8,0xa2,0x27,0x11 };*/
+	uint8_t publickey_eg4[] = { 0x03 , 0x75 , 0x60 , 0x99 , 0x3B , 0x5F , 0x74 , 0xCF ,
+		0x10 , 0xD7 , 0x7F , 0x9F , 0x96 , 0x9E , 0x37 , 0x5E ,
+		0x21 , 0x73 , 0x43 , 0x15 , 0xAA , 0x11 , 0xEE , 0x13 ,
+		0x12 , 0x21 , 0x13 , 0x7B , 0x8C , 0x83 , 0x76 , 0xEA , 0x7F };// ECC_BYTES + 1
+
+	if (fwi_sig1_tag + fwi_sig2_tag + fwi_sig3_tag + fwi_sig4_tag < 2 || fwi_sig1_tag + fwi_sig2_tag + fwi_sig3_tag + fwi_sig4_tag >4)
+		printf("fwi_sig_tag error... ... %d %d %d %d \n", fwi_sig1_tag , fwi_sig2_tag,fwi_sig3_tag , fwi_sig4_tag);
+
+	//uint8_t publickey_eg1[ECC_BYTES + 1];//33
 	uint8_t signature_old_eg1[ECC_BYTES * 2];//64
 	uint8_t signature_new_eg1[ECC_BYTES * 2];//64
-	uint8_t signature_new_firstboot[ECC_BYTES * 2];
-	raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
+	uint8_t signature_new_firstboot1[ECC_BYTES * 2];
+	//raspi_read(publickey_eg1, mtd8_ADDR+ sizeof(fw_info_t), ECC_BYTES + 1); //(char *buf, unsigned int from, int len)
 	raspi_read(signature_old_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1, ECC_BYTES * 2);
 	raspi_read(signature_new_eg1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
-	raspi_read(signature_new_firstboot, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES * 2);
+	raspi_read(signature_new_firstboot1, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES * 2);
+
+	//uint8_t publickey_eg2[ECC_BYTES + 1];//33
+	uint8_t signature_old_eg2[ECC_BYTES * 2];//64
+	uint8_t signature_new_eg2[ECC_BYTES * 2];//64
+	uint8_t signature_new_firstboot2[ECC_BYTES * 2];
+	//raspi_read(publickey_eg2,mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2+ ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES + 1); 
+	raspi_read(signature_old_eg2, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2+ ECC_BYTES * 2 
+		+ ECC_BYTES + 1, ECC_BYTES * 2);
+	raspi_read(signature_new_eg2, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1+ ECC_BYTES * 2 , ECC_BYTES * 2);
+	raspi_read(signature_new_firstboot2, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2
+		+ ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2, ECC_BYTES * 2);
+
+	//uint8_t publickey_eg3[ECC_BYTES + 1];//33
+	uint8_t signature_old_eg3[ECC_BYTES * 2];//64
+	uint8_t signature_new_eg3[ECC_BYTES * 2];//64
+	uint8_t signature_new_firstboot3[ECC_BYTES * 2];
+	//raspi_read(publickey_eg3,mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2+ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES + 1);  
+	raspi_read(signature_old_eg3, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1, ECC_BYTES * 2);
+	raspi_read(signature_new_eg3, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
+	raspi_read(signature_new_firstboot3, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2, ECC_BYTES * 2);
+
+	//uint8_t publickey_eg4[ECC_BYTES + 1];//33
+	uint8_t signature_old_eg4[ECC_BYTES * 2];//64
+	uint8_t signature_new_eg4[ECC_BYTES * 2];//64
+	uint8_t signature_new_firstboot4[ECC_BYTES * 2];
+	//raspi_read(publickey_eg4, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 +ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2+ ECC_BYTES * 2, ECC_BYTES + 1); 
+	raspi_read(signature_old_eg4, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1, ECC_BYTES * 2);
+	raspi_read(signature_new_eg4, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1 + ECC_BYTES * 2, ECC_BYTES * 2);
+	raspi_read(signature_new_firstboot4, mtd8_ADDR + sizeof(fw_info_t) + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2 + ECC_BYTES * 2 
+		+ ECC_BYTES + 1 + ECC_BYTES * 2 + ECC_BYTES * 2, ECC_BYTES * 2);
+
+
+
 
 	/*printf("\n\nThis is for checking mtd8 reading... ... ... \n");
 	printf("pubkey: "); for (i = 0; i < ECC_BYTES + 1; i++)printf("%02x ", publickey_eg1[i]);
@@ -376,86 +409,109 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	if (fwi_update != 0x01) {
 		if(fwi_update!=0)printf("****** fwi_update is neither 0 nor 1 ........ please check mtd8\n* ");
 
-		printf("sig_varify_current_firmware_hash_mtd3: "); 
+		printf("varify signature of current firmware in mtd3: ... "); 
 		if (fwi_firstboot_tag == 1){
-			printf("(fwi_firstboot_tag==1)... :\t");
-#ifdef USE_GET_TIMER
-			ulong timer_3f;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
-			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
-#ifdef USE_GET_TIMER
-			timer_3f = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_3f (based on timer_0,mips_count)= %lu\n", timer_3f);
-			printf("[TIME] timer_3f used: (usec)                   %lu\n", timer_3f / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_3f used: (msec)                   %lu\n", (timer_3f / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_3f used: (second)                 %lu\n", (timer_3f / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
-
+			printf("firstboot... :\t");
+			//signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
+			if (fwi_sig1_tag == 1) {
+				printf("sig1: ");
+				signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot1);
+			}
+			if (fwi_sig2_tag == 1) {
+				printf("sig2: ");
+				signature_verify_by_pubkey_33(publickey_eg2, sha256_sum, signature_new_firstboot2);
+			}
+			if (fwi_sig3_tag == 1) {
+				printf("sig3: ");
+				signature_verify_by_pubkey_33(publickey_eg3, sha256_sum, signature_new_firstboot3);
+			}
+			if (fwi_sig4_tag == 1) {
+				printf("sig4: ");
+				signature_verify_by_pubkey_33(publickey_eg4, sha256_sum, signature_new_firstboot4);
+			}
+			printf("\n");
 		}
 		else {
-			printf("(fwi_firstboot_tag is not 1)... :\t");
-
-#ifdef USE_GET_TIMER
-			ulong timer_3;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
-
-			signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
-
-#ifdef USE_GET_TIMER
-			timer_3 = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_3 (based on timer_0,mips_count) = %lu\n", timer_3);
-			printf("[TIME] timer_3 used: (usec)                    %lu\n", timer_3 / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_3 used: (msec)                    %lu\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_3 used: (second)                  %lu\n", (timer_3 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
+			printf(" not firstboot ... :\t");
+			//signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
+			if (fwi_sig1_tag == 1) {
+				printf("sig1: ");
+				signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
+			}
+			if (fwi_sig2_tag == 1) {
+				printf("sig2: ");
+				signature_verify_by_pubkey_33(publickey_eg2, sha256_sum, signature_new_eg2);
+			}
+			if (fwi_sig3_tag == 1) {
+				printf("sig3: ");
+				signature_verify_by_pubkey_33(publickey_eg3, sha256_sum, signature_new_eg3);
+			}
+			if (fwi_sig4_tag == 1) {
+				printf("sig4: ");
+				signature_verify_by_pubkey_33(publickey_eg4, sha256_sum, signature_new_eg4);
+			}
+			printf("\n");
 		}
 	}
 	else if (fwi_update == 0x01) {
 		unsigned int sig_varify_currentfirmware_result = 0, sig_varify_newfirmware_mtd7_result=0;
-		printf("sig_varify_current_firmware_hash_mtd3: "); sig_varify_currentfirmware_result=signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1);
-		printf("sig_varify_newfirmware_hash_mtd7: "); sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot);
+		printf("sig_varify_current_firmware_hash_mtd3:\n"); 
+		//sig_varify_currentfirmware_result=signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1);
+		if (fwi_sig1_tag == 1) {
+			printf("sig1: ");
+			if (signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1) == 1 && sig_varify_currentfirmware_result>=0) sig_varify_currentfirmware_result = 1;
+			else sig_varify_currentfirmware_result =-1;
+		}
+		if (fwi_sig2_tag == 1) {
+			printf("sig2: ");
+			if(signature_verify_by_pubkey_33(publickey_eg2, sha256_sum, signature_old_eg2) ==1 && sig_varify_currentfirmware_result >= 0) sig_varify_currentfirmware_result = 1;
+			else  sig_varify_currentfirmware_result = -1;
+		}
+		if (fwi_sig3_tag == 1) {
+			printf("sig3: ");
+			if(signature_verify_by_pubkey_33(publickey_eg3, sha256_sum, signature_old_eg3) ==1 && sig_varify_currentfirmware_result >= 0)sig_varify_currentfirmware_result = 1;
+			else  sig_varify_currentfirmware_result =-1;
+		}
+		if (fwi_sig4_tag == 1) {
+			printf("sig4: ");
+			if(signature_verify_by_pubkey_33(publickey_eg4, sha256_sum, signature_old_eg4) ==1 && sig_varify_currentfirmware_result >= 0)sig_varify_currentfirmware_result = 1;
+			else  sig_varify_currentfirmware_result =-1;
+		}
+		printf("\n");
+
+		printf("sig_varify_newfirmware_hash_mtd7:\n"); 
+		//sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot);
+		if (fwi_sig1_tag == 1) {
+			printf("sig1: ");
+			if (signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot1) == 1 && sig_varify_newfirmware_mtd7_result>=0) sig_varify_newfirmware_mtd7_result = 1;
+			else sig_varify_newfirmware_mtd7_result =-1;
+		}
+		if (fwi_sig2_tag == 1) {
+			printf("sig2: ");
+			if (signature_verify_by_pubkey_33(publickey_eg2, sha256_sum_mtd7, signature_new_firstboot2) == 1 && sig_varify_newfirmware_mtd7_result >= 0) sig_varify_newfirmware_mtd7_result = 1;
+			else  sig_varify_newfirmware_mtd7_result =-1;
+		}
+		if (fwi_sig3_tag == 1) {
+			printf("sig3: ");
+			if (signature_verify_by_pubkey_33(publickey_eg3, sha256_sum_mtd7, signature_new_firstboot3) == 1 && sig_varify_newfirmware_mtd7_result >= 0)sig_varify_newfirmware_mtd7_result = 1;
+			else  sig_varify_newfirmware_mtd7_result =-1;
+		}
+		if (fwi_sig4_tag == 1) {
+			printf("sig4: ");
+			if (signature_verify_by_pubkey_33(publickey_eg4, sha256_sum_mtd7, signature_new_firstboot4) == 1 && sig_varify_newfirmware_mtd7_result >= 0)sig_varify_newfirmware_mtd7_result = 1;
+			else  sig_varify_newfirmware_mtd7_result =-1;
+		}
+		printf("\n");
+
 		if (sig_varify_currentfirmware_result == 1 && sig_varify_newfirmware_mtd7_result ==1) {
 			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
 			int raspi_erase_write_result = 1;
 			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
 			printf("reading.# ");
-
-#ifdef USE_GET_TIMER
-			ulong timer_u1;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
 			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
-#ifdef USE_GET_TIMER
-			timer_u1 = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_u1 (based on timer_0,mips_count)= %lu\n", timer_u1);
-			printf("[TIME] timer_u1 used: (usec)                   %lu\n", timer_u1 / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_u1 used: (msec)                   %lu\n", (timer_u1 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_u1 used: (second)                 %lu\n", (timer_u1 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
 
 			printf("    writing.# ");
-#ifdef USE_GET_TIMER
-			ulong timer_u2;
-			timer_init();
-			timer_0 = get_timer(0);
-#endif // USE_GET_TIMER
-			raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
-#ifdef USE_GET_TIMER
-			timer_u2 = get_timer(timer_0);
-			printf("[TIME] timer_0 (based on 0,mips_count) =       %lu\n", timer_0);
-			printf("[TIME] timer_u2 (based on timer_0,mips_count)= %lu\n", timer_u2);
-			printf("[TIME] timer_u2 used: (usec)                   %lu\n", timer_u2 / ((mips_cpu_feq / 2) / 1000000));
-			printf("[TIME] timer_u2 used: (msec)                   %lu\n", (timer_u2 / ((mips_cpu_feq / 2) / 1000000)) / 1000);
-			printf("[TIME] timer_u2 used: (second)                 %lu\n", (timer_u2 / ((mips_cpu_feq / 2) / 1000000)) / 1000000);
-#endif // USE_GET_TIMER
+			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new);//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 
 			if (raspi_erase_write_result == 0)
 			{
@@ -470,7 +526,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			else printf("it seems that raspi_erase_write() is not successful because the return value is not 0.. .... \n");
 		}
 		else if (sig_varify_currentfirmware_result == -1 || sig_varify_newfirmware_mtd7_result ==-1) {
-			printf("current firmware hash sig is not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
+			printf("firmware sig not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
+		}
+		else if (sig_varify_currentfirmware_result == 0 || sig_varify_newfirmware_mtd7_result == 0) {
+			printf("firmware sig not verified.....,sig_varify_currentfirmware_result==%d, sig_varify_newfirmware_mtd7_result=%d  .....\n", sig_varify_currentfirmware_result, sig_varify_newfirmware_mtd7_result);
 		}
 		else {
 			printf("ecdsa_verify error\n");
@@ -527,6 +586,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #endif // READ_BYTES_FROM_mtd8_DURING_BOOT
 
 	
+
+boot_start_point:
 	SHOW_BOOT_PROGRESS (1);
 	printf ("## Booting image at %08lx ...\n", addr);
 

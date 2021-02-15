@@ -158,6 +158,12 @@ typedef struct fw_info {
 
 	uint8_t		firstboot_tag;
 	uint8_t		hash_new_firstboot[32];
+
+	uint8_t		sig1_tag;
+	uint8_t		sig2_tag;
+	uint8_t		sig3_tag;
+	uint8_t		sig4_tag;
+
 } fw_info_t;
 
 #endif	/* __IMAGE_H__ */

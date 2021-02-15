@@ -1,3 +1,7 @@
+14 Feb 2021
+Partitioning of the Flash: https://openwrt.org/docs/techref/flash.layout#example_2hoo_too_ht-tm02
+		(Example 2: Hoo Too HT-TM02)
+---11--------------------------------------------------------------------------------------------------------------------
 unsigned long mips_cpu_feq == 580 000 000 
 __attribute__((nomips16)) void udelay (unsigned long usec)
 {

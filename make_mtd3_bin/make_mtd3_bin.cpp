@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <cstdio>
 #include <sys/stat.h>  
+#define _CRT_SECURE_NO_WARNINGS
 using namespace std;
 
 bool compare_char(uint8_t* a, uint8_t* b, int length) {

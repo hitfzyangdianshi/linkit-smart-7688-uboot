@@ -13,3 +13,9 @@ The file changelog is [changes_summary/changes.txt](changes_summary/changes.txt)
 
 # NOTICE
 The head file "stdio.h" is not used and cannot be used here, because functions about printing are defined in other files, so I make it as an empty file. 
+
+# Visual Studio
+**_CRT_SECURE_NO_WARNINGS**
+https://docs.microsoft.com/zh-cn/cpp/error-messages/compiler-warnings/compiler-warning-level-3-c4996?f1url=%3FappId%3DDev16IDEF1%26l%3DZH-CN%26k%3Dk(C4996)%26rd%3Dtrue&view=msvc-160 
+https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-3-c4996?f1url=%3FappId%3DDev16IDEF1&l=ZH-CN&k=k(C4996)&rd=true&view=msvc-160
+

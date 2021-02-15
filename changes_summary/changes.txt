@@ -1,4 +1,4 @@
-cmd_bootm.c:			line 191 - line 529   (around)
+cmd_bootm.c:		//	line 191 - line 529   (around)
 		from:		if (argc < 2) {
 						addr = load_addr;
 					} else {
