@@ -249,17 +249,17 @@ int getsig_sign_and_print(uint8_t p_privateKey[ECC_BYTES], uint8_t digest[ECC_BY
 		printf("error:ecdsa_sign\n");
 		return -2;
 	}
-	printf("p_signature: ");
-	for (i = 0; i < ECC_BYTES * 2; i++) {
+	printf("signature: ");
+	/*for (i = 0; i < ECC_BYTES * 2; i++) {
 		printf("%c", p_signature[i]);
-	}
+	}*/
 	/*printf("\n{");
 	for (i = 0; i < ECC_BYTES * 2; i++) {
 		if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", p_signature[i]);
 		else printf("0x%02X , ", p_signature[i]);
 	}
-	printf("};\n");*/
-	printf("\t");
+	printf("};\n");
+	printf("\t");*/
 	for (i = 0; i < ECC_BYTES * 2; i++) {
 		printf("%02x", p_signature[i]);
 	}

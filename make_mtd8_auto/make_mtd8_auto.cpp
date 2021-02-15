@@ -231,8 +231,8 @@ int main(int argc, char** argv)
 	fgets(hash_new_singlechar, 65, fpsha256new);
 	shastr64to0x32(hash_new_singlechar, hash_new);
 	pclose(fpsha256new);
-	for (i = 0; i < 64; i++)printf("%c", hash_new_singlechar[i]);
-	printf("\n");
+	/*for (i = 0; i < 64; i++)printf("%c", hash_new_singlechar[i]);
+	printf("\n");*/
 	/*for (i = 0; i < 32; i++)printf("%02x", hash_new[i]);
 	printf("\n");*/
 	remove("/tmp/output_file.binmtd3notfirstboot");
@@ -271,21 +271,26 @@ int main(int argc, char** argv)
 	else     fw_info_test.sig4_tag = 0;
 
 
-	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_old, signature_old_eg1);
-	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new, signature_new_eg1);
-	getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
 
-	getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_old, signature_old_eg2);
-	getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_new, signature_new_eg2);
-	getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_new_firstboot, signature_new_firstboot2);
+	getsig_sign_no_print(privatekey_eg1, fw_info_test.hash_old, signature_old_eg1);
+	getsig_sign_no_print(privatekey_eg1, fw_info_test.hash_new, signature_new_eg1);
+	if(fw_info_test.sig1_tag==1) getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
+	else  getsig_sign_no_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
 
-	getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_old, signature_old_eg3);
-	getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_new, signature_new_eg3);
-	getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_new_firstboot, signature_new_firstboot3);
+	getsig_sign_no_print(privatekey_eg2, fw_info_test.hash_old, signature_old_eg2);
+	getsig_sign_no_print(privatekey_eg2, fw_info_test.hash_new, signature_new_eg2);
+	if (fw_info_test.sig2_tag == 1) getsig_sign_and_print(privatekey_eg2, fw_info_test.hash_new_firstboot, signature_new_firstboot2);
+	else getsig_sign_no_print(privatekey_eg2, fw_info_test.hash_new_firstboot, signature_new_firstboot2);
 
-	getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_old, signature_old_eg4);
-	getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_new, signature_new_eg4);
-	getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_new_firstboot, signature_new_firstboot4);
+	getsig_sign_no_print(privatekey_eg3, fw_info_test.hash_old, signature_old_eg3);
+	getsig_sign_no_print(privatekey_eg3, fw_info_test.hash_new, signature_new_eg3);
+	if (fw_info_test.sig3_tag == 1) getsig_sign_and_print(privatekey_eg3, fw_info_test.hash_new_firstboot, signature_new_firstboot3);
+	else getsig_sign_no_print(privatekey_eg3, fw_info_test.hash_new_firstboot, signature_new_firstboot3);
+
+	getsig_sign_no_print(privatekey_eg4, fw_info_test.hash_old, signature_old_eg4);
+	getsig_sign_no_print(privatekey_eg4, fw_info_test.hash_new, signature_new_eg4);
+	if (fw_info_test.sig4_tag == 1)getsig_sign_and_print(privatekey_eg4, fw_info_test.hash_new_firstboot, signature_new_firstboot4);
+	getsig_sign_no_print(privatekey_eg4, fw_info_test.hash_new_firstboot, signature_new_firstboot4);
 
 
 
@@ -295,10 +300,10 @@ int main(int argc, char** argv)
 	uint8_t* p = (uint8_t*)(&fw_info_test);
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		putc(p[i], mtd8_pubsig);
-		printf("%02x ", p[i]);
+		/*printf("%02x ", p[i]);
 		if ((i + 1) % 16 == 0) {
 			printf("\n");
-		}
+		}*/
 	}
 	//printf("\nsizeof(fw_info_t): %d\n", sizeof(fw_info_t));
 
