@@ -274,6 +274,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	/*if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
 	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);*/
+	if (fwi_firstboot_tag != 1 && fwi_update == 0) fwi_size_forupdate = fwi_size_forupdate - 0x357;
 	sha256_csum_wd((char*)load_addr, fwi_size_forupdate, sha256_sum, CHUNKSZ_SHA256);
 
 	for (i = 0; i < 32; i++) {
