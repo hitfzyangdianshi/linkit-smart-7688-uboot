@@ -15,7 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_kernel_dev_root", "mak
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cut_init_fw_kernel_dev_root", "cut_init_fw_kernel_dev_root\cut_init_fw_kernel_dev_root.vcxproj", "{0AA758BE-6E4B-4755-8B3F-AF8C318E4B15}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_mtd8_severend", "make_mtd8_severend\make_mtd8_severend.vcxproj", "{8CA1A8B7-0651-4203-9FA8-734BB470E8BC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_mtd8_serverend", "make_mtd8_serverend\make_mtd8_serverend.vcxproj", "{8CA1A8B7-0651-4203-9FA8-734BB470E8BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
