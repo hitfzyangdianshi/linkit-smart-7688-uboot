@@ -118,9 +118,9 @@ int cut_fw_removemetadata(const char* old_filename,FILE* in, FILE* out,int offse
 }
 
 
-#define GRNRRATE_NOT_FIRSTBOOT
+#define GRNERATE_NOT_FIRSTBOOT
 
-#ifdef GRNRRATE_NOT_FIRSTBOOT
+#ifdef GRNERATE_NOT_FIRSTBOOT
 bool compare_char(uint8_t* a, uint8_t* b, int length) {
 	int i;
 	for (i = 0; i < length; i++) {
@@ -179,7 +179,7 @@ int make_mtd3(const char initpath[],const char outpath[]) {
 	//printf("\nDone!\n");
 	return 0;
 }
-#endif // GRNRRATE_NOT_FIRSTBOOT
+#endif // GRNERATE_NOT_FIRSTBOOT
 
 
 int main(int argc, char** argv)
@@ -230,7 +230,7 @@ int main(int argc, char** argv)
 	printf("\n");
 
 	char hash_new_notfirstboot[32], hash_new_notfirstboot_singlechar[64];
-#ifdef GRNRRATE_NOT_FIRSTBOOT
+#ifdef GRNERATE_NOT_FIRSTBOOT
 	make_mtd3(fwnewpath, "newfw_mtd3_notfirstboot.tmp");
 	sha2new_notfirstboot= popen("sha256sum newfw_mtd3_notfirstboot.tmp", "r");
 	fgets(hash_new_notfirstboot_singlechar, 65, sha2new_notfirstboot);
@@ -238,7 +238,7 @@ int main(int argc, char** argv)
 	pclose(sha2new_notfirstboot);
 	for (i = 0; i < 64; i++)printf("%c", hash_new_notfirstboot_singlechar[i]);
 	printf("\n");
-#endif // GRNRRATE_NOT_FIRSTBOOT
+#endif // GRNERATE_NOT_FIRSTBOOT
 
 	
 
