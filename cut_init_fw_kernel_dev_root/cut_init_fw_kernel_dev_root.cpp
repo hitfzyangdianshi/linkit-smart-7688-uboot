@@ -22,7 +22,7 @@ int main(int argc, char **argv)
         outfilepath = outfilepath_;
     }
     else if (argc == 3) {
-        printf("argc==3");
+        printf("argc==3\n");
         initfilepath = argv[1];
         outfilepath = argv[2];
     }
