@@ -1,0 +1,9 @@
+*.bin
+*.tmp
+*.out
+*.test
+*.test*
+Release
+Release/*
+Debug
+Debug/*
