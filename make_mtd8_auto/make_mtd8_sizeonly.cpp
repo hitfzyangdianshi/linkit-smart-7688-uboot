@@ -37,20 +37,22 @@ int main(int argc, char** argv)
 	mtd6 = fopen("/tmp/mtd6", "rb");
 	newfw = fopen("/tmp/download_fw.bin", "rb");
 
-	uint32_t size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6");
-	uint32_t size_new= file_size2("/tmp/download_fw.bin");
-	
 
+	int size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6");
+	int size_new= file_size2("/tmp/download_fw.bin");
+	printf("%d\t%d\n", size_old, size_new);
 
 	fw_info_t* fwi = (fw_info_t*)malloc(sizeof(fw_info_t));
 	//int p[1020];
-	uint8_t* p = (uint8_t*)(&fwi);
+	uint8_t* p = (uint8_t*)(fwi);
 	FILE* mtd8 = fopen("/tmp/mtd8_pubsig.bin", "rb");
 	//printf("fw-info raw: \n");
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		*(p + i) = fgetc(mtd8);
 	}
 	fwi = (fw_info_t*)p;
+
+	printf("%d\t%d\n", fwi->size_old, fwi->size_new);
 
 	uint8_t pubkey_get1[ECC_BYTES + 1];
 	for (i = 0; i < ECC_BYTES + 1; i++) pubkey_get1[i] = fgetc(mtd8);
@@ -107,16 +109,15 @@ int main(int argc, char** argv)
 
 
 
-
 	fwi->size_old = size_old;
 	fwi->size_new = size_new- 0x357;
 
 
-
+	printf("%d\t%d\n", fwi->size_old, fwi->size_new);
 
 
 	FILE* mtd8_pubsig = fopen("/tmp/mtd8_1_big2small.bin", "wb");
-	uint8_t* p1 = (uint8_t*)(&fwi);
+	uint8_t* p1 = (uint8_t*)(fwi);
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		putc(p1[i], mtd8_pubsig);
 		/*printf("%02x ", p1[i]);
