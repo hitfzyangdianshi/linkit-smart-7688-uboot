@@ -3,7 +3,10 @@
 *.out
 *.test
 *.test*
+*.go
 Release
 Release/*
 Debug
 Debug/*
+firmwares
+firmwares/*

@@ -222,7 +222,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	printf("\n");
 #endif // DEMO_PRINT
-	printf("fw-info data: ->update, ->size_old_(kernel+/dev/root), ->size_new, fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);  
+	printf("fw-info data: ->update, ->size_old_(kernel+/dev/root), ->size_new_(without metadate), fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);  
 	uint32_t fwi_size_old = fwi->size_old;
 	uint32_t fwi_size_new = fwi->size_new;
 	uint32_t fwi_update = fwi->update;
@@ -245,11 +245,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 #endif // DEMO_PRINT
 
 
-	if (fwi->size_old < 0 || fwi->size_old>32*1024*1024) {
+	if (fwi->size_old <= 0 || fwi->size_old>32*1024*1024) {
 		fwi_size_old = 1;
 		printf("fwi->size_old size out of range\n");
 	}
-	if (fwi->size_new < 0 || fwi->size_new>32*1024*1024) {
+	if (fwi->size_new <= 0 || fwi->size_new>32*1024*1024) {
 		fwi_size_new = 1;
 		printf("fwi->size_new size out of range\n");
 	}
@@ -274,7 +274,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	/*if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
 	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);*/
-	if (fwi_firstboot_tag != 1 && fwi_update == 0) fwi_size_forupdate = fwi_size_forupdate - 0x357;
+	//if (fwi_firstboot_tag != 1 && fwi_update == 0) fwi_size_forupdate = fwi_size_forupdate - 0x357;
 	sha256_csum_wd((char*)load_addr, fwi_size_forupdate, sha256_sum, CHUNKSZ_SHA256);
 
 	for (i = 0; i < 32; i++) {
@@ -512,7 +512,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
 
 			printf("    writing.# ");
-			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new);//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
+			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new+   0x357);//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 
 			if (raspi_erase_write_result == 0)
 			{
