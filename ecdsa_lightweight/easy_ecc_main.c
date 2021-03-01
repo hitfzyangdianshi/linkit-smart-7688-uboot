@@ -421,56 +421,140 @@ int main() {
 #endif // TEST_AND_RUN_IN_THIS_FILE
 #endif/* Windows */
 
+/*
+int main() {
 
-//{
-//PrivKey: "MHcCAQEEICfrz3CsrsscS9h04p4Tt7JYuUmMvb0a/bLAE99lj8y5oAoGCCqGSM49AwEHoUQDQgAEaMDIHXKFZyLgNzintGwRYoXBo6hQ7vyEpudHeB8iHQr9n1fffwkJP3nIBm5TD9XEUjk72rAZEbylkSJOekTW0A==",
-//PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEaMDIHXKFZyLgNzintGwRYoXBo6hQ7vyEpudHeB8iHQr9n1fffwkJP3nIBm5TD9XEUjk72rAZEbylkSJOekTW0A==",
-//},
-//SEQUENCE
-//INTEGER 01..(total 1bytes)..01
-//OCTETSTRING 27ebcf70acaecb1c4bd874e29e13b7b258b9498cbdbd1afdb2c013df658fccb9..(total 32bytes)..27ebcf70acaecb1c4bd874e29e13b7b258b9498cbdbd1afdb2c013df658fccb9
-//[0]
-//ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
-//[1]
-//BITSTRING 000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0..(total 66bytes)..000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0
+	unsigned char  digest[] = "11111111111111111111111111111111";
+	uint8_t privatekey_eg1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
+								  0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
+	0x58,0xb9,0x49,0x8c,0xbd,0xbd,0x1a,0xfd,
+	0xb2,0xc0,0x13,0xdf,0x65,0x8f,0xcc,0xb9 };
+	uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
+		0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
+		0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
+		0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
+		0x0A };
+
+	uint8_t signature_1[ECC_BYTES * 2] = { 0x22,0x02,0x33,0x05,0xa1,0x38,0xc2,0x81,
+		0x9f,0xc3,0xad,0x6c,0x79,0x8d,0x4e,0x48,
+		0x9f,0x37,0x61,0x8e,0x4e,0xcf,0xb2,0xf1,
+		0x4f,0x6a,0x7e,0x66,0x21,0xc0,0x29,0x2f,
+		0x3d,0x30,0x22,0x02,0x9a,0x0a,0xe8,0x36,
+		0x3a,0xdc,0xdf,0x71,0x00,0x13,0x5c,0xa3,
+		0xa9,0xf3,0x22,0x6e,0xd1,0xd6,0x36,0x34,
+		0xc0,0xb0,0xf7,0x81,0x55,0x71,0x33,0xdd };
+
+	signature_verify_by_pubkey_33(publickey_eg1, digest, signature_1);
+
+	return 0;
+
+}*/
+/*
+{
+PrivKey: "MHcCAQEEICfrz3CsrsscS9h04p4Tt7JYuUmMvb0a/bLAE99lj8y5oAoGCCqGSM49AwEHoUQDQgAEaMDIHXKFZyLgNzintGwRYoXBo6hQ7vyEpudHeB8iHQr9n1fffwkJP3nIBm5TD9XEUjk72rAZEbylkSJOekTW0A==",
+PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEaMDIHXKFZyLgNzintGwRYoXBo6hQ7vyEpudHeB8iHQr9n1fffwkJP3nIBm5TD9XEUjk72rAZEbylkSJOekTW0A==",
+},
+SEQUENCE
+INTEGER 01..(total 1bytes)..01
+OCTETSTRING 27ebcf70acaecb1c4bd874e29e13b7b258b9498cbdbd1afdb2c013df658fccb9..(total 32bytes)..27ebcf70acaecb1c4bd874e29e13b7b258b9498cbdbd1afdb2c013df658fccb9
+[0]
+ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
+[1]
+BITSTRING 000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0..(total 66bytes)..000468c0c81d72856722e03738a7b46c116285c1a3a850eefc84a6e747781f221d0afd9f57df7f09093f79c8066e530fd5c452393bdab01911bca591224e7a44d6d0
 
 
-//	{
-//		PrivKey: "MHcCAQEEIPVj1LatgA6F7NXvjec39Ifk9CtCMBShORXpf5fh3+mzoAoGCCqGSM49AwEHoUQDQgAEA+y+Wg6a963cFTSbljspxyQ2XiTeLumSfBHpLfWk4YB0OoQP/0e406cvXlvB0kHwejQrOQ4+cjAzpTwbZATbew==",
-//		PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEA+y+Wg6a963cFTSbljspxyQ2XiTeLumSfBHpLfWk4YB0OoQP/0e406cvXlvB0kHwejQrOQ4+cjAzpTwbZATbew==",
-//	},
-//SEQUENCE
-//INTEGER 01..(total 1bytes)..01
-//OCTETSTRING f563d4b6ad800e85ecd5ef8de737f487e4f42b423014a13915e97f97e1dfe9b3..(total 32bytes)..f563d4b6ad800e85ecd5ef8de737f487e4f42b423014a13915e97f97e1dfe9b3
-//[0]
-//ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
-//[1]
-//BITSTRING 000403ecbe5a0e9af7addc15349b963b29c724365e24de2ee9927c11e92df5a4e180743a840fff47b8d3a72f5e5bc1d241f07a342b390e3e723033a53c1b6404db7b..(total 66bytes)..000403ecbe5a0e9af7addc15349b963b29c724365e24de2ee9927c11e92df5a4e180743a840fff47b8d3a72f5e5bc1d241f07a342b390e3e723033a53c1b6404db7b
+	{
+		PrivKey: "MHcCAQEEIPVj1LatgA6F7NXvjec39Ifk9CtCMBShORXpf5fh3+mzoAoGCCqGSM49AwEHoUQDQgAEA+y+Wg6a963cFTSbljspxyQ2XiTeLumSfBHpLfWk4YB0OoQP/0e406cvXlvB0kHwejQrOQ4+cjAzpTwbZATbew==",
+		PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEA+y+Wg6a963cFTSbljspxyQ2XiTeLumSfBHpLfWk4YB0OoQP/0e406cvXlvB0kHwejQrOQ4+cjAzpTwbZATbew==",
+	},
+SEQUENCE
+INTEGER 01..(total 1bytes)..01
+OCTETSTRING f563d4b6ad800e85ecd5ef8de737f487e4f42b423014a13915e97f97e1dfe9b3..(total 32bytes)..f563d4b6ad800e85ecd5ef8de737f487e4f42b423014a13915e97f97e1dfe9b3
+[0]
+ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
+[1]
+BITSTRING 000403ecbe5a0e9af7addc15349b963b29c724365e24de2ee9927c11e92df5a4e180743a840fff47b8d3a72f5e5bc1d241f07a342b390e3e723033a53c1b6404db7b..(total 66bytes)..000403ecbe5a0e9af7addc15349b963b29c724365e24de2ee9927c11e92df5a4e180743a840fff47b8d3a72f5e5bc1d241f07a342b390e3e723033a53c1b6404db7b
 
 
-//	{
-//		PrivKey: "MHcCAQEEIMPgPZHoEn3dk4bXN97MGCS3selCZpHrn321gDz1jwnHoAoGCCqGSM49AwEHoUQDQgAEJaeRxAsru5DGm6QJIUR3TVSItwE5GY1Peklq3/7S8RO3JK7pCvbDfv4UpB/fjpN5g9Q5Xq4LreLf6RuGBxfxpw==",
-//		PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJaeRxAsru5DGm6QJIUR3TVSItwE5GY1Peklq3/7S8RO3JK7pCvbDfv4UpB/fjpN5g9Q5Xq4LreLf6RuGBxfxpw==",
-//	},
-//SEQUENCE
-//INTEGER 01..(total 1bytes)..01
-//OCTETSTRING c3e03d91e8127ddd9386d737decc1824b7b1e9426691eb9f7db5803cf58f09c7..(total 32bytes)..c3e03d91e8127ddd9386d737decc1824b7b1e9426691eb9f7db5803cf58f09c7
-//[0]
-//ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
-//[1]
-//BITSTRING 000425a791c40b2bbb90c69ba4092144774d5488b70139198d4f7a496adffed2f113b724aee90af6c37efe14a41fdf8e937983d4395eae0bade2dfe91b860717f1a7..(total 66bytes)..000425a791c40b2bbb90c69ba4092144774d5488b70139198d4f7a496adffed2f113b724aee90af6c37efe14a41fdf8e937983d4395eae0bade2dfe91b860717f1a7
+	{
+		PrivKey: "MHcCAQEEIMPgPZHoEn3dk4bXN97MGCS3selCZpHrn321gDz1jwnHoAoGCCqGSM49AwEHoUQDQgAEJaeRxAsru5DGm6QJIUR3TVSItwE5GY1Peklq3/7S8RO3JK7pCvbDfv4UpB/fjpN5g9Q5Xq4LreLf6RuGBxfxpw==",
+		PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJaeRxAsru5DGm6QJIUR3TVSItwE5GY1Peklq3/7S8RO3JK7pCvbDfv4UpB/fjpN5g9Q5Xq4LreLf6RuGBxfxpw==",
+	},
+SEQUENCE
+INTEGER 01..(total 1bytes)..01
+OCTETSTRING c3e03d91e8127ddd9386d737decc1824b7b1e9426691eb9f7db5803cf58f09c7..(total 32bytes)..c3e03d91e8127ddd9386d737decc1824b7b1e9426691eb9f7db5803cf58f09c7
+[0]
+ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
+[1]
+BITSTRING 000425a791c40b2bbb90c69ba4092144774d5488b70139198d4f7a496adffed2f113b724aee90af6c37efe14a41fdf8e937983d4395eae0bade2dfe91b860717f1a7..(total 66bytes)..000425a791c40b2bbb90c69ba4092144774d5488b70139198d4f7a496adffed2f113b724aee90af6c37efe14a41fdf8e937983d4395eae0bade2dfe91b860717f1a7
 
 
-//	{
-//		PrivKey: "MHcCAQEEIMxif9OZrsyLSJ0p+HekBerQp4xRrkfGuUmmj6eooicRoAoGCCqGSM49AwEHoUQDQgAEdWCZO190zxDXf5+WnjdeIXNDFaoR7hMSIRN7jIN26n94vtHj+czclJ4GX3qsq/9fKENl5zAMudrfwSOnjBiTtw==",
-//		PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdWCZO190zxDXf5+WnjdeIXNDFaoR7hMSIRN7jIN26n94vtHj+czclJ4GX3qsq/9fKENl5zAMudrfwSOnjBiTtw==",
-//	},
-//SEQUENCE
-//INTEGER 01..(total 1bytes)..01
-//OCTETSTRING cc627fd399aecc8b489d29f877a405ead0a78c51ae47c6b949a68fa7a8a22711..(total 32bytes)..cc627fd399aecc8b489d29f877a405ead0a78c51ae47c6b949a68fa7a8a22711
-//[0]
-//ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
-//[1]
-//BITSTRING 00047560993b5f74cf10d77f9f969e375e21734315aa11ee131221137b8c8376ea7f78bed1e3f9ccdc949e065f7aacabff5f284365e7300cb9dadfc123a78c1893b7..(total 66bytes)..00047560993b5f74cf10d77f9f969e375e21734315aa11ee131221137b8c8376ea7f78bed1e3f9ccdc949e065f7aacabff5f284365e7300cb9dadfc123a78c1893b7
+	{
+		PrivKey: "MHcCAQEEIMxif9OZrsyLSJ0p+HekBerQp4xRrkfGuUmmj6eooicRoAoGCCqGSM49AwEHoUQDQgAEdWCZO190zxDXf5+WnjdeIXNDFaoR7hMSIRN7jIN26n94vtHj+czclJ4GX3qsq/9fKENl5zAMudrfwSOnjBiTtw==",
+		PubKey : "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdWCZO190zxDXf5+WnjdeIXNDFaoR7hMSIRN7jIN26n94vtHj+czclJ4GX3qsq/9fKENl5zAMudrfwSOnjBiTtw==",
+	},
+SEQUENCE
+INTEGER 01..(total 1bytes)..01
+OCTETSTRING cc627fd399aecc8b489d29f877a405ead0a78c51ae47c6b949a68fa7a8a22711..(total 32bytes)..cc627fd399aecc8b489d29f877a405ead0a78c51ae47c6b949a68fa7a8a22711
+[0]
+ObjectIdentifier secp256r1(1 2 840 10045 3 1 7)
+[1]
+BITSTRING 00047560993b5f74cf10d77f9f969e375e21734315aa11ee131221137b8c8376ea7f78bed1e3f9ccdc949e065f7aacabff5f284365e7300cb9dadfc123a78c1893b7..(total 66bytes)..00047560993b5f74cf10d77f9f969e375e21734315aa11ee131221137b8c8376ea7f78bed1e3f9ccdc949e065f7aacabff5f284365e7300cb9dadfc123a78c1893b7
 
-//https://gchq.github.io/CyberChef/#recipe=PEM_to_Hex()Parse_ASN.1_hex_string(0,33)&input=TUhjQ0FRRUVJQ2ZyejNDc3Jzc2NTOWgwNHA0VHQ3Sll1VW1NdmIwYS9iTEFFOTlsajh5NW9Bb0dDQ3FHU000OUF3RUhvVVFEUWdBRWFNRElIWEtGWnlMZ056aW50R3dSWW9YQm82aFE3dnlFcHVkSGVCOGlIUXI5bjFmZmZ3a0pQM25JQm01VEQ5WEVVams3MnJBWkVieWxrU0pPZWtUVzBBPT0
+https://gchq.github.io/CyberChef/#recipe=PEM_to_Hex()Parse_ASN.1_hex_string(0,33)&input=TUhjQ0FRRUVJQ2ZyejNDc3Jzc2NTOWgwNHA0VHQ3Sll1VW1NdmIwYS9iTEFFOTlsajh5NW9Bb0dDQ3FHU000OUF3RUhvVVFEUWdBRWFNRElIWEtGWnlMZ056aW50R3dSWW9YQm82aFE3dnlFcHVkSGVCOGlIUXI5bjFmZmZ3a0pQM25JQm01VEQ5WEVVams3MnJBWkVieWxrU0pPZWtUVzBBPT0
+
+
+
+
+
+uint8_t privatekey_eg1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
+								  0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
+	0x58,0xb9,0x49,0x8c,0xbd,0xbd,0x1a,0xfd,
+	0xb2,0xc0,0x13,0xdf,0x65,0x8f,0xcc,0xb9 };
+uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
+	0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
+	0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
+	0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
+	0x0A };
+uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
+		0xec,0xd5,0xef,0x8d,0xe7,0x37,0xf4,0x87,
+		0xe4,0xf4,0x2b,0x42,0x30,0x14,0xa1,0x39,
+		0x15,0xe9,0x7f,0x97,0xe1,0xdf,0xe9,0xb3 };
+uint8_t publickey_eg2[] = { 0x03 , 0x03 , 0xEC , 0xBE , 0x5A , 0x0E , 0x9A , 0xF7 , // ECC_BYTES + 1
+	0xAD , 0xDC , 0x15 , 0x34 , 0x9B , 0x96 , 0x3B , 0x29 ,
+	0xC7 , 0x24 , 0x36 , 0x5E , 0x24 , 0xDE , 0x2E , 0xE9 ,
+	0x92 , 0x7C , 0x11 , 0xE9 , 0x2D , 0xF5 , 0xA4 , 0xE1 , 0x80 };
+
+uint8_t privatekey_eg3[] = { 0xc3,0xe0,0x3d,0x91,0xe8,0x12,0x7d,0xdd,
+	0x93,0x86,0xd7,0x37,0xde,0xcc,0x18,0x24,
+	0xb7,0xb1,0xe9,0x42,0x66,0x91,0xeb,0x9f,
+	0x7d,0xb5,0x80,0x3c,0xf5,0x8f,0x09,0xc7 };
+uint8_t publickey_eg3[] = { 0x03, 0x25, 0xA7, 0x91, 0xC4, 0x0B, 0x2B, 0xBB,
+	0x90, 0xC6, 0x9B, 0xA4, 0x09, 0x21, 0x44, 0x77,
+	0x4D, 0x54, 0x88, 0xB7, 0x01, 0x39, 0x19, 0x8D,
+	0x4F, 0x7A, 0x49, 0x6A, 0xDF, 0xFE, 0xD2, 0xF1, 0x13 }; //ECC_BYTES + 1
+uint8_t privatekey_eg4[] = { 0xcc,0x62,0x7f,0xd3,0x99,0xae,0xcc,0x8b,
+	0x48,0x9d,0x29,0xf8,0x77,0xa4,0x05,0xea,
+	0xd0,0xa7,0x8c,0x51,0xae,0x47,0xc6,0xb9,
+	0x49,0xa6,0x8f,0xa7,0xa8,0xa2,0x27,0x11 };
+uint8_t publickey_eg4[] = { 0x03 , 0x75 , 0x60 , 0x99 , 0x3B , 0x5F , 0x74 , 0xCF ,
+	0x10 , 0xD7 , 0x7F , 0x9F , 0x96 , 0x9E , 0x37 , 0x5E ,
+	0x21 , 0x73 , 0x43 , 0x15 , 0xAA , 0x11 , 0xEE , 0x13 ,
+	0x12 , 0x21 , 0x13 , 0x7B , 0x8C , 0x83 , 0x76 , 0xEA , 0x7F };// ECC_BYTES + 1
+
+uint8_t signature_old_eg1[ECC_BYTES * 2];
+uint8_t signature_new_eg1[ECC_BYTES * 2];
+uint8_t signature_new_firstboot1[ECC_BYTES * 2];
+
+uint8_t signature_old_eg2[ECC_BYTES * 2];
+uint8_t signature_new_eg2[ECC_BYTES * 2];
+uint8_t signature_new_firstboot2[ECC_BYTES * 2];
+
+uint8_t signature_old_eg3[ECC_BYTES * 2];
+uint8_t signature_new_eg3[ECC_BYTES * 2];
+uint8_t signature_new_firstboot3[ECC_BYTES * 2];
+
+uint8_t signature_old_eg4[ECC_BYTES * 2];
+uint8_t signature_new_eg4[ECC_BYTES * 2];
+uint8_t signature_new_firstboot4[ECC_BYTES * 2];
+*/

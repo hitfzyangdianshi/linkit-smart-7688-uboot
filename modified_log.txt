@@ -1,7 +1,16 @@
+01 Mar 2021
+	pubkey: uint8_t[33] <---- PEM
+	privatekey: uint8_t[32] <---- PEM
+	signature:  uint8_t[64] !<-!!!!!!->! PEM  : PEM->uint8_t[64] sig verify failed with uint8_t[33] keys
+	( https://gchq.github.io/CyberChef/#recipe=PEM_to_Hex()Parse_ASN.1_hex_string(0,64)&input=TUhjQ0FRRUVJQ2ZyejNDc3Jzc2NTOWgwNHA0VHQ3Sll1VW1NdmIwYS9iTEFFOTlsajh5NW9Bb0dDQ3FHU000OUF3RUhvVVFEUWdBRWFNRElIWEtGWnlMZ056aW50R3dSWW9YQm82aFE3dnlFcHVkSGVCOGlIUXI5bjFmZmZ3a0pQM25JQm01VEQ5WEVVams3MnJBWkVieWxrU0pPZWtUVzBBPT0 )
+		??? server make fw-info?
+
+
+--------------------------------------------------------------------------------------------------------------------
 14 Feb 2021
 Partitioning of the Flash: https://openwrt.org/docs/techref/flash.layout#example_2hoo_too_ht-tm02
 		(Example 2: Hoo Too HT-TM02)
----11--------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
 unsigned long mips_cpu_feq == 580 000 000 
 __attribute__((nomips16)) void udelay (unsigned long usec)
 {
@@ -693,11 +702,8 @@ issues:
 
 --------------------------------------------------------------------------------------------------------------
 copy include files from uboot source codes (https://gitlab.denx.de/u-boot/u-boot) to /include
-
 copy include/bits, include/sys, and ctype.h, endian.h, fcntl.h, features.h, stddef.h, unistd.h from buildroot_gcc342 include to /include
-
 easy-ecc: https://github.com/jestan/easy-ecc
-
 ecdsa with openssl is not used.
 
 NOTE: stdio.h cannot be used while uboot compiling 

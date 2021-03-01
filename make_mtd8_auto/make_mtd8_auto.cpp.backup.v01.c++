@@ -1,4 +1,4 @@
-#include<stdio.h>
+ï»¿#include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include <time.h> 
@@ -101,7 +101,7 @@ long file_size2(const char* filename)
 		return -1;
 	}
 
-	//×¢Ã÷long long£¬±ÜÃâÊı¾İÒç³ö
+	//æ³¨æ˜long longï¼Œé¿å…æ•°æ®æº¢å‡º
 	//*freeSize = ((unsigned long)myStatfs.f_bsize * (unsigned long)myStatfs.f_bfree) ;
 	totalSize = ((  long)myStatfs.f_bsize * (  long)myStatfs.f_blocks) ;
 	printf("fssize:%ld\n", totalSize);
@@ -111,11 +111,11 @@ long file_size2(const char* filename)
 int shastr64to0x32(char singlechar[64], char hash[32]) {
 	unsigned long i, j;
 	int temp;
-
+	
 	i = 0;
 	for (j = 0; j < 64; j++) {
 		if (j % 2 == 0) {
-			if (singlechar[j] == '0' || (singlechar[j] >= '1' && singlechar[j] <= '9'))
+			if(singlechar[j]=='0' || (singlechar[j]>='1' && singlechar[j]<='9'))
 				temp = singlechar[j] - '1' + 1;
 			else
 				temp = singlechar[j] - 'a' + 0x0a;
@@ -135,71 +135,71 @@ int shastr64to0x32(char singlechar[64], char hash[32]) {
 uint8_t deadc0deffffffff[] = { 0xDE, 0xAD, 0xC0, 0xDE, 0xFF, 0xFF, 0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 uint8_t ffffffffffffffff[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 uint8_t deadc0de00000000[] = { 0xDE, 0xAD ,0xC0, 0xDE, 0x00, 0x00, 0x00, 0x00,     0x00, 0x00, 0x00, 0x00, 0x7B, 0x20, 0x20, 0x22 };
-uint8_t _851903200C000000[] = { 0x85, 0x19 ,0x03, 0x20 ,0x0C ,0x00 ,0x00 ,0x00     ,0xB1 ,0xB0 ,0x1E, 0xE4, 0xFF, 0xFF, 0xFF, 0xFF };
+uint8_t _851903200C000000[] ={ 0x85, 0x19 ,0x03, 0x20 ,0x0C ,0x00 ,0x00 ,0x00     ,0xB1 ,0xB0 ,0x1E, 0xE4, 0xFF, 0xFF, 0xFF, 0xFF };
 int make_mtd3() {
 	char init_filename[] = "/tmp/download_fw.bin";   //"../write_mtd/bin_files/big_init.bin";
-	long init_file_length = file_size2(init_filename), i;
-	FILE* init_file = fopen(init_filename, "rb");
-	FILE* output_file = fopen("/tmp/output_file.binmtd3notfirstboot", "wb");
-	uint8_t b[16];
-	int j;
-	bool putFF = false;
-	for (i = 0; i < init_file_length; i++) {
-		if (putFF == true)     fputc(0xff, output_file);
-		else {
-			if (i % 0x10000 == 0) {
-				for (j = 0; j < 16; j++) {
-					b[j] = fgetc(init_file);
-				}
-				if (compare_char(b, deadc0deffffffff, 16) == true || compare_char(b, ffffffffffffffff, 16) == true)
-				{
-					for (j = 0; j < 16; j++) {
-						fputc(_851903200C000000[j], output_file);
-					}
-				}
-				else if (compare_char(b, deadc0de00000000, 16) == true) {
-					for (j = 0; j < 16; j++) {
-						fputc(_851903200C000000[j], output_file);
-					}
-					putFF = true;
-				}
-				else {
-					for (j = 0; j < 16; j++) {
-						fputc(b[j], output_file);
-					}
-				}
-				i = i + 15;
-			}
-			else
-				fputc(fgetc(init_file), output_file);
-		}
-		//  printf("%ld\r", i);
-	}
+    long init_file_length = file_size2(init_filename),i;
+    FILE* init_file = fopen(init_filename, "rb");
+    FILE* output_file = fopen("/tmp/output_file.binmtd3notfirstboot", "wb");
+    uint8_t b[16];
+    int j;
+    bool putFF = false;
+    for (i = 0; i < init_file_length; i++) {
+        if (putFF == true)     fputc(0xff, output_file);
+        else {
+            if (i % 0x10000 == 0) {
+                for (j = 0; j < 16; j++) {
+                    b[j] = fgetc(init_file);
+                }
+                if (compare_char(b, deadc0deffffffff, 16) == true || compare_char(b, ffffffffffffffff, 16) == true)
+                {
+                    for (j = 0; j < 16; j++) {
+                        fputc(_851903200C000000[j], output_file);
+                    }
+                }
+                else if (compare_char(b, deadc0de00000000, 16) == true) {
+                    for (j = 0; j < 16; j++) {
+                        fputc(_851903200C000000[j], output_file);
+                    }
+                    putFF = true;
+                }
+                else {
+                    for (j = 0; j < 16; j++) {
+                        fputc(b[j], output_file);
+                    }
+                }
+                i = i + 15;
+            }
+            else 
+                fputc(fgetc(init_file), output_file);
+        }
+      //  printf("%ld\r", i);
+    }
 
-	fclose(init_file);
-	fclose(output_file);
-	//printf("\nDone!\n");
-	return 0;
+    fclose(init_file);
+    fclose(output_file);
+    //printf("\nDone!\n");
+    return 0;
 }
 
 
 int main(int argc, char** argv)
 {
-	/*if (argc != 3) {
-		printf("two arguments are needed here. please confirm the current firmware path and the new firmware path. \n");
-		return -1;
-	}*/
+    /*if (argc != 3) {
+        printf("two arguments are needed here. please confirm the current firmware path and the new firmware path. \n");
+        return -1;
+    }*/
 
-	FILE* current_fw, * current_fw_cut, * new_fw, *new_fw_cut,* fpsha256old, * fpsha256new, * fpsha256newfirstboot;
+	FILE *current_fw, * current_fw_cut,*new_fw,*fpsha256old,*fpsha256new,*fpsha256newfirstboot;
 	fw_info_t fw_info_test, * pst;
 	pst = &fw_info_test;
 	/*current_fw = fopen(argv[1], "rb");
 	new_fw = fopen(argv[2], "rb");*/
-	unsigned long i, j;
+	unsigned long i,j;
 	char c;
 	current_fw = fopen("/tmp/current_fw.bin", "rb");
 	current_fw_cut = fopen("/tmp/current_fw_cut.bin", "wb");
-	char hash_old[32], hash_old_singlechar[64];
+	char hash_old[32],hash_old_singlechar[64];
 
 
 	system("dd if=/dev/mtd6 of=/tmp/mtd6");
@@ -213,7 +213,7 @@ int main(int argc, char** argv)
 	}
 	fclose(current_fw_cut);
 	fclose(current_fw);
-	fpsha256old = popen("sha256sum /tmp/current_fw_cut.bin", "r");
+	fpsha256old = popen("sha256sum /tmp/current_fw_cut.bin","r");
 	fgets(hash_old_singlechar, 65, fpsha256old);
 	shastr64to0x32(hash_old_singlechar, hash_old);
 	pclose(fpsha256old);
@@ -224,30 +224,8 @@ int main(int argc, char** argv)
 	remove("/tmp/current_fw.bin");
 
 
-
-	char hash_new_firstboot[32], hash_new_firstboot_singlechar[64];
-	fw_info_test.size_new = file_size2("/tmp/download_fw.bin")  -   0x357;
-	new_fw = fopen("/tmp/download_fw.bin", "rb");
-	new_fw_cut = fopen("/tmp/new_fw_cut.bin", "wb");
-	for (i = 0; i < fw_info_test.size_new; i++) {
-		c = fgetc(new_fw);
-		fputc(c, new_fw_cut);
-	}
-	fclose(new_fw);
-	fclose(new_fw_cut);
-	fpsha256newfirstboot = popen("sha256sum /tmp/new_fw_cut.bin", "r");
-	fgets(hash_new_firstboot_singlechar, 65, fpsha256newfirstboot);
-	shastr64to0x32(hash_new_firstboot_singlechar, hash_new_firstboot);
-	pclose(fpsha256newfirstboot);
-	for (i = 0; i < 64; i++)printf("%c", hash_new_firstboot_singlechar[i]);
-	printf("\n");
-	/*for (i = 0; i < 32; i++)printf("%02x", hash_new_firstboot[i]);
-	printf("\n");*/
-
-
-
-	char hash_new[32], hash_new_singlechar[64];		
-#ifdef GRNERATE_NOT_FIRSTBOOT
+	char hash_new[32], hash_new_singlechar[64];
+	fw_info_test.size_new = file_size2("/tmp/download_fw.bin");																	//9438039;//12583767;//9700183;//12845911;//9700183;//15991639
 	make_mtd3();
 	fpsha256new = popen("sha256sum /tmp/output_file.binmtd3notfirstboot", "r");
 	fgets(hash_new_singlechar, 65, fpsha256new);
@@ -258,17 +236,22 @@ int main(int argc, char** argv)
 	/*for (i = 0; i < 32; i++)printf("%02x", hash_new[i]);
 	printf("\n");*/
 	remove("/tmp/output_file.binmtd3notfirstboot");
-#else // GRNERATE_NOT_FIRSTBOOT
-	for (i = 0; i < 32; i++)hash_new[i] = hash_new_firstboot[i];
-	for (i = 0; i < 64; i++)hash_new_singlechar[i] = hash_new_firstboot_singlechar[i];
-#endif // GRNERATE_NOT_FIRSTBOOT
 
 
 
 
 
+	char hash_new_firstboot[32], hash_new_firstboot_singlechar[64];
+	fpsha256newfirstboot = popen("sha256sum /tmp/download_fw.bin", "r");
+	fgets(hash_new_firstboot_singlechar, 65, fpsha256newfirstboot);
+	shastr64to0x32(hash_new_firstboot_singlechar, hash_new_firstboot);
+	pclose(fpsha256newfirstboot);
+	for (i = 0; i < 64; i++)printf("%c", hash_new_firstboot_singlechar[i]);
+	printf("\n");
+	/*for (i = 0; i < 32; i++)printf("%02x", hash_new_firstboot[i]);
+	printf("\n");*/
 
-
+	
 	fw_info_test.update = 0x01;
 	copy_char_to_unsigned_char(hash_old, fw_info_test.hash_old);
 	copy_char_to_unsigned_char(hash_new, fw_info_test.hash_new);
@@ -281,37 +264,17 @@ int main(int argc, char** argv)
 	fw_info_test.sig4_tag = 1;
 
 	srand((unsigned)time(NULL));
-	int randomnumber = rand() % 6;
-	if (randomnumber == 1) {
-		fw_info_test.sig1_tag = 0;
-		fw_info_test.sig2_tag = 0;
-	}
-	else if (randomnumber == 2) {
-		fw_info_test.sig1_tag = 0;
-		fw_info_test.sig3_tag = 0;
-	}
-	else if (randomnumber == 3) {
-		fw_info_test.sig1_tag = 0;
-		fw_info_test.sig4_tag = 0;
-	}
-	else if (randomnumber == 4) {
-		fw_info_test.sig2_tag = 0;
-		fw_info_test.sig3_tag = 0;
-	}
-	else if (randomnumber == 4) {
-		fw_info_test.sig2_tag = 0;
-		fw_info_test.sig4_tag = 0;
-	}
-	else {
-		fw_info_test.sig3_tag = 0;
-		fw_info_test.sig4_tag = 0;
-	}
+	int randomnumber = rand() % 4;
+	if(randomnumber==1)fw_info_test.sig1_tag = 0;
+	else if (randomnumber == 2)fw_info_test.sig2_tag = 0;
+	else if (randomnumber == 3)fw_info_test.sig3_tag = 0;
+	else     fw_info_test.sig4_tag = 0;
 
 
 
 	getsig_sign_no_print(privatekey_eg1, fw_info_test.hash_old, signature_old_eg1);
 	getsig_sign_no_print(privatekey_eg1, fw_info_test.hash_new, signature_new_eg1);
-	if (fw_info_test.sig1_tag == 1) getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
+	if(fw_info_test.sig1_tag==1) getsig_sign_and_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
 	else  getsig_sign_no_print(privatekey_eg1, fw_info_test.hash_new_firstboot, signature_new_firstboot1);
 
 	getsig_sign_no_print(privatekey_eg2, fw_info_test.hash_old, signature_old_eg2);
@@ -427,6 +390,6 @@ int main(int argc, char** argv)
 
 #endif // PRE_VERIFY_fwi
 
-	return 0;
+    return 0;
 }
 //  /home/qwer/openwrt19/openwrt/staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-gcc make_mtd8_auto.cpp -o generatemtd8.out
