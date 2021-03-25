@@ -203,6 +203,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 //#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
 #define mtd7_SIZE	(mtd8_ADDR-mtd7_ADDR)
 
+#define CHECK_NEW_FW_ONLY
+
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
 	uint8_t* p = (uint8_t*)fwi;
@@ -222,6 +224,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	printf("\n");
 #endif // DEMO_PRINT
+
 	printf("fw-info data: ->update, ->size_old_(kernel+/dev/root), ->size_new_(without metadate), fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);  
 	uint32_t fwi_size_old = fwi->size_old;
 	uint32_t fwi_size_new = fwi->size_new;
@@ -257,19 +260,19 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
 #ifdef TEST_HASH_SHA256_	//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 #include<u-boot/sha256.h>
-
+#ifndef CHECK_NEW_FW_ONLY
 	printf("testing sha256...     copy mtd3 within fwi_size to load_addr...\n");
+#endif // !CHECK_NEW_FW_ONLY
 	uint32_t fwi_size_forupdate;
 	if (fwi_update == 0x01)		fwi_size_forupdate= fwi_size_old;
 	else if (fwi_update == 0)	fwi_size_forupdate= fwi_size_new;
 	else						fwi_size_forupdate= fwi_size_new;
 
+#ifndef CHECK_NEW_FW_ONLY
 	//raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
 	raspi_read(load_addr, mtd3_ADDR, fwi_size_forupdate);
 
-
 	printf("current firmware (kernel+/dev/root, +metadata if firstboot) sha256 ... \n");
-
 
 	/*if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
 	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
@@ -289,12 +292,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("\n");
 	}*/
 	printf("\n");
+#endif // !CHECK_NEW_FW_ONLY
 	if (fwi_update == 0x01) {
 		raspi_read(load_addr, mtd7_ADDR, fwi_size_new);
 
 		printf("new firmware mtd7 sha256 ... \n");
 
 		sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum_mtd7, CHUNKSZ_SHA256);
+		/*WITHOUT 0x357metadata!!!!*/
 
 		for (i = 0; i < 32; i++) {
 			printf("%02lx", sha256_sum_mtd7[i]);
@@ -456,7 +461,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	else if (fwi_update == 0x01) {
 		unsigned int sig_varify_currentfirmware_result = 0, sig_varify_newfirmware_mtd7_result=0;
-		printf("sig_varify_current_firmware_hash_mtd3:\n"); 
+#ifndef CHECK_NEW_FW_ONLY
+		printf("sig_verify_current_firmware_hash_mtd3:\n"); 
 		//sig_varify_currentfirmware_result=signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_old_eg1);
 		if (fwi_sig1_tag == 1) {
 			printf("sig1: ");
@@ -479,8 +485,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			else  sig_varify_currentfirmware_result =-1;
 		}
 		printf("\n");
+#else // !CHECK_NEW_FW_ONLY
+		sig_varify_currentfirmware_result = 1;
+#endif // !CHECK_NEW_FW_ONLY
 
-		printf("sig_varify_newfirmware_hash_mtd7:\n"); 
+		printf(" verify sig of new fw in mtd7:\n"); 
 		//sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot);
 		if (fwi_sig1_tag == 1) {
 			printf("sig1: ");
@@ -505,7 +514,11 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("\n");
 
 		if (sig_varify_currentfirmware_result == 1 && sig_varify_newfirmware_mtd7_result ==1) {
+#ifndef CHECK_NEW_FW_ONLY
 			printf("current and new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
+#else // !CHECK_NEW_FW_ONLY
+			printf(" new firmware hash sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
+#endif // !CHECK_NEW_FW_ONLY
 			int raspi_erase_write_result = 1;
 			//raspi_read(load_addr, mtd7_ADDR, fwi_size_new );
 			printf("reading.# ");
