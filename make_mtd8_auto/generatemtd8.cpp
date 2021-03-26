@@ -9,7 +9,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 typedef		unsigned long		ulong;
-
+/*
 uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
 	0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
 	0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
@@ -46,7 +46,7 @@ uint8_t signature_new_firstboot3[ECC_BYTES * 2];
 uint8_t signature_old_eg4[ECC_BYTES * 2];
 uint8_t signature_new_eg4[ECC_BYTES * 2];
 uint8_t signature_new_firstboot4[ECC_BYTES * 2];
-
+*/
 /*int copy_string_to_unsigned_char(string s, uint8_t ch[]) {
 	int i;
 	for (i = 0; i < s.length(); i++) {
@@ -55,20 +55,20 @@ uint8_t signature_new_firstboot4[ECC_BYTES * 2];
 	return 0;
 }*/
 
-int copy_char_to_unsigned_char(char s[], uint8_t ch[]) {
+int copy_char_to_unsigned_char(char s[], uint8_t ch[],int length) {
 	int i;
-	for (i = 0; i < 32; i++) {
+	for (i = 0; i < length; i++) {
 		ch[i] = s[i];
 	}
 	return 0;
 }
 
-bool compare_char(uint8_t* a, uint8_t* b, int length) {
+int copy_unsigned_char_to_unsigned_char(uint8_t in[], uint8_t out[],int length) {
 	int i;
 	for (i = 0; i < length; i++) {
-		if (a[i] != b[i])  return false;
+		out[i] = in[i];
 	}
-	return true;
+	return 0;
 }
 
 long file_size2(const char* filename)
@@ -94,167 +94,30 @@ long file_size2(const char* filename)
 	return totalSize;
 }*/
 
-int shastr64to0x32(char singlechar[64], char hash[32]) {
-	unsigned long i, j;
-	int temp;
 
-	i = 0;
-	for (j = 0; j < 64; j++) {
-		if (j % 2 == 0) {
-			if (singlechar[j] == '0' || (singlechar[j] >= '1' && singlechar[j] <= '9'))
-				temp = singlechar[j] - '1' + 1;
-			else
-				temp = singlechar[j] - 'a' + 0x0a;
-		}
-		else {
-			if (singlechar[j] == '0' || (singlechar[j] >= '1' && singlechar[j] <= '9'))
-				temp = temp * 0x10 + (singlechar[j] - '1' + 1);
-			else
-				temp = temp * 0x10 + (singlechar[j] - 'a' + 0x0a);
-			hash[i] = temp;
-			i++;
-		}
-	}
-	return 0;
-}
 
-uint8_t deadc0deffffffff[] = { 0xDE, 0xAD, 0xC0, 0xDE, 0xFF, 0xFF, 0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-uint8_t ffffffffffffffff[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-uint8_t deadc0de00000000[] = { 0xDE, 0xAD ,0xC0, 0xDE, 0x00, 0x00, 0x00, 0x00,     0x00, 0x00, 0x00, 0x00, 0x7B, 0x20, 0x20, 0x22 };
-uint8_t _851903200C000000[] = { 0x85, 0x19 ,0x03, 0x20 ,0x0C ,0x00 ,0x00 ,0x00     ,0xB1 ,0xB0 ,0x1E, 0xE4, 0xFF, 0xFF, 0xFF, 0xFF };
-int make_mtd3() {
-	char init_filename[] = "/tmp/download_fw.bin";   //"../write_mtd/bin_files/big_init.bin";
-	long init_file_length = file_size2(init_filename), i;
-	FILE* init_file = fopen(init_filename, "rb");
-	FILE* output_file = fopen("/tmp/output_file.binmtd3notfirstboot", "wb");
-	uint8_t b[16];
-	int j;
-	bool putFF = false;
-	for (i = 0; i < init_file_length; i++) {
-		if (putFF == true)     fputc(0xff, output_file);
-		else {
-			if (i % 0x10000 == 0) {
-				for (j = 0; j < 16; j++) {
-					b[j] = fgetc(init_file);
-				}
-				if (compare_char(b, deadc0deffffffff, 16) == true || compare_char(b, ffffffffffffffff, 16) == true)
-				{
-					for (j = 0; j < 16; j++) {
-						fputc(_851903200C000000[j], output_file);
-					}
-				}
-				else if (compare_char(b, deadc0de00000000, 16) == true) {
-					for (j = 0; j < 16; j++) {
-						fputc(_851903200C000000[j], output_file);
-					}
-					putFF = true;
-				}
-				else {
-					for (j = 0; j < 16; j++) {
-						fputc(b[j], output_file);
-					}
-				}
-				i = i + 15;
-			}
-			else
-				fputc(fgetc(init_file), output_file);
-		}
-		//  printf("%ld\r", i);
-	}
 
-	fclose(init_file);
-	fclose(output_file);
-	//printf("\nDone!\n");
-	return 0;
-}
-
-#define CHECK_NEW_FW_ONLY
 
 int main(int argc, char** argv)
 {
 
-	FILE* current_fw, * current_fw_cut, * new_fw, * new_fw_cut, * fpsha256old, * fpsha256new, * fpsha256newfirstboot;
-	fw_info_t fw_info_test, * pst;
-	pst = &fw_info_test;
+	//FILE* current_fw, * current_fw_cut, * new_fw, * new_fw_cut, * fpsha256old, * fpsha256new, * fpsha256newfirstboot;
+	fw_info_t fw_info_test ;
 
 	unsigned long i, j;
 	char c;
-	current_fw = fopen("/tmp/current_fw.bin", "rb");
-	current_fw_cut = fopen("/tmp/current_fw_cut.bin", "wb");
-	char hash_old[32], hash_old_singlechar[64];
-
+	//current_fw = fopen("/tmp/current_fw.bin", "rb");
+	//current_fw_cut = fopen("/tmp/current_fw_cut.bin", "wb");
 
 	fw_info_test.size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6");
-#ifndef CHECK_NEW_FW_ONLY
-	remove("/tmp/mtd6");
-	for (i = 0; i < fw_info_test.size_old; i++) {
-		c = fgetc(current_fw);
-		fputc(c, current_fw_cut);
-	}
-	fclose(current_fw_cut);
-	fclose(current_fw);
-	fpsha256old = popen("sha256sum /tmp/current_fw_cut.bin", "r");
-	fgets(hash_old_singlechar, 65, fpsha256old);
-	shastr64to0x32(hash_old_singlechar, hash_old);
-	pclose(fpsha256old);
-	for (i = 0; i < 64; i++)printf("%c", hash_old_singlechar[i]);
-	printf("\n");
-	/*for (i = 0; i < 32; i++)printf("%02x", hash_old[i]);
-	printf("\n");*/
-#endif // !CHECK_NEW_FW_ONLY
-	remove("/tmp/current_fw.bin");
+	//remove("/tmp/mtd6");
+	//remove("/tmp/current_fw.bin");
 
-
-
-	char hash_new_firstboot[32], hash_new_firstboot_singlechar[64];
 	fw_info_test.size_new = file_size2("/tmp/download_fw.bin") - 0x357;
-	new_fw = fopen("/tmp/download_fw.bin", "rb");
-	new_fw_cut = fopen("/tmp/new_fw_cut.bin", "wb");
-	for (i = 0; i < fw_info_test.size_new; i++) {
-		c = fgetc(new_fw);
-		fputc(c, new_fw_cut);
-	}
-	fclose(new_fw);
-	fclose(new_fw_cut);
-	fpsha256newfirstboot = popen("sha256sum /tmp/new_fw_cut.bin", "r");
-	fgets(hash_new_firstboot_singlechar, 65, fpsha256newfirstboot);
-	shastr64to0x32(hash_new_firstboot_singlechar, hash_new_firstboot);
-	pclose(fpsha256newfirstboot);
-	for (i = 0; i < 64; i++)printf("%c", hash_new_firstboot_singlechar[i]);
-	printf("\n");
-	/*for (i = 0; i < 32; i++)printf("%02x", hash_new_firstboot[i]);
-	printf("\n");*/
-
-
-
-	char hash_new[32], hash_new_singlechar[64];
-#ifdef GRNERATE_NOT_FIRSTBOOT
-	make_mtd3();
-	fpsha256new = popen("sha256sum /tmp/output_file.binmtd3notfirstboot", "r");
-	fgets(hash_new_singlechar, 65, fpsha256new);
-	shastr64to0x32(hash_new_singlechar, hash_new);
-	pclose(fpsha256new);
-	/*for (i = 0; i < 64; i++)printf("%c", hash_new_singlechar[i]);
-	printf("\n");*/
-	/*for (i = 0; i < 32; i++)printf("%02x", hash_new[i]);
-	printf("\n");*/
-	remove("/tmp/output_file.binmtd3notfirstboot");
-#else // GRNERATE_NOT_FIRSTBOOT
-	for (i = 0; i < 32; i++)hash_new[i] = hash_new_firstboot[i];
-	for (i = 0; i < 64; i++)hash_new_singlechar[i] = hash_new_firstboot_singlechar[i];
-#endif // GRNERATE_NOT_FIRSTBOOT
-
-
-
-
-
-
 
 	fw_info_test.update = 0x01;
-	copy_char_to_unsigned_char(hash_old, fw_info_test.hash_old);
-	copy_char_to_unsigned_char(hash_new, fw_info_test.hash_new);
+	
 	fw_info_test.firstboot_tag = 1;
-	copy_char_to_unsigned_char(hash_new_firstboot, fw_info_test.hash_new_firstboot);
 
 	fw_info_test.sig1_tag = 0;
 	fw_info_test.sig2_tag = 0;
@@ -264,55 +127,59 @@ int main(int argc, char** argv)
 
 	FILE* f0, * f1;
 	uint8_t sig0[ECC_BYTES * 2], sig1[ECC_BYTES * 2];
-	f0 = fopen("sig0", "rb");
+	f0 = fopen("/tmp/sig0", "rb");
 	fread(sig0, 1, ECC_BYTES * 2, f0);
 	fclose(f0);
-	f1 = fopen("sig1", "rb");
+	f1 = fopen("/tmp/sig1", "rb");
 	fread(sig1, 1, ECC_BYTES * 2, f1);
 	fclose(f1);
 
 
 	FILE *keyindex;
+	keyindex = fopen("/tmp/index.txt", "r");
 	int index0, index1;
 	fscanf(keyindex, "%d %d", &index0, &index1);
+	fclose(keyindex);
+
+
 	switch (index0) {
 	case 0:fw_info_test.sig1_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot1[i] = sig0[i];
+		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig1, ECC_BYTES * 2);
 		break;
 	case 1:fw_info_test.sig2_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot2[i] = sig0[i];
+		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig2, ECC_BYTES * 2);
 		break;
 	case 2:fw_info_test.sig3_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot3[i] = sig0[i];
+		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig3, ECC_BYTES * 2);
 		break;
 	case 3:fw_info_test.sig4_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot4[i] = sig0[i];
+		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig4, ECC_BYTES * 2);
 		break;
 	default:fw_info_test.sig1_tag = 1; 
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot1[i] = sig0[i];
+		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig1, ECC_BYTES * 2);
 		break;
 	}
 	switch (index1) {
 	case 0:fw_info_test.sig1_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot1[i] = sig1[i];
+		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig1, ECC_BYTES * 2);
 		break;
 	case 1:fw_info_test.sig2_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot2[i] = sig1[i];
+		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig2, ECC_BYTES * 2);
 		break;
 	case 2:fw_info_test.sig3_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot3[i] = sig1[i];
+		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig3, ECC_BYTES * 2);
 		break;
 	case 3:fw_info_test.sig4_tag = 1;
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot4[i] = sig1[i];
+		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig4, ECC_BYTES * 2);
 		break;
 	default:fw_info_test.sig2_tag = 1; 
-		for (i = 0; i < ECC_BYTES * 2; i++)signature_new_firstboot2[i] = sig1[i];
+		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig2, ECC_BYTES * 2);
 		break;
 	}
 
 
 
-	FILE* mtd8_pubsig = fopen("/tmp/mtd8_1_big2small.bin", "wb");
+	FILE* mtd8_pubsig = fopen("/tmp/mtd8_.bin", "wb");
 	uint8_t* p = (uint8_t*)(&fw_info_test);
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		putc(p[i], mtd8_pubsig);
@@ -323,37 +190,11 @@ int main(int argc, char** argv)
 	}
 	//printf("\nsizeof(fw_info_t): %d\n", sizeof(fw_info_t));
 
-	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg1[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg1[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg1[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot1[i], mtd8_pubsig);
 
-	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg2[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg2[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg2[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot2[i], mtd8_pubsig);
-
-	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg3[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg3[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg3[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot3[i], mtd8_pubsig);
-
-	for (i = 0; i < ECC_BYTES + 1; i++) fputc(publickey_eg4[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_old_eg4[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_eg4[i], mtd8_pubsig);
-	for (i = 0; i < ECC_BYTES * 2; i++) fputc(signature_new_firstboot4[i], mtd8_pubsig);
 
 	fclose(mtd8_pubsig);
 
 
-
-
-
-
-
-
-
-
 	return 0;
 }
-//  /home/qwer/openwrt19/openwrt/staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-gcc make_mtd8_auto.cpp -o generatemtd8.out
+//  /home/qwer/openwrt19/openwrt/staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-gcc generatemtd8.cpp -o generatemtd8.out

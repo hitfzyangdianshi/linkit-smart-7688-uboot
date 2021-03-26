@@ -153,16 +153,26 @@ typedef struct fw_info {
 	uint32_t	size_old;
 	uint32_t	size_new;
 	uint8_t		update;
-	uint8_t		hash_old[32];
-	uint8_t		hash_new[32];
+	//uint8_t		hash_old[32];
+	//uint8_t		hash_new[32];
 
 	uint8_t		firstboot_tag;
-	uint8_t		hash_new_firstboot[32];
+	//uint8_t		hash_new_firstboot[32];
 
 	uint8_t		sig1_tag;
 	uint8_t		sig2_tag;
 	uint8_t		sig3_tag;
 	uint8_t		sig4_tag;
+
+	uint8_t		sig1[64];
+	uint8_t		sig2[64];
+	uint8_t		sig3[64];
+	uint8_t		sig4[64];
+
+	uint8_t		pukkey1[33];
+	uint8_t		pukkey2[33];
+	uint8_t		pukkey3[33];
+	uint8_t		pukkey4[33];
 
 } fw_info_t;
 

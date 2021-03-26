@@ -479,14 +479,31 @@ int main() {
 	fread(sig1, 1, 64, f1);
 	fclose(f1);
 
-	signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig0);
+	/*signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig0);
 	signature_verify_by_pubkey_33(publickey_eg2, digestnew, sig0);
 	signature_verify_by_pubkey_33(publickey_eg3, digestnew, sig0);
 	signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig0);
 	signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig1);
 	signature_verify_by_pubkey_33(publickey_eg2, digestnew, sig1);
 	signature_verify_by_pubkey_33(publickey_eg3, digestnew, sig1);
-	signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig1);
+	signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig1);*/
+
+
+	uint8_t hash[32];
+	FILE* sum;
+	sum = fopen("sum", "rb");
+	fread(hash, 1, 32, sum);
+	fclose(sum);
+
+	FILE* f;
+	uint8_t sig[64];
+	f = fopen("sig0", "rb");
+	fread(sig, 1, 64, f);
+	fclose(f);
+	signature_verify_by_pubkey_33(publickey_eg1, hash, sig0);
+	signature_verify_by_pubkey_33(publickey_eg2, hash, sig1);
+	signature_verify_by_pubkey_33(publickey_eg1, hash, signature_1);
+	signature_verify_by_pubkey_33(publickey_eg2, hash, signature_2);
 
 
 	return 0;
