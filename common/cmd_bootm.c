@@ -203,6 +203,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 //#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
 #define mtd7_SIZE	(mtd8_ADDR-mtd7_ADDR)
 
+#define FW_TAIL_OFFSET 0x30e
+
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
 	uint8_t* p = (uint8_t*)fwi;
@@ -468,7 +470,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
 
 			printf("    writing.# ");
-			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new+   0x357);//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
+			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new+   FW_TAIL_OFFSET  );//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 
 			if (raspi_erase_write_result == 0)
 			{

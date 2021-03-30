@@ -96,7 +96,7 @@ long file_size2(const char* filename)
 
 
 
-
+#define FW_TAIL_OFFSET 0x30e
 
 int main(int argc, char** argv)
 {
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 	//remove("/tmp/mtd6");
 	//remove("/tmp/current_fw.bin");
 
-	fw_info_test.size_new = file_size2("/tmp/download_fw.bin") - 0x357;
+	fw_info_test.size_new = file_size2("/tmp/download_fw.bin") - FW_TAIL_OFFSET;
 
 	fw_info_test.update = 0x01;
 	
