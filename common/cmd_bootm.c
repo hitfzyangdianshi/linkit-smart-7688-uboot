@@ -308,7 +308,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("new firmware mtd7 sha256 ... \n");
 
 		sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum_mtd7, CHUNKSZ_SHA256);
-		/*WITHOUT 0x357metadata!!!!*/
+		/*WITHOUT 0x(FW_TAIL_OFFSET) metadata!!!!*/
 
 		for (i = 0; i < 32; i++) {
 			printf("%02lx", sha256_sum_mtd7[i]);
@@ -321,8 +321,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	for (i = 0; i < 32; i++) hash_new_old[i] = sha256_sum_mtd7[i];
 	for (i = 0; i < 32; i++) hash_new_old[i+32] = sha256_sum[i];
 	uint8_t hash_hash_new_old[32];
-	raspi_read(load_addr, *hash_new_old, 64);
-	sha256_csum_wd((char*)load_addr, 64, hash_hash_new_old, CHUNKSZ_SHA256);
+	/*raspi_read(load_addr, *hash_new_old, 64);
+	sha256_csum_wd((char*)load_addr, 64, hash_hash_new_old, CHUNKSZ_SHA256);*/
+	sha256_csum_wd(hash_new_old, 64, hash_hash_new_old, CHUNKSZ_SHA256);
 	for (i = 0; i < 32; i++) {
 		printf("%02lx", hash_hash_new_old[i]);
 	}
