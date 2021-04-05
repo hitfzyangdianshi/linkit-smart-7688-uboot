@@ -11,6 +11,10 @@ There are also some head files and source codes from u-boot-2021.01-rc4 (https:/
 
 The file changelog is [changes_summary/changes.txt](changes_summary/changes.txt)
 
+Openwrt19 (https://github.com/openwrt/openwrt/tree/v19.07.7 ) is used as the firmware of the device. The partition is modified in the file ([openwrt19/openwrt/target/linux/ramips/dts/LINKIT7688.dts](openwrt19/openwrt/target/linux/ramips/dts/LINKIT7688.dts))
+
+
+
 # NOTICE
 The head file "stdio.h" is not used and cannot be used here, because functions about printing are defined in other files, so I make it as an empty file. 
 
