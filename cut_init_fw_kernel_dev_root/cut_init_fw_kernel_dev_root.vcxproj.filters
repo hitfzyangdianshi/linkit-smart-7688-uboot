@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cut_init_fw_kernel_dev_root.cpp">
+    <ClCompile Include="cut_init_fw_kernel_dev_root.cpp.backup">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

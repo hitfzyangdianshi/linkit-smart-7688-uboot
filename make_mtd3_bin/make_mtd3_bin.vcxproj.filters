@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="make_mtd3_bin.cpp">
+    <ClCompile Include="make_mtd3_bin.cpp.backup">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="make_mtd8_sizeonly.cpp">
+    <ClCompile Include="make_mtd8_sizeonly.cpp.backup">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="make_mtd8_auto.cpp">
+    <ClCompile Include="make_mtd8_auto.cpp.backup">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="make_mtd8_auto.cpp.backup.v01.c++">
