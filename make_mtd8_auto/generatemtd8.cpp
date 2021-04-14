@@ -125,20 +125,23 @@ int main(int argc, char** argv)
 	fw_info_test.sig4_tag = 0;
 
 
-	FILE* f0, * f1;
-	uint8_t sig0[ECC_BYTES * 2], sig1[ECC_BYTES * 2];
+	FILE* f0, * f1, *f2;
+	uint8_t sig0[ECC_BYTES * 2], sig1[ECC_BYTES * 2], sig2[ECC_BYTES * 2];
 	f0 = fopen("/tmp/sig0", "rb");
 	fread(sig0, 1, ECC_BYTES * 2, f0);
 	fclose(f0);
 	f1 = fopen("/tmp/sig1", "rb");
 	fread(sig1, 1, ECC_BYTES * 2, f1);
 	fclose(f1);
+	f2 = fopen("/tmp/sig2", "rb");
+	fread(sig2, 1, ECC_BYTES * 2, f2);
+	fclose(f2);
 
 
 	FILE *keyindex;
 	keyindex = fopen("/tmp/index.txt", "r");
-	int index0, index1;
-	fscanf(keyindex, "%d %d", &index0, &index1);
+	int index0, index1, index2;
+	fscanf(keyindex, "%d %d %d", &index0, &index1, &index2);
 	fclose(keyindex);
 
 
@@ -177,6 +180,46 @@ int main(int argc, char** argv)
 		break;
 	}
 
+	switch (index2) {
+	case 0:fw_info_test.sig1_tag = 1;
+		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig1, ECC_BYTES * 2);
+		break;
+	case 1:fw_info_test.sig2_tag = 1;
+		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig2, ECC_BYTES * 2);
+		break;
+	case 2:fw_info_test.sig3_tag = 1;
+		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig3, ECC_BYTES * 2);
+		break;
+	case 3:fw_info_test.sig4_tag = 1;
+		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig4, ECC_BYTES * 2);
+		break;
+	default:fw_info_test.sig4_tag = 1;
+		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig4, ECC_BYTES * 2);
+		break;
+	}
+
+
+	FILE* k0, * k1, * k2, * k3;
+	k0 = fopen("/tmp/pubkey0", "rb");
+	k1 = fopen("/tmp/pubkey1", "rb");
+	k2 = fopen("/tmp/pubkey2", "rb");
+	k3 = fopen("/tmp/pubkey3", "rb");
+
+	uint8_t pubk0[ECC_BYTES + 1], pubk1[ECC_BYTES + 1], pubk2[ECC_BYTES + 1], pubk3[ECC_BYTES + 1];
+	fread(pubk0, 1, ECC_BYTES + 1, k0);
+	fread(pubk1, 1, ECC_BYTES + 1, k1);
+	fread(pubk2, 1, ECC_BYTES + 1, k2);
+	fread(pubk3, 1, ECC_BYTES + 1, k3);
+
+	fclose(k0);
+	fclose(k1);
+	fclose(k2);
+	fclose(k3);
+
+	copy_unsigned_char_to_unsigned_char(pubk0, fw_info_test.pubkey1, ECC_BYTES+1);
+	copy_unsigned_char_to_unsigned_char(pubk1, fw_info_test.pubkey2, ECC_BYTES + 1);
+	copy_unsigned_char_to_unsigned_char(pubk2, fw_info_test.pubkey3, ECC_BYTES + 1);
+	copy_unsigned_char_to_unsigned_char(pubk3, fw_info_test.pubkey4, ECC_BYTES + 1);
 
 
 	FILE* mtd8_pubsig = fopen("/tmp/mtd8_.bin", "wb");

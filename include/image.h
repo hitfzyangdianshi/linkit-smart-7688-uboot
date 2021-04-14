@@ -169,10 +169,10 @@ typedef struct fw_info {
 	uint8_t		sig3[64];
 	uint8_t		sig4[64];
 
-	uint8_t		pukkey1[33];
-	uint8_t		pukkey2[33];
-	uint8_t		pukkey3[33];
-	uint8_t		pukkey4[33];
+	uint8_t		pubkey1[33];
+	uint8_t		pubkey2[33];
+	uint8_t		pubkey3[33];
+	uint8_t		pubkey4[33];
 
 } fw_info_t;
 
