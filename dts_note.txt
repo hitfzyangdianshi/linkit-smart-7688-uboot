@@ -1,1 +1,1 @@
-/target/linux/ramips/dts/mt7628an_mediatek_linkit-smart-7688.dts
+/target/linux/ramips/dts/*.dts
