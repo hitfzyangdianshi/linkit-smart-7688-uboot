@@ -254,26 +254,26 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	printf ("\n\n");
 */	
 
-	fw_info_t *fwi = malloc(sizeof(fw_info_t));
-	printf("fw-info size: %d\n", sizeof(fw_info_t));
-	raspi_read(fwi, 0x1ff0000, sizeof(fw_info_t));
-	printf("fw-info raw: \n");
-	uint8_t *p = (uint8_t*)fwi;
-	for (i = 0; i < (sizeof(fw_info_t)); i++) {
-		printf("%02X ", p[i]);
-		if ((i+1) % 16 == 0) {
-			printf("\n");
-		}
-	}
-	printf("\n\n");
-	printf("fw-info data: %d %ld %ld\n", fwi->update, fwi->size_old, fwi->size_new);
+	// fw_info_t *fwi = malloc(sizeof(fw_info_t));
+	// printf("fw-info size: %d\n", sizeof(fw_info_t));
+	// raspi_read(fwi, 0x1ff0000, sizeof(fw_info_t));
+	// printf("fw-info raw: \n");
+	// uint8_t *p = (uint8_t*)fwi;
+	// for (i = 0; i < (sizeof(fw_info_t)); i++) {
+	// 	printf("%02X ", p[i]);
+	// 	if ((i+1) % 16 == 0) {
+	// 		printf("\n");
+	// 	}
+	// }
+	// printf("\n\n");
+	// printf("fw-info data: %d %ld %ld\n", fwi->update, fwi->size_old, fwi->size_new);
 
-	raspi_read(load_addr, 0x50000, fwi->size_old);
-	sha256_csum_wd((char *)load_addr, fwi->size_old , sha256_old, CHUNKSZ_SHA256);
-	for (i = 0; i < 32; i++) {
-                printf ("%02lx", sha256_old[i]);
-        }
-        printf ("\n\n");
+	// raspi_read(load_addr, 0x50000, fwi->size_old);
+	// sha256_csum_wd((char *)load_addr, fwi->size_old , sha256_old, CHUNKSZ_SHA256);
+	// for (i = 0; i < 32; i++) {
+    //             printf ("%02lx", sha256_old[i]);
+    //     }
+    //     printf ("\n\n");
 
 
 	SHOW_BOOT_PROGRESS (1);

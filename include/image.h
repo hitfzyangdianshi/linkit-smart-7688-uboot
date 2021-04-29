@@ -148,12 +148,25 @@ typedef struct image_header {
 	uint8_t		ih_name[IH_NMLEN];	/* Image Name		*/
 } image_header_t;
 
-typedef struct fw_info {
-	uint32_t	size_old;
-	uint32_t	size_new;
-	uint8_t		update;
-	uint8_t		hash_old[32];
-	uint8_t		hash_new[32];
-} fw_info_t;
+typedef struct update_info {
+	uint32_t	key_update_count;
+	uint32_t	fw_version;
+	uint32_t	fw_size;
+	uint8_t		update_key;
+	uint8_t		update_fw;
+	uint8_t		signature[64];
+} update_info_t;
+
+typedef struct key_update {
+	uint32_t	key_version;
+	uint8_t		key[33];
+	uint8_t		signature[64];
+} key_update_t;
+
+typedef struct uboot_state {
+	uint32_t	fw_version;
+	uint32_t	key_version;
+	uint8_t		key[33];
+} uboot_state_t;
 
 #endif	/* __IMAGE_H__ */
