@@ -102,136 +102,66 @@ int main(int argc, char** argv)
 {
 
 	//FILE* current_fw, * current_fw_cut, * new_fw, * new_fw_cut, * fpsha256old, * fpsha256new, * fpsha256newfirstboot;
-	fw_info_t fw_info_test ;
+	fw_info_t fwinfo ;
 
 	unsigned long i, j;
 	char c;
-	//current_fw = fopen("/tmp/current_fw.bin", "rb");
+	/*//current_fw = fopen("/tmp/current_fw.bin", "rb");
 	//current_fw_cut = fopen("/tmp/current_fw_cut.bin", "wb");
 
-	fw_info_test.size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6");
+	//fw_info_test.size_old = file_size2("/tmp/current_fw.bin") - file_size2("/tmp/mtd6");
 	//remove("/tmp/mtd6");
-	//remove("/tmp/current_fw.bin");
+	//remove("/tmp/current_fw.bin");*/
 
-	fw_info_test.size_new = file_size2("/tmp/download_fw.bin") - FW_TAIL_OFFSET;
+	fwinfo.size_new = file_size2("/tmp/download_fw.bin") - FW_TAIL_OFFSET;
 
-	fw_info_test.update = 0x01;
+	fwinfo.update = 0x01;
 	
-	fw_info_test.firstboot_tag = 1;
+//	fwinfo.firstboot_tag = 1;
+	fwinfo.membership_update = 0; 
 
-	fw_info_test.sig1_tag = 0;
-	fw_info_test.sig2_tag = 0;
-	fw_info_test.sig3_tag = 0;
-	fw_info_test.sig4_tag = 0;
+	for (i = 0; i < 10; i++) fwinfo.sigs_tag[i] = 0;
 
+	FILE* sighowmany = fopen("/tmp/sighowmany.txt", "r");
+	int sighowmany_n;
+	fscanf(sighowmany, "%d", &sighowmany_n);
+	fclose(sighowmany);
 
-	FILE* f0, * f1, *f2;
-	uint8_t sig0[ECC_BYTES * 2], sig1[ECC_BYTES * 2], sig2[ECC_BYTES * 2];
-	f0 = fopen("/tmp/sig0", "rb");
-	fread(sig0, 1, ECC_BYTES * 2, f0);
-	fclose(f0);
-	f1 = fopen("/tmp/sig1", "rb");
-	fread(sig1, 1, ECC_BYTES * 2, f1);
-	fclose(f1);
-	f2 = fopen("/tmp/sig2", "rb");
-	fread(sig2, 1, ECC_BYTES * 2, f2);
-	fclose(f2);
+	for (i = 0; i < sighowmany_n; i++) {
+		uint8_t sigi[ECC_BYTES * 2];
+		char number_s[5];
+		char sigsfilename[50];
+		itoa(i, number_s, 10);
+		strcat(sigsfilename, "/tmp/sig");
+		strcat(sigsfilename, number_s);
+		FILE *sigs;
+		sigs = fopen(sigsfilename, "rb");
+		fread(sigi, 1, ECC_BYTES * 2, sigs);
+		copy_unsigned_char_to_unsigned_char(sigi, fwinfo.sigs[i], ECC_BYTES *2);
+		fclose(sigs);
+	}
 
 
 	FILE *keyindex;
 	keyindex = fopen("/tmp/index.txt", "r");
-	int index0, index1, index2;
-	fscanf(keyindex, "%d %d %d", &index0, &index1, &index2);
+	int index_temp;
+	for (i = 0; i < sighowmany_n; i++) {
+		fscanf(keyindex, "%d", &index_temp);
+		fwinfo.sigs_tag[index_temp] = 1;
+	}
 	fclose(keyindex);
 
+	
 
-	switch (index0) {
-	case 0:fw_info_test.sig1_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig1, ECC_BYTES * 2);
-		break;
-	case 1:fw_info_test.sig2_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig2, ECC_BYTES * 2);
-		break;
-	case 2:fw_info_test.sig3_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig3, ECC_BYTES * 2);
-		break;
-	case 3:fw_info_test.sig4_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig4, ECC_BYTES * 2);
-		break;
-	default:fw_info_test.sig1_tag = 1; 
-		copy_unsigned_char_to_unsigned_char(sig0, fw_info_test.sig1, ECC_BYTES * 2);
-		break;
-	}
-	switch (index1) {
-	case 0:fw_info_test.sig1_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig1, ECC_BYTES * 2);
-		break;
-	case 1:fw_info_test.sig2_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig2, ECC_BYTES * 2);
-		break;
-	case 2:fw_info_test.sig3_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig3, ECC_BYTES * 2);
-		break;
-	case 3:fw_info_test.sig4_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig4, ECC_BYTES * 2);
-		break;
-	default:fw_info_test.sig2_tag = 1; 
-		copy_unsigned_char_to_unsigned_char(sig1, fw_info_test.sig2, ECC_BYTES * 2);
-		break;
-	}
-
-	switch (index2) {
-	case 0:fw_info_test.sig1_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig1, ECC_BYTES * 2);
-		break;
-	case 1:fw_info_test.sig2_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig2, ECC_BYTES * 2);
-		break;
-	case 2:fw_info_test.sig3_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig3, ECC_BYTES * 2);
-		break;
-	case 3:fw_info_test.sig4_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig4, ECC_BYTES * 2);
-		break;
-	default:fw_info_test.sig4_tag = 1;
-		copy_unsigned_char_to_unsigned_char(sig2, fw_info_test.sig4, ECC_BYTES * 2);
-		break;
-	}
-
-
-	FILE* k0, * k1, * k2, * k3;
-	k0 = fopen("/tmp/pubkey0", "rb");
-	k1 = fopen("/tmp/pubkey1", "rb");
-	k2 = fopen("/tmp/pubkey2", "rb");
-	k3 = fopen("/tmp/pubkey3", "rb");
-
-	uint8_t pubk0[ECC_BYTES + 1], pubk1[ECC_BYTES + 1], pubk2[ECC_BYTES + 1], pubk3[ECC_BYTES + 1];
-	fread(pubk0, 1, ECC_BYTES + 1, k0);
-	fread(pubk1, 1, ECC_BYTES + 1, k1);
-	fread(pubk2, 1, ECC_BYTES + 1, k2);
-	fread(pubk3, 1, ECC_BYTES + 1, k3);
-
-	fclose(k0);
-	fclose(k1);
-	fclose(k2);
-	fclose(k3);
-
-	copy_unsigned_char_to_unsigned_char(pubk0, fw_info_test.pubkey1, ECC_BYTES+1);
-	copy_unsigned_char_to_unsigned_char(pubk1, fw_info_test.pubkey2, ECC_BYTES + 1);
-	copy_unsigned_char_to_unsigned_char(pubk2, fw_info_test.pubkey3, ECC_BYTES + 1);
-	copy_unsigned_char_to_unsigned_char(pubk3, fw_info_test.pubkey4, ECC_BYTES + 1);
 
 
 	FILE* mtd8_pubsig = fopen("/tmp/mtd8_.bin", "wb");
-	uint8_t* p = (uint8_t*)(&fw_info_test);
+	uint8_t* p = (uint8_t*)(&fwinfo);
 	for (i = 0; i < (sizeof(fw_info_t)); i++) {
 		putc(p[i], mtd8_pubsig);
-		/*printf("%02x ", p[i]);
-		if ((i + 1) % 16 == 0) {
-			printf("\n");
-		}*/
+
 	}
-	//printf("\nsizeof(fw_info_t): %d\n", sizeof(fw_info_t));
+
 
 
 

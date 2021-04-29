@@ -15,17 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="make_mtd8_sizeonly.cpp.backup">
+    <ClCompile Include="update_membership.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="make_mtd8_auto.cpp.backup">
+    <ClCompile Include="membership_test_file0.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="make_mtd8_auto.cpp.backup.v01.c++">
+    <ClCompile Include="sha256.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="generatemtd8.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sha256.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

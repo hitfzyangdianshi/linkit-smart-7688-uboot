@@ -1,1 +1,0 @@
-/home/qwer/openwrt19/openwrt/staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin/mipsel-openwrt-linux-g++ make_kernel_dev_root.cpp -o make_kernel_dev_root.out

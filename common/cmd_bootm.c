@@ -167,6 +167,33 @@ static inline void mips_cache_set(u32 v)
 
 extern unsigned long mips_cpu_feq;
 
+
+int check_array_empty0(uint8_t *a,int length)
+{
+	int i;
+	for(i=0;i<length;i++){
+		if(a[i]!=0) return 0;
+	}
+	return 1;
+}
+
+int check_duplicate_sigs(uint8_t sigs[10][64], uint8_t sigs_tag[10])
+{
+	int i,j,t;
+	for(i=0;i<10;i++){
+		for(j=i+1;j<10;j++){
+			if(sigs[i][0]==sigs[j][0] && sigs[i][1]==sigs[j][1] && sigs[i][2]==sigs[j][2] && sigs[i][3]==sigs[j][3] && 
+				sigs_tag[i]==1 && sigs_tag[j]==1 )
+			{
+				printf("contains duplicate signatures\n");
+				return -1;	
+			}
+		}
+	}
+	return 1;
+
+}
+
 int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 {
 	ulong	addr;
@@ -188,14 +215,13 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	} else {
 		addr = simple_strtoul(argv[1], NULL, 16);
 	}
-#define READ_BYTES_FROM_mtd8_DURING_BOOT
-#define TEST_HASH_SHA256_
-#define TEST_ECDSA_mtd8
-#define TEST_raspi_write_UPDATE_VALUE
-//#define USE_GET_TIMER
-//#define DEMO_PRINT
 
-#ifdef READ_BYTES_FROM_mtd8_DURING_BOOT
+
+
+
+//#define USE_GET_TIMER
+
+
 #define mtd8_ADDR 0x1ff0000 //"fw-info"
 #define mtd7_ADDR 0x1360000 //"fw-new"
 #define mtd3_ADDR   0x50000 //"firmware"
@@ -203,247 +229,126 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 //#define mtd6_ADDR  0xf20000+0x50000 //"rootfs_data"
 #define mtd7_SIZE	(mtd8_ADDR-mtd7_ADDR)
 
+#define mtd9_ADDR 0x1ff8000 //"u-info_i"
+#define mtd10_ADDR 0x1ffc000 //"u-info" read_only
+
 #define FW_TAIL_OFFSET 0x30e
+
+#include<u-boot/sha256.h>
+#include "../ecdsa_lightweight/easy_ecc_main.c"
 
 	fw_info_t* fwi = malloc(sizeof(fw_info_t));
 	raspi_read(fwi, mtd8_ADDR, sizeof(fw_info_t));
 	uint8_t* p = (uint8_t*)fwi;
 	// check while first boot only
-	if (fwi->firstboot_tag != 1) {
+/*	if (fwi->firstboot_tag != 1) {
 		printf("\nnot first boot. skip fw verify.\n\n");
 		goto boot_start_point;
-	}
-	if (fwi->update != 1) {
-		printf("\nnot fw update. skip fw verify.\n\n");
+	}*/
+	if (fwi->update != 1 && fwi->membership_update!=1) {
+		printf("\n - -\n\n");
 		goto boot_start_point;
 	}
-#ifdef DEMO_PRINT
-	printf("fw-info size: %d\n", sizeof(fw_info_t));
-	printf("fw-info raw: \n");
-	for (i = 0; i < (sizeof(fw_info_t)); i++) {
-		printf("%02x ", p[i]);
-		if ((i + 1) % 16 == 0) {
-			printf("\n");
+	else if (fwi->membership_update != 1 &&fwi->update == 1) {
+		membership_info_t* meminfo = malloc(sizeof(membership_info_t));
+		raspi_read(meminfo, mtd10_ADDR, sizeof(membership_info_t));
+		uint8_t* q = (uint8_t*)meminfo;
+
+
+		printf("fw-info data: ->update,  ->size_new_(without metadate): %d %d \n", fwi->update, fwi->size_new);
+		//uint32_t fwi_size_old = fwi->size_old;
+		uint32_t fwi_size_new = fwi->size_new;
+		uint32_t fwi_update = fwi->update;
+		//uint32_t fwi_firstboot_tag = fwi->firstboot_tag;
+
+		uint8_t* fwi_sigs_tag = fwi->sigs_tag;
+		uint8_t (*fwi_sigs)[ECC_BYTES*2] = fwi->sigs;
+
+		uint8_t		meminfo_version = meminfo->version;
+		uint8_t   (*meminfo_pubkeys)[ECC_BYTES+1] = meminfo->pubkeys;
+
+
+
+		if (fwi->size_new <= 0 || fwi->size_new > 32 * 1024 * 1024) {
+			fwi_size_new = 1;
+			printf("fwi->size_new size out of range\n");
 		}
-	}
-	printf("\n");
-#endif // DEMO_PRINT
 
-	printf("fw-info data: ->update, ->size_old_(kernel+/dev/root), ->size_new_(without metadate), fwi->firstboot_tag: %d %d %d %d\n", fwi->update, fwi->size_old, fwi->size_new, fwi->firstboot_tag);  
-	uint32_t fwi_size_old = fwi->size_old;
-	uint32_t fwi_size_new = fwi->size_new;
-	uint32_t fwi_update = fwi->update;
-	uint32_t fwi_firstboot_tag = fwi->firstboot_tag;
+		uint8_t  sha256_sum_mtd7[32];				//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
 
-	uint8_t fwi_sig1_tag = fwi->sig1_tag;
-	uint8_t fwi_sig2_tag = fwi->sig2_tag;
-	uint8_t fwi_sig3_tag = fwi->sig3_tag;
-	uint8_t fwi_sig4_tag = fwi->sig4_tag;
-
-	uint8_t* sig1 = fwi->sig1;
-	uint8_t* sig2 = fwi->sig2;
-	uint8_t* sig3 = fwi->sig3;
-	uint8_t* sig4 = fwi->sig4;
-
-	uint8_t* publickey_eg1 = fwi->pubkey1;
-	uint8_t* publickey_eg2 = fwi->pubkey2;
-	uint8_t* publickey_eg3 = fwi->pubkey3;
-	uint8_t* publickey_eg4 = fwi->pubkey4;
-
-
-
-	if (fwi->size_old <= 0 || fwi->size_old>32*1024*1024) {
-		fwi_size_old = 1;
-		printf("fwi->size_old size out of range\n");
-	}
-	if (fwi->size_new <= 0 || fwi->size_new>32*1024*1024) {
-		fwi_size_new = 1;
-		printf("fwi->size_new size out of range\n");
-	}
-
-	uint8_t sha256_sum[32], sha256_sum_mtd7[32];
-								//void sha256_csum_wd(const unsigned char* input, unsigned int ilen,	unsigned char* output, unsigned int chunk_sz)
-#include<u-boot/sha256.h>
-
-	printf("testing sha256...     copy mtd3 within fwi_size to load_addr...\n");
-
-	uint32_t fwi_size_forupdate;
-	if (fwi_update == 0x01)		fwi_size_forupdate= fwi_size_old;
-	else if (fwi_update == 0)	fwi_size_forupdate= fwi_size_new;
-	else						fwi_size_forupdate= fwi_size_new;
-
-
-	//raspi_read(load_addr, mtd3_ADDR, fwi_size_old> fwi_size_new? fwi_size_old: fwi_size_new);
-	raspi_read(load_addr, mtd3_ADDR, fwi_size_forupdate);
-
-	printf("current firmware (kernel+/dev/root, +metadata if firstboot) sha256 ... \n");
-
-	/*if (fwi_update == 0x01)		sha256_csum_wd((char*)load_addr, fwi_size_old, sha256_sum, CHUNKSZ_SHA256);
-	else if (fwi_update == 0)	sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);
-	else						sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum, CHUNKSZ_SHA256);*/
-	//if (fwi_firstboot_tag != 1 && fwi_update == 0) fwi_size_forupdate = fwi_size_forupdate - 0x357;
-	sha256_csum_wd((char*)load_addr, fwi_size_forupdate, sha256_sum, CHUNKSZ_SHA256);
-
-	for (i = 0; i < 32; i++) {
-		printf("%02lx", sha256_sum[i]);
-	}
-	/*printf("\n"); 
-	for (k = 0; k < mtd6_ADDR - mtd5_ADDR; k=k+0x10000) {
-		for (i = 0; i < 32; i++) {
-			if (i % 8 == 0 && i != 0)printf("  ");
-			printf("%02lx ", *(p_load_addr + k+i));
-		}
-		printf("\n");
-	}*/
-	printf("\n");
-
-	if (fwi_update == 0x01) {
+		printf("sha256...    ");
 		raspi_read(load_addr, mtd7_ADDR, fwi_size_new);
-
 		printf("new firmware mtd7 sha256 ... \n");
-
 		sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum_mtd7, CHUNKSZ_SHA256);
 		/*WITHOUT 0x(FW_TAIL_OFFSET) metadata!!!!*/
-
-		for (i = 0; i < 32; i++) {
-			printf("%02lx", sha256_sum_mtd7[i]);
-		}
-		printf("\n");
-	}
-
-	printf("hash(hashNew|hashOld) :");
-	uint8_t hash_new_old[64];
-	for (i = 0; i < 32; i++) hash_new_old[i] = sha256_sum_mtd7[i];
-	for (i = 0; i < 32; i++) hash_new_old[i+32] = sha256_sum[i];
-	uint8_t hash_hash_new_old[32];
-	/*raspi_read(load_addr, *hash_new_old, 64);
-	sha256_csum_wd((char*)load_addr, 64, hash_hash_new_old, CHUNKSZ_SHA256);*/
-	sha256_csum_wd(hash_new_old, 64, hash_hash_new_old, CHUNKSZ_SHA256);
-	for (i = 0; i < 32; i++) {
-		printf("%02lx", hash_hash_new_old[i]);
-	}
-	printf("\n");
-
-
-
-#include "../ecdsa_lightweight/easy_ecc_main.c"
-	/*uint8_t privatekey_eg1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
-									  0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
-		0x58,0xb9,0x49,0x8c,0xbd,0xbd,0x1a,0xfd,
-		0xb2,0xc0,0x13,0xdf,0x65,0x8f,0xcc,0xb9 };
-
-	uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
-		0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
-		0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
-		0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
-		0x0A };
-
-	/*uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
-		0xec,0xd5,0xef,0x8d,0xe7,0x37,0xf4,0x87,
-		0xe4,0xf4,0x2b,0x42,0x30,0x14,0xa1,0x39,
-		0x15,0xe9,0x7f,0x97,0xe1,0xdf,0xe9,0xb3 };
-	uint8_t publickey_eg2[] = { 0x03 , 0x03 , 0xEC , 0xBE , 0x5A , 0x0E , 0x9A , 0xF7 , // ECC_BYTES + 1
-		0xAD , 0xDC , 0x15 , 0x34 , 0x9B , 0x96 , 0x3B , 0x29 ,
-		0xC7 , 0x24 , 0x36 , 0x5E , 0x24 , 0xDE , 0x2E , 0xE9 ,
-		0x92 , 0x7C , 0x11 , 0xE9 , 0x2D , 0xF5 , 0xA4 , 0xE1 , 0x80 };
-
-	/*uint8_t privatekey_eg3[] = { 0xc3,0xe0,0x3d,0x91,0xe8,0x12,0x7d,0xdd,
-		0x93,0x86,0xd7,0x37,0xde,0xcc,0x18,0x24,
-		0xb7,0xb1,0xe9,0x42,0x66,0x91,0xeb,0x9f,
-		0x7d,0xb5,0x80,0x3c,0xf5,0x8f,0x09,0xc7 };
-	uint8_t publickey_eg3[] = { 0x03, 0x25, 0xA7, 0x91, 0xC4, 0x0B, 0x2B, 0xBB,
-		0x90, 0xC6, 0x9B, 0xA4, 0x09, 0x21, 0x44, 0x77,
-		0x4D, 0x54, 0x88, 0xB7, 0x01, 0x39, 0x19, 0x8D,
-		0x4F, 0x7A, 0x49, 0x6A, 0xDF, 0xFE, 0xD2, 0xF1, 0x13 }; //ECC_BYTES + 1
-	/*uint8_t privatekey_eg4[] = { 0xcc,0x62,0x7f,0xd3,0x99,0xae,0xcc,0x8b,
-		0x48,0x9d,0x29,0xf8,0x77,0xa4,0x05,0xea,
-		0xd0,0xa7,0x8c,0x51,0xae,0x47,0xc6,0xb9,
-		0x49,0xa6,0x8f,0xa7,0xa8,0xa2,0x27,0x11 };
-	uint8_t publickey_eg4[] = { 0x03 , 0x75 , 0x60 , 0x99 , 0x3B , 0x5F , 0x74 , 0xCF ,
-		0x10 , 0xD7 , 0x7F , 0x9F , 0x96 , 0x9E , 0x37 , 0x5E ,
-		0x21 , 0x73 , 0x43 , 0x15 , 0xAA , 0x11 , 0xEE , 0x13 ,
-		0x12 , 0x21 , 0x13 , 0x7B , 0x8C , 0x83 , 0x76 , 0xEA , 0x7F };// ECC_BYTES + 1
-	*/
-
-	if (fwi_sig1_tag + fwi_sig2_tag + fwi_sig3_tag + fwi_sig4_tag < 1|| fwi_sig1_tag + fwi_sig2_tag + fwi_sig3_tag + fwi_sig4_tag >4)
-		printf("fwi_sig_tag error... ... %d %d %d %d \n", fwi_sig1_tag , fwi_sig2_tag,fwi_sig3_tag , fwi_sig4_tag);
-
-
-	if (fwi_update != 0x01) {
-	/*	if(fwi_update!=0)printf("****** fwi_update is neither 0 nor 1 ........ please check mtd8\n* ");
-
-		printf("varify signature of current firmware in mtd3: ... "); 
-		if (fwi_firstboot_tag == 1){
-			printf("firstboot... :\t");
-			//signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot);
-			if (fwi_sig1_tag == 1) {
-				printf("sig1: ");
-				signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_firstboot1);
-			}
-			if (fwi_sig2_tag == 1) {
-				printf("sig2: ");
-				signature_verify_by_pubkey_33(publickey_eg2, sha256_sum, signature_new_firstboot2);
-			}
-			if (fwi_sig3_tag == 1) {
-				printf("sig3: ");
-				signature_verify_by_pubkey_33(publickey_eg3, sha256_sum, signature_new_firstboot3);
-			}
-			if (fwi_sig4_tag == 1) {
-				printf("sig4: ");
-				signature_verify_by_pubkey_33(publickey_eg4, sha256_sum, signature_new_firstboot4);
-			}
-			printf("\n");
-		}
-		else {
-			printf(" not firstboot ... :\t");
-			//signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
-			if (fwi_sig1_tag == 1) {
-				printf("sig1: ");
-				signature_verify_by_pubkey_33(publickey_eg1, sha256_sum, signature_new_eg1);
-			}
-			if (fwi_sig2_tag == 1) {
-				printf("sig2: ");
-				signature_verify_by_pubkey_33(publickey_eg2, sha256_sum, signature_new_eg2);
-			}
-			if (fwi_sig3_tag == 1) {
-				printf("sig3: ");
-				signature_verify_by_pubkey_33(publickey_eg3, sha256_sum, signature_new_eg3);
-			}
-			if (fwi_sig4_tag == 1) {
-				printf("sig4: ");
-				signature_verify_by_pubkey_33(publickey_eg4, sha256_sum, signature_new_eg4);
-			}
-			printf("\n");
-		}*/
-	}
-	else if (fwi_update == 0x01) {
-		unsigned int sig_verified=0;
-
-		printf(" verify signature(s):\n"); 
-		//sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot);
-		if (fwi_sig1_tag == 1) {
-			printf("sig1: ");
-			if (signature_verify_by_pubkey_33(publickey_eg1, hash_hash_new_old, sig1) == 1 && sig_verified >=0) sig_verified = 1;
-			else sig_verified =-1;
-		}
-		if (fwi_sig2_tag == 1) {
-			printf("sig2: ");
-			if (signature_verify_by_pubkey_33(publickey_eg2, hash_hash_new_old, sig2) == 1 && sig_verified >= 0) sig_verified = 1;
-			else  sig_verified =-1;
-		}
-		if (fwi_sig3_tag == 1) {
-			printf("sig3: ");
-			if (signature_verify_by_pubkey_33(publickey_eg3, hash_hash_new_old, sig3) == 1 && sig_verified >= 0)sig_verified = 1;
-			else  sig_verified =-1;
-		}
-		if (fwi_sig4_tag == 1) {
-			printf("sig4: ");
-			if (signature_verify_by_pubkey_33(publickey_eg4, hash_hash_new_old,sig4 ) == 1 && sig_verified >= 0)sig_verified = 1;
-			else  sig_verified =-1;
-		}
+		for (i = 0; i < 32; i++)		printf("%02lx", sha256_sum_mtd7[i]);
 		printf("\n");
 
-		if (sig_verified ==1) {
+
+
+
+		/*uint8_t privatekey_eg1[] = { 0x27,0xeb,0xcf,0x70,0xac,0xae,0xcb,0x1c,
+										  0x4b,0xd8,0x74,0xe2,0x9e,0x13,0xb7,0xb2,
+			0x58,0xb9,0x49,0x8c,0xbd,0xbd,0x1a,0xfd,
+			0xb2,0xc0,0x13,0xdf,0x65,0x8f,0xcc,0xb9 };
+
+		uint8_t publickey_eg1[] = { 0x02, 0x68, 0xC0, 0xC8, 0x1D, 0x72, 0x85, 0x67,
+			0x22, 0xE0, 0x37, 0x38, 0xA7, 0xB4, 0x6C, 0x11,
+			0x62, 0x85, 0xC1, 0xA3, 0xA8, 0x50, 0xEE, 0xFC,
+			0x84, 0xA6, 0xE7, 0x47, 0x78, 0x1F, 0x22, 0x1D,
+			0x0A };
+
+		/*uint8_t privatekey_eg2[] = { 0xf5,0x63,0xd4,0xb6,0xad,0x80,0x0e,0x85,
+			0xec,0xd5,0xef,0x8d,0xe7,0x37,0xf4,0x87,
+			0xe4,0xf4,0x2b,0x42,0x30,0x14,0xa1,0x39,
+			0x15,0xe9,0x7f,0x97,0xe1,0xdf,0xe9,0xb3 };
+		uint8_t publickey_eg2[] = { 0x03 , 0x03 , 0xEC , 0xBE , 0x5A , 0x0E , 0x9A , 0xF7 , // ECC_BYTES + 1
+			0xAD , 0xDC , 0x15 , 0x34 , 0x9B , 0x96 , 0x3B , 0x29 ,
+			0xC7 , 0x24 , 0x36 , 0x5E , 0x24 , 0xDE , 0x2E , 0xE9 ,
+			0x92 , 0x7C , 0x11 , 0xE9 , 0x2D , 0xF5 , 0xA4 , 0xE1 , 0x80 };
+
+		/*uint8_t privatekey_eg3[] = { 0xc3,0xe0,0x3d,0x91,0xe8,0x12,0x7d,0xdd,
+			0x93,0x86,0xd7,0x37,0xde,0xcc,0x18,0x24,
+			0xb7,0xb1,0xe9,0x42,0x66,0x91,0xeb,0x9f,
+			0x7d,0xb5,0x80,0x3c,0xf5,0x8f,0x09,0xc7 };
+		uint8_t publickey_eg3[] = { 0x03, 0x25, 0xA7, 0x91, 0xC4, 0x0B, 0x2B, 0xBB,
+			0x90, 0xC6, 0x9B, 0xA4, 0x09, 0x21, 0x44, 0x77,
+			0x4D, 0x54, 0x88, 0xB7, 0x01, 0x39, 0x19, 0x8D,
+			0x4F, 0x7A, 0x49, 0x6A, 0xDF, 0xFE, 0xD2, 0xF1, 0x13 }; //ECC_BYTES + 1
+		/*uint8_t privatekey_eg4[] = { 0xcc,0x62,0x7f,0xd3,0x99,0xae,0xcc,0x8b,
+			0x48,0x9d,0x29,0xf8,0x77,0xa4,0x05,0xea,
+			0xd0,0xa7,0x8c,0x51,0xae,0x47,0xc6,0xb9,
+			0x49,0xa6,0x8f,0xa7,0xa8,0xa2,0x27,0x11 };
+		uint8_t publickey_eg4[] = { 0x03 , 0x75 , 0x60 , 0x99 , 0x3B , 0x5F , 0x74 , 0xCF ,
+			0x10 , 0xD7 , 0x7F , 0x9F , 0x96 , 0x9E , 0x37 , 0x5E ,
+			0x21 , 0x73 , 0x43 , 0x15 , 0xAA , 0x11 , 0xEE , 0x13 ,
+			0x12 , 0x21 , 0x13 , 0x7B , 0x8C , 0x83 , 0x76 , 0xEA , 0x7F };// ECC_BYTES + 1
+		*/
+
+	//	if (fwi_sig1_tag + fwi_sig2_tag + fwi_sig3_tag + fwi_sig4_tag < 1 || fwi_sig1_tag + fwi_sig2_tag + fwi_sig3_tag + fwi_sig4_tag >4)	printf("fwi_sig_tag error... ... %d %d %d %d \n", fwi_sig1_tag, fwi_sig2_tag, fwi_sig3_tag, fwi_sig4_tag);
+
+		int sum_sig_index = 0;
+		for (i = 0; i < 10; i++)sum_sig_index = sum_sig_index + fwi_sigs_tag[i];
+		if (sum_sig_index < 1 || sum_sig_index >10) {
+			printf("fwi_sig_tag error... ...");
+			for (i = 0; i < 10; i++) printf("%d ", fwi_sigs_tag[i]);
+			printf("\n");
+		}
+
+
+		int sig_verified = 0;
+
+		printf(" verify signature(s):\n");			//sig_varify_newfirmware_mtd7_result = signature_verify_by_pubkey_33(publickey_eg1, sha256_sum_mtd7, signature_new_firstboot);
+		for (i = 0; i < 10; i++) {
+			if (fwi_sigs_tag[i] == 1) {
+				printf("sig%d: ", i);
+				if (signature_verify_by_pubkey_33(meminfo_pubkeys[i], sha256_sum_mtd7, fwi_sigs[i]) == 1 && sig_verified >= 0) sig_verified = 1;
+				else sig_verified = -1;
+			}
+		}
+
+
+		if (sig_verified == 1) {
 
 			printf(" sig verified..... flash mtd7 as the new firmware to mtd3 now.....\n");
 
@@ -453,7 +358,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			raspi_read(load_addr, mtd7_ADDR, mtd7_SIZE);
 
 			printf("    writing.# ");
-			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new+   FW_TAIL_OFFSET  );//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
+			raspi_erase_write_result = raspi_erase_write((char*)load_addr, mtd3_ADDR, fwi_size_new + 0 * FW_TAIL_OFFSET);//raspi_erase_write_result=raspi_erase_write((char*)load_addr, mtd3_ADDR, mtd7_SIZE);
 
 			if (raspi_erase_write_result == 0)
 			{
@@ -470,56 +375,160 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		else {
 			printf("ecdsa_verify error, firmware sig not verified.....    %d\n", sig_verified);
 		}
+
+
 	}
-	/*printf("publicKey:\n");
-	for (i = 0; i < ECC_BYTES + 1; i++) {
-		printf("%c", publickey_eg1[i]);
-	}
-	printf("\n{");
-	for (i = 0; i < ECC_BYTES + 1; i++) {
-		if (i == ECC_BYTES)printf("0x%02X ", publickey_eg1[i]);
-		else printf("0x%02X , ", publickey_eg1[i]);
-	}
-	printf("};\n");
-	printf("signature:\n");
-	for (i = 0; i < ECC_BYTES * 2; i++) {
-		printf("%c", signature_eg1[i]);
-	}
-	printf("\n{");
-	for (i = 0; i < ECC_BYTES * 2; i++) {
-		if (i == ECC_BYTES * 2 - 1)printf("0x%02X ", signature_eg1[i]);
-		else printf("0x%02X , ", signature_eg1[i]);
-	}
-	printf("};\n");*/
+
+	else if (fwi->membership_update == 1) {
+
+		membership_info_t* meminfo_current = malloc(sizeof(membership_info_t));
+		raspi_read(meminfo_current, mtd10_ADDR, sizeof(membership_info_t));
+		uint8_t* q0 = (uint8_t*)meminfo_current;
+		uint32_t current_version=meminfo_current->version;
+		uint8_t (*current_pubkeys)[ECC_BYTES+1] = meminfo_current->pubkeys;
+
+
+		membership_info_t* meminfo_new = malloc(sizeof(membership_info_t));
+		raspi_read(meminfo_new, mtd7_ADDR  , sizeof(membership_info_t));
+		uint8_t* q = (uint8_t*)meminfo_new;
+		uint32_t new_version=meminfo_new->version;
+		uint8_t (*new_pubkeys)[ECC_BYTES+1] = meminfo_new->pubkeys;
+		uint8_t (*new_sig)[ECC_BYTES*2] = meminfo_new->sigs;
+		uint32_t	  including_next=meminfo_new->including_next;
+		uint8_t* new_sigs_tag=meminfo_new->sigs_tag;
 
 
 
-	if (fwi->update != 0) {
+		uint32_t version0=current_version, version1=new_version;
+		uint8_t (*keys0)[ECC_BYTES+1] = meminfo_current->pubkeys;
+		uint8_t (*keys1)[ECC_BYTES+1] = meminfo_new->pubkeys;
+		uint8_t  (*sig0)[ECC_BYTES*2];
+		uint8_t  (*sig1)[ECC_BYTES*2] = meminfo_new->sigs;
+
+		int verify_membershipinfo_new = -1;
+		uint8_t sha2_mem_new[32];
+		int sig_count=0;
+		int j;
+
+		for(i=0;i<32767;i++)
+		{
+			if(version0+1!=version1){
+				printf("invlaid membership version, v0=%d ,v1=%d ,i=%d \n",version0,version1,i);
+				break;
+			}
+
+			check_duplicate_sigs(sig1, new_sigs_tag);
+
+	
+
+
+			/*for (j = 0; j < sizeof(membership_info_t); j++) {
+				printf("%02x ", q0[j]);
+			}
+			printf("\n");*/
+	
+
+			printf("verify membership info [version %d] with sig:  \n",version1);
+			//sha256_csum_wd(q, sizeof(membership_info_t) , sha2_mem_new, CHUNKSZ_SHA256);
+
+			/*for (j = 0; j < sizeof(membership_info_t); j++) {
+				printf("%02x ", q[j]);
+			}
+			printf("\n");*/
+			
+			sha256_csum_wd(q, sizeof(uint32_t)+10*(ECC_BYTES+1)*sizeof(uint8_t) , sha2_mem_new, CHUNKSZ_SHA256);
+
+			for (j = 0; j < 32; j++)	printf("%02x", sha2_mem_new[j]);
+			printf("\n");
+
+			sig_count=0;
+
+			for(j=0;j<10;j++)
+			{
+							
+				if(new_sigs_tag[j]==1)
+				{
+					sig_count++;
+					verify_membershipinfo_new= signature_verify_by_pubkey_33(keys0[j], sha2_mem_new, sig1[j]);
+					if (verify_membershipinfo_new == 1) {
+						printf("    version %d verified by sig%d\n",version1,j);
+					}
+					else {
+						printf("...version %d is not verified by sig%d\n",version1,j);
+						break;
+					}
+				}
+				else{
+					if(check_array_empty0(sig1[j],64)!=1){
+						printf("contains non member signatures at %d\n",j);
+					}
+				}
+			}
+			if (verify_membershipinfo_new != 1) break;
+			/*if(sig_count<???){
+				printf("not enough signatures, sig_count= %d\n",sig_count);
+			}*/
+		
+
+			if(including_next==0){
+					printf("\n\nflashing new membership [version %d]... ...", version1);
+					raspi_erase_write(meminfo_new, mtd10_ADDR, sizeof(membership_info_t));
+					break;
+			}
+			else if(including_next==1){
+					raspi_read(meminfo_current, mtd7_ADDR+( i*sizeof(membership_info_t) ), sizeof(membership_info_t));
+					q0 = (uint8_t*)meminfo_current;
+					current_version=meminfo_current->version;
+					current_pubkeys = meminfo_current->pubkeys;
+
+					
+					raspi_read(meminfo_new, mtd7_ADDR+( (i+1)*sizeof(membership_info_t)), sizeof(membership_info_t));
+					q = (uint8_t*)meminfo_new;
+					new_version=meminfo_new->version;
+					new_pubkeys = meminfo_new->pubkeys;
+					new_sig = meminfo_new->sigs;
+					including_next=meminfo_new->including_next;
+					new_sigs_tag=meminfo_new->sigs_tag;
+
+
+					version0=current_version; 	version1=new_version;
+					keys0=current_pubkeys; 		keys1=new_pubkeys;
+					sig1=new_sig;	
+
+
+					verify_membershipinfo_new = -1;
+			}
+			else {
+				printf("including_next is not 1 or 0. error value: %d\n", including_next);
+			}
+
+
+	
+			/*else {
+				printf("...version %d is not verified\n",version1);
+				break;
+			}*/
+
+
+		} //for
+
+
+	} //else if (fwi->membership_update == 1)
+
+
+	if (fwi->membership_update == 0&& fwi->update != 0) {
 		printf("change fwi->update to 0 .... ....\n");
 		fwi->update = 0;
 		raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));//int raspi_erase_write(char *buf, unsigned int offs, int count)
 	}
-	if (fwi->firstboot_tag != 0) {
-		printf("change fwi->firstboot_tag to 0 .... ....\n");
-		fwi->firstboot_tag = 0;
+	if (fwi->membership_update != 0) {
+		printf("change fwi->membership_update to 0 .... ....\n");
+		fwi->membership_update = 0;
 		raspi_erase_write(fwi, mtd8_ADDR, sizeof(fw_info_t));
 	}
-	/*if (fwi->update != 1) {
-		uint8_t *update_update =  0x01 ,existupdatevalue[1];
-		int raspiwriteresult=-10;
-		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
-		printf("%02x#", existupdatevalue[0]);
-		if (existupdatevalue[0] != 0x01){
-			raspiwriteresult = raspi_write(update_update, mtd8_ADDR + sizeof(uint32_t) * 2, 1); //(char *buf, unsigned int to, int len)
-			printf("@");
-		}
-		//printf("test: update fwi->update value to 0x19\n");
-		raspi_read(existupdatevalue, mtd8_ADDR + sizeof(uint32_t) * 2, sizeof(uint8_t));
-		printf("%02x#%d\n", existupdatevalue[0],raspiwriteresult);
-	}*/
 	printf("\n");
 
-#endif // READ_BYTES_FROM_mtd8_DURING_BOOT
+
 
 	
 

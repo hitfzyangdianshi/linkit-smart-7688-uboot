@@ -150,30 +150,43 @@ typedef struct image_header {
 
 
 typedef struct fw_info {
-	uint32_t	size_old;
+	//uint32_t	size_old;
 	uint32_t	size_new;
 	uint8_t		update;
 	//uint8_t		hash_old[32];
 	//uint8_t		hash_new[32];
 
-	uint8_t		firstboot_tag;
+//	uint8_t		firstboot_tag;
+	uint8_t		membership_update;
 	//uint8_t		hash_new_firstboot[32];
-
+	/*
 	uint8_t		sig1_tag;
 	uint8_t		sig2_tag;
 	uint8_t		sig3_tag;
 	uint8_t		sig4_tag;
-
+   
 	uint8_t		sig1[64];
 	uint8_t		sig2[64];
 	uint8_t		sig3[64];
 	uint8_t		sig4[64];
-
+	
 	uint8_t		pubkey1[33];
 	uint8_t		pubkey2[33];
 	uint8_t		pubkey3[33];
-	uint8_t		pubkey4[33];
+	uint8_t		pubkey4[33];*/
+	uint8_t		sigs_tag[10];
+	uint8_t		sigs[10][64];
 
 } fw_info_t;
+
+
+typedef struct membership_info {
+	uint32_t	version;
+	uint8_t		pubkeys[10][33]; 
+	uint8_t		sigs_tag[10];
+	uint8_t		sigs[10][64];
+	uint32_t		including_next; 
+} membership_info_t;
+
 
 #endif	/* __IMAGE_H__ */

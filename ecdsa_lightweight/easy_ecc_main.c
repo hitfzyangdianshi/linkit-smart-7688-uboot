@@ -422,6 +422,7 @@ static int test3() {
 #endif/* Windows */
 
 #if (defined(_WIN32) || defined(_WIN64))/* Windows */
+/*
 int main() {
 	uint8_t digest[32] = { 0x99,0xfe,0x1e,0xb6,0xf0,0xdb,0x56,0xd6,
 		0xad,0x2b,0xe7,0xbc,0xb8,0x15,0x6e,0x98,
@@ -479,14 +480,7 @@ int main() {
 	fread(sig1, 1, 64, f1);
 	fclose(f1);
 
-	/*signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig0);
-	signature_verify_by_pubkey_33(publickey_eg2, digestnew, sig0);
-	signature_verify_by_pubkey_33(publickey_eg3, digestnew, sig0);
-	signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig0);
-	signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig1);
-	signature_verify_by_pubkey_33(publickey_eg2, digestnew, sig1);
-	signature_verify_by_pubkey_33(publickey_eg3, digestnew, sig1);
-	signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig1);*/
+
 
 
 	uint8_t hash[32];
@@ -508,7 +502,15 @@ int main() {
 
 	return 0;
 
-}/*
+}*/
+/*signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig0);
+signature_verify_by_pubkey_33(publickey_eg2, digestnew, sig0);
+signature_verify_by_pubkey_33(publickey_eg3, digestnew, sig0);
+signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig0);
+signature_verify_by_pubkey_33(publickey_eg1, digestnew, sig1);
+signature_verify_by_pubkey_33(publickey_eg2, digestnew, sig1);
+signature_verify_by_pubkey_33(publickey_eg3, digestnew, sig1);
+signature_verify_by_pubkey_33(publickey_eg4, digestnew, sig1);*//*
 [{"keyIndex":0, "r" : 30573770039788355340837132412538075102096195922855111309972573350357414662311, "s" : 13490624650182305673330301563662358554802493490301165310946048391121243983559}, { "ke
 yIndex":1,"r":7458905350704965378733748165391584128041360664474639336955204410613486741429,"s":70039266208827087355310698155906451423393860642607629271223453741624221224695}]
 0

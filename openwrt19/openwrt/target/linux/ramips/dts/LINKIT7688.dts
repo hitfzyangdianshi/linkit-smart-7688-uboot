@@ -136,7 +136,18 @@
 
 			partition@70000 {
 				label = "fw-info";
-				reg = <0x1ff0000 0x10000>;
+				reg = <0x1ff0000 0x8000>;
+			};
+			
+			partition@80000 {
+				label = "u-info-update";
+				reg = <0x1ff8000 0x4000>;
+			};
+			
+			partition@90000 {
+				label = "u-info";
+				reg = <0x1ffc000 0x4000>;
+				 
 			};
 		};
 	};
