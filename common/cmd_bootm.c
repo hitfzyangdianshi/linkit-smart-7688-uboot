@@ -182,7 +182,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	ulong	data, len, checksum;
 	ulong  *len_ptr;
 	uint	unc_len = 0x800000;
-	int	i, j, verify;
+	int	i, verify;
 	char	*name, *s;
 	int	(*appl)(int, char *[]);
 	image_header_t *hdr = &header;
@@ -228,34 +228,33 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	// 		}
 	// 		raspi_erase_write(uboot_state, mtd9_ADDR, sizeof(uboot_state_t));
 	// 	}
-	// } else 
-	if (upd_info->update_fw != 0) {
-		puts("updating firmware...");
-		printf("firmware size: %d", upd_info->fw_size);
+	// } else if (upd_info->update_fw != 0) {
+	// 	puts("updating firmware...");
+	// 	printf("firmware size: %d", upd_info->fw_size);
 
-		raspi_read(load_addr, mtd7_ADDR, upd_info->fw_size);
-		sha256_csum_wd(load_addr, upd_info->fw_size, sha256_sum, CHUNKSZ_SHA256);
-		puts("firmware hash: ");
-		for (i = 0; i < 32; i++) {
-			printf ("%02lx", sha256_sum[i]);
-		}
-		printf("\n\n");
+	// 	raspi_read(load_addr, mtd7_ADDR, upd_info->fw_size);
+	// 	sha256_csum_wd(load_addr, upd_info->fw_size, sha256_sum, CHUNKSZ_SHA256);
+	// 	puts("firmware hash: ");
+	// 	for (i = 0; i < 32; i++) {
+	// 		printf ("%02lx", sha256_sum[i]);
+	// 	}
+	// 	printf("\n\n");
 
-		int valid = ecdsa_verify(uboot_state->key, sha256_sum, upd_info->signature);
-		if (valid == 1) {
-			puts("valid signature, writing firmware to flash");
-			raspi_erase_write(load_addr, mtd3_ADDR, upd_info->fw_size);
-		} else {
-			puts("invalid signature");
-		}
-	}
+	// 	int valid = ecdsa_verify(uboot_state->key, sha256_sum, upd_info->signature);
+	// 	if (valid == 1) {
+	// 		puts("valid signature, writing firmware to flash");
+	// 		raspi_erase_write(load_addr, mtd3_ADDR, upd_info->fw_size);
+	// 	} else {
+	// 		puts("invalid signature");
+	// 	}
+	// }
 
-	if (upd_info->update_fw || upd_info->update_key) {
-		upd_info->update_key = 0;
-		upd_info->update_fw = 0;
-		raspi_erase_write(upd_info, mtd8_ADDR, sizeof(update_info_t));
-		do_reset(cmdtp, 0, argc, argv);
-	}
+	// if (upd_info->update_fw || upd_info->update_key) {
+	// 	upd_info->update_key = 0;
+	// 	upd_info->update_fw = 0;
+	// 	raspi_erase_write(upd_info, mtd8_ADDR, sizeof(update_info_t));
+	// 	do_reset(cmdtp, 0, argc, argv);
+	// }
 
 /*
 	char *tmp_argv[5];
