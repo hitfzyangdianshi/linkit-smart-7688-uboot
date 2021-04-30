@@ -1,7 +1,7 @@
 #ifndef _EASY_ECC_H_
 #define _EASY_ECC_H_
 
-#include <stdint.h>
+// #include <stdint.h>
 
 /* Curve selection options. */
 #define secp128r1 16
