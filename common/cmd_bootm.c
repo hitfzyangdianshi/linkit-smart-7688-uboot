@@ -33,6 +33,8 @@
 #include <rt_mmap.h>
 #include <sha256.h>
 #include <ecc.h>
+#include <spi_api.h>
+#include <nand_api.h>
 
 #include <environment.h>
 #include <asm/byteorder.h>
