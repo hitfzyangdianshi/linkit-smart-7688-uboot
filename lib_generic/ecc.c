@@ -1,6 +1,11 @@
 #include <ecc.h>
 
+#ifndef USE_HOSTCC
+#include <common.h>
+#include <linux/string.h>
+#else
 #include <string.h>
+#endif /* USE_HOSTCC */
 
 #define NUM_ECC_DIGITS (ECC_BYTES/8)
 #define MAX_TRIES 16

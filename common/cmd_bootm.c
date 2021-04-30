@@ -206,55 +206,55 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 	uint8_t sha256_sum[32];
 
-	// if (upd_info->update_key != 0) {
-	// 	puts("updating key...");
-	// 	printf("key count: %d", upd_info->key_update_count);
+	if (upd_info->update_key != 0) {
+		puts("updating key...");
+		printf("key count: %d", upd_info->key_update_count);
 
-	// 	void *key_updates = malloc(sizeof(key_update_t) * upd_info->key_update_count);
-	// 	raspi_read(key_updates, mtd7_ADDR, sizeof(sizeof(key_update_t) * upd_info->key_update_count));
+		void *key_updates = malloc(sizeof(key_update_t) * upd_info->key_update_count);
+		raspi_read(key_updates, mtd7_ADDR, sizeof(sizeof(key_update_t) * upd_info->key_update_count));
 
-	// 	for (i = 0; i < upd_info->key_update_count; i++, key_updates+= sizeof(key_update_t)) {
-	// 		key_update_t *key_upd = (key_update_t*)key_updates;
-	// 		sha256_csum_wd(key_upd, 4+33, sha256_sum, CHUNKSZ_SHA256);
+		for (i = 0; i < upd_info->key_update_count; i++, key_updates+= sizeof(key_update_t)) {
+			key_update_t *key_upd = (key_update_t*)key_updates;
+			sha256_csum_wd(key_upd, 4+33, sha256_sum, CHUNKSZ_SHA256);
 
-	// 		int valid = ecdsa_verify(uboot_state->key, sha256_sum, key_upd->signature);
-	// 		if (valid == 1) {
-	// 			printf("valid key update, version: %d", key_upd->key_version);
-	// 			uboot_state->key_version = key_upd->key_version;
-	// 			memcpy(uboot_state->key, key_upd->key, 33);
-	// 		} else {
-	// 			puts("invalid signature");
-	// 			break;
-	// 		}
-	// 		raspi_erase_write(uboot_state, mtd9_ADDR, sizeof(uboot_state_t));
-	// 	}
-	// } else if (upd_info->update_fw != 0) {
-	// 	puts("updating firmware...");
-	// 	printf("firmware size: %d", upd_info->fw_size);
+			int valid = ecdsa_verify(uboot_state->key, sha256_sum, key_upd->signature);
+			if (valid == 1) {
+				printf("valid key update, version: %d", key_upd->key_version);
+				uboot_state->key_version = key_upd->key_version;
+				memcpy(uboot_state->key, key_upd->key, 33);
+			} else {
+				puts("invalid signature");
+				break;
+			}
+			raspi_erase_write(uboot_state, mtd9_ADDR, sizeof(uboot_state_t));
+		}
+	} else if (upd_info->update_fw != 0) {
+		puts("updating firmware...");
+		printf("firmware size: %d", upd_info->fw_size);
 
-	// 	raspi_read(load_addr, mtd7_ADDR, upd_info->fw_size);
-	// 	sha256_csum_wd(load_addr, upd_info->fw_size, sha256_sum, CHUNKSZ_SHA256);
-	// 	puts("firmware hash: ");
-	// 	for (i = 0; i < 32; i++) {
-	// 		printf ("%02lx", sha256_sum[i]);
-	// 	}
-	// 	printf("\n\n");
+		raspi_read(load_addr, mtd7_ADDR, upd_info->fw_size);
+		sha256_csum_wd(load_addr, upd_info->fw_size, sha256_sum, CHUNKSZ_SHA256);
+		puts("firmware hash: ");
+		for (i = 0; i < 32; i++) {
+			printf ("%02lx", sha256_sum[i]);
+		}
+		printf("\n\n");
 
-	// 	int valid = ecdsa_verify(uboot_state->key, sha256_sum, upd_info->signature);
-	// 	if (valid == 1) {
-	// 		puts("valid signature, writing firmware to flash");
-	// 		raspi_erase_write(load_addr, mtd3_ADDR, upd_info->fw_size);
-	// 	} else {
-	// 		puts("invalid signature");
-	// 	}
-	// }
+		int valid = ecdsa_verify(uboot_state->key, sha256_sum, upd_info->signature);
+		if (valid == 1) {
+			puts("valid signature, writing firmware to flash");
+			raspi_erase_write(load_addr, mtd3_ADDR, upd_info->fw_size);
+		} else {
+			puts("invalid signature");
+		}
+	}
 
-	// if (upd_info->update_fw || upd_info->update_key) {
-	// 	upd_info->update_key = 0;
-	// 	upd_info->update_fw = 0;
-	// 	raspi_erase_write(upd_info, mtd8_ADDR, sizeof(update_info_t));
-	// 	do_reset(cmdtp, 0, argc, argv);
-	// }
+	if (upd_info->update_fw || upd_info->update_key) {
+		upd_info->update_key = 0;
+		upd_info->update_fw = 0;
+		raspi_erase_write(upd_info, mtd8_ADDR, sizeof(update_info_t));
+		do_reset(cmdtp, 0, argc, argv);
+	}
 
 /*
 	char *tmp_argv[5];
