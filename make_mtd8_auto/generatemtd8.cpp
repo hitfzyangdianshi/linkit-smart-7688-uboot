@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 	//remove("/tmp/mtd6");
 	//remove("/tmp/current_fw.bin");*/
 
-	fwinfo.size_new = file_size2("/tmp/download_fw.bin") - FW_TAIL_OFFSET;
+	fwinfo.size_new = file_size2("/tmp/download_fw.bin") - 0;
 
 	fwinfo.update = 0x01;
 	

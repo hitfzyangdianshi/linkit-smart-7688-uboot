@@ -52,7 +52,7 @@ int main()
 	meminit.including_next =0;
 
 
-	for(i=0;i<10;i++)
+	for(i=0;i<4;i++)
 		ecc_make_key(meminit.pubkeys[i], p_privateKey0[i]);
 
 	uint8_t* p = (uint8_t*)(&meminit);
@@ -79,7 +79,7 @@ int main()
 	uint8_t sha256hash[32];
 	uint8_t* q = (uint8_t*)&m1;
 
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 4; i++) {
 		ecc_make_key(m1.pubkeys[i], p_privateKey1[i]);
 	}
 
@@ -87,10 +87,14 @@ int main()
 	for (i = 0; i < 32; i++)printf("%02x", sha256hash[i]);
 	printf("\n");
 
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 4; i++) {
 		m1.sigs_tag[i] = 1;
 		ecdsa_sign(p_privateKey0[i], sha256hash, m1.sigs[i]);
 		signature_verify_by_pubkey_33(meminit.pubkeys[i], sha256hash, m1.sigs[i]);
+	}
+	for (i = 4; i < 10; i++) {
+		m1.sigs_tag[i] = 0;
+		memset(m1.sigs[i], 0, sizeof(uint8_t) * 64);
 	}
 
 	
@@ -117,10 +121,15 @@ int main()
 	for (i = 0; i < 32; i++)printf("%02x", sha256hash[i]);
 	printf("\n");
 
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 4; i++) {
 		m2.sigs_tag[i] = 1;
 		ecdsa_sign(p_privateKey1[i], sha256hash, m2.sigs[i]);
 		signature_verify_by_pubkey_33(m1.pubkeys[i], sha256hash, m2.sigs[i]);
+	}
+
+	for (i = 4; i < 10; i++) {
+		m2.sigs_tag[i] = 0;
+		memset(m2.sigs[i], 0, sizeof(uint8_t) * 64);
 	}
 
 
@@ -144,10 +153,14 @@ int main()
 	for (i = 0; i < 32; i++)printf("%02x", sha256hash[i]);
 	printf("\n");
 
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 4; i++) {
 		m3.sigs_tag[i] = 1;
 		ecdsa_sign(p_privateKey2[i], sha256hash, m3.sigs[i]);
 		signature_verify_by_pubkey_33(m2.pubkeys[i], sha256hash, m3.sigs[i]);
+	}
+	for (i = 4; i < 10; i++) {
+		m3.sigs_tag[i] = 0;
+		memset(m3.sigs[i], 0, sizeof(uint8_t) * 64);
 	}
 
 

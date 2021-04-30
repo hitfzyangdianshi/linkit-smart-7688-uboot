@@ -255,7 +255,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		uint8_t* q = (uint8_t*)meminfo;
 
 
-		printf("fw-info data: ->update,  ->size_new_(without metadate): %d %d \n", fwi->update, fwi->size_new);
+		printf("fw-info data: ->update,  ->size_new : %d %d \n", fwi->update, fwi->size_new);
 		//uint32_t fwi_size_old = fwi->size_old;
 		uint32_t fwi_size_new = fwi->size_new;
 		uint32_t fwi_update = fwi->update;
@@ -281,7 +281,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		printf("new firmware mtd7 sha256 ... \n");
 		sha256_csum_wd((char*)load_addr, fwi_size_new, sha256_sum_mtd7, CHUNKSZ_SHA256);
 		/*WITHOUT 0x(FW_TAIL_OFFSET) metadata!!!!*/
-		for (i = 0; i < 32; i++)		printf("%02lx", sha256_sum_mtd7[i]);
+		for (i = 0; i < 32; i++)		printf("%02x", sha256_sum_mtd7[i]);
 		printf("\n");
 
 
@@ -409,6 +409,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		uint8_t sha2_mem_new[32];
 		int sig_count=0;
 		int j;
+
+		printf("\ncurrent version: %d\n", version0);
 
 		for(i=0;i<32767;i++)
 		{
