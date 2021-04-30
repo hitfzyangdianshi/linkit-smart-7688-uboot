@@ -32,7 +32,7 @@
 #include <malloc.h>
 #include <rt_mmap.h>
 #include <sha256.h>
-#include <ecc.h>
+#include "../lib_generic/ecc.c"
 #include <environment.h>
 #include <asm/byteorder.h>
 
