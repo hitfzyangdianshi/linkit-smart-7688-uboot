@@ -33,9 +33,6 @@
 #include <rt_mmap.h>
 #include <sha256.h>
 #include <ecc.h>
-#include <spi_api.h>
-#include <nand_api.h>
-
 #include <environment.h>
 #include <asm/byteorder.h>
 
@@ -209,29 +206,30 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 
 	uint8_t sha256_sum[32];
 
-	if (upd_info->update_key != 0) {
-		puts("updating key...");
-		printf("key count: %d", upd_info->key_update_count);
+	// if (upd_info->update_key != 0) {
+	// 	puts("updating key...");
+	// 	printf("key count: %d", upd_info->key_update_count);
 
-		void *key_updates = malloc(sizeof(key_update_t) * upd_info->key_update_count);
-		raspi_read(key_updates, mtd7_ADDR, sizeof(sizeof(key_update_t) * upd_info->key_update_count));
+	// 	void *key_updates = malloc(sizeof(key_update_t) * upd_info->key_update_count);
+	// 	raspi_read(key_updates, mtd7_ADDR, sizeof(sizeof(key_update_t) * upd_info->key_update_count));
 
-		for (i = 0; i < upd_info->key_update_count; i++, key_updates+= sizeof(key_update_t)) {
-			key_update_t *key_upd = (key_update_t*)key_updates;
-			sha256_csum_wd(key_upd, 4+33, sha256_sum, CHUNKSZ_SHA256);
+	// 	for (i = 0; i < upd_info->key_update_count; i++, key_updates+= sizeof(key_update_t)) {
+	// 		key_update_t *key_upd = (key_update_t*)key_updates;
+	// 		sha256_csum_wd(key_upd, 4+33, sha256_sum, CHUNKSZ_SHA256);
 
-			int valid = ecdsa_verify(uboot_state->key, sha256_sum, key_upd->signature);
-			if (valid == 1) {
-				printf("valid key update, version: %d", key_upd->key_version);
-				uboot_state->key_version = key_upd->key_version;
-				memcpy(uboot_state->key, key_upd->key, 33);
-			} else {
-				puts("invalid signature");
-				break;
-			}
-			raspi_erase_write(uboot_state, mtd9_ADDR, sizeof(uboot_state_t));
-		}
-	} else if (upd_info->update_fw != 0) {
+	// 		int valid = ecdsa_verify(uboot_state->key, sha256_sum, key_upd->signature);
+	// 		if (valid == 1) {
+	// 			printf("valid key update, version: %d", key_upd->key_version);
+	// 			uboot_state->key_version = key_upd->key_version;
+	// 			memcpy(uboot_state->key, key_upd->key, 33);
+	// 		} else {
+	// 			puts("invalid signature");
+	// 			break;
+	// 		}
+	// 		raspi_erase_write(uboot_state, mtd9_ADDR, sizeof(uboot_state_t));
+	// 	}
+	// } else 
+	if (upd_info->update_fw != 0) {
 		puts("updating firmware...");
 		printf("firmware size: %d", upd_info->fw_size);
 
